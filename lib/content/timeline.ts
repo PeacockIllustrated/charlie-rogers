@@ -38,7 +38,7 @@ export const timeline: TimelineEvent[] = [
   {
     year: 1965,
     title: 'First exhibition',
-    body: 'Three-man show at the Univision Gallery, Bigg Market, Newcastle, on 24 March. Appeared on BBC Look North; met Norman Cornish.',
+    body: 'Three-man show at the Univision Gallery, Bigg Market, Newcastle, in March. Appeared on BBC Look North; met Norman Cornish.',
   },
   {
     year: 1967,
