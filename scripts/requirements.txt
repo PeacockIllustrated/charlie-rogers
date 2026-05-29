@@ -1,0 +1,4 @@
+# Image extraction pipeline dependencies. See docs/IMAGE-EXTRACTION.md.
+# Install with: pip install -r scripts/requirements.txt
+PyMuPDF>=1.24
+Pillow>=10.0

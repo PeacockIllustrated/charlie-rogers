@@ -1,0 +1,14 @@
+# Normalise text line endings; keep checkouts consistent across Windows and Unix.
+* text=auto eol=lf
+
+# Shell scripts must stay LF even on Windows.
+*.sh text eol=lf
+
+# Binary assets, never diff or convert.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
