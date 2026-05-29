@@ -81,3 +81,7 @@ export const people: Person[] = [
     ],
   },
 ]
+
+export function personBySlug(slug: string): Person | undefined {
+  return people.find((p) => p.slug === slug)
+}

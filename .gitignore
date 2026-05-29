@@ -53,3 +53,6 @@ __pycache__/
 #   /public/paintings/thumbs/
 #   /public/paintings/web/
 #   /public/paintings/manifest.json
+
+# Scheduler runtime lock
+.claude/scheduled_tasks.lock

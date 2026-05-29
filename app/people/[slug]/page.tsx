@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { SectionHeading } from '@/components/SectionHeading'
+import { Eyebrow } from '@/components/Eyebrow'
 import { Prose } from '@/components/Prose'
-import { Button } from '@/components/Button'
+import { BackLink } from '@/components/BackLink'
 import { BookCallout } from '@/components/BookCallout'
-import { people } from '@/lib/content/people'
+import { people, personBySlug } from '@/lib/content/people'
 
 export function generateStaticParams() {
   return people.map((p) => ({ slug: p.slug }))
@@ -16,37 +16,36 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const person = people.find((x) => x.slug === slug)
-  return person
-    ? { title: person.name, description: person.role }
-    : { title: 'Not found' }
+  const person = personBySlug(slug)
+  if (!person) return { title: 'Not found' }
+  return { title: person.name, description: person.paragraphs[0] }
 }
 
-export default async function Page({
+export default async function PersonPage({
   params,
 }: {
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const person = people.find((x) => x.slug === slug)
+  const person = personBySlug(slug)
   if (!person) notFound()
 
   return (
     <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading as="h1" eyebrow={person.role} title={person.name} />
+      <BackLink href="/people">All people</BackLink>
 
-      {person.years && (
-        <p className="font-sans text-small text-ink-mute mt-3">{person.years}</p>
-      )}
+      <header className="mt-6 max-w-reading">
+        <Eyebrow>{person.role}</Eyebrow>
+        <h1 className="font-serif text-h1 mt-3">{person.name}</h1>
+        {person.years && (
+          <p className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute mt-2">
+            {person.years}
+          </p>
+        )}
+      </header>
 
       <div className="mt-8">
         <Prose paragraphs={person.paragraphs} />
-      </div>
-
-      <div className="mt-10">
-        <Button variant="tertiary" href="/people">
-          All people
-        </Button>
       </div>
 
       <BookCallout />
