@@ -88,51 +88,76 @@ function Event({ event }: { event: TimelineEvent }) {
 
 export default function TimelinePage() {
   return (
-    <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading
-        as="h1"
-        eyebrow="Charlie Rogers"
-        title="Timeline"
-        intro="Fifty-six years of painting, told in four chapters: the life before the brush, the lucky break that started it, the working years, and the legacy still being written."
-      />
+    <div>
+      <div className="mx-auto max-w-content px-6 pt-12">
+        <SectionHeading
+          as="h1"
+          eyebrow="Charlie Rogers"
+          title="Timeline"
+          intro="Fifty-six years of painting, told in four chapters: the life before the brush, the lucky break that started it, the working years, and the legacy still being written."
+        />
 
-      <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-rule pt-6">
-        {kindOrder.map((kind) => (
-          <div key={kind} className="flex items-center gap-2">
-            <span
-              className={`inline-block h-2 w-2 ${kindDotClass[kind]}`}
-              aria-hidden="true"
-            />
-            <dt className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft">
-              {kindLabels[kind]}
-            </dt>
-          </div>
-        ))}
-      </dl>
+        <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-rule pt-6">
+          {kindOrder.map((kind) => (
+            <div key={kind} className="flex items-center gap-2">
+              <span
+                className={`inline-block h-2 w-2 ${kindDotClass[kind]}`}
+                aria-hidden="true"
+              />
+              <dt className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft">
+                {kindLabels[kind]}
+              </dt>
+            </div>
+          ))}
+        </dl>
+      </div>
 
-      {timelineEras.map((era) => {
-        const events = eventsByEra(era.slug)
-        if (events.length === 0) return null
-        return (
-          <section key={era.slug} className="mt-16">
-            <header className="max-w-reading">
-              <Eyebrow>{era.range}</Eyebrow>
-              <h2 className="mt-3 font-serif text-h2">{era.label}</h2>
-              <p className="mt-3 font-serif text-body-lg text-ink-soft">
-                {era.blurb}
-              </p>
-            </header>
+      {/* Era jump navigation. Anchor links, no JavaScript. Sticky from sm up,
+          sitting just below the site header. */}
+      <nav
+        aria-label="Jump to an era"
+        className="mt-8 border-y border-rule bg-paper sm:sticky sm:top-16 sm:z-30"
+      >
+        <div className="mx-auto max-w-content px-6 py-3 flex flex-wrap gap-x-6 gap-y-2">
+          {timelineEras.map((era) => (
+            <a
+              key={era.slug}
+              href={`#${era.slug}`}
+              className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft hover:text-bensham"
+            >
+              {era.label}
+            </a>
+          ))}
+        </div>
+      </nav>
 
-            <ol className="mt-8">
-              {events.map((event) => (
-                <Event key={`${event.year}-${event.title}`} event={event} />
-              ))}
-            </ol>
-          </section>
-        )
-      })}
+      <div className="mx-auto max-w-content px-6">
+        {timelineEras.map((era) => {
+          const events = eventsByEra(era.slug)
+          if (events.length === 0) return null
+          return (
+            <section key={era.slug} id={era.slug} className="scroll-mt-32 pt-14">
+              <header className="max-w-reading">
+                <Eyebrow>{era.range}</Eyebrow>
+                <h2 className="mt-3 font-serif text-h2">{era.label}</h2>
+                <p className="mt-3 font-serif text-body-lg text-ink-soft">
+                  {era.blurb}
+                </p>
+              </header>
 
-      <BookCallout text="The full chronology, year by year, is in the book." />
+              <ol className="mt-8">
+                {events.map((event) => (
+                  <Event key={`${event.year}-${event.title}`} event={event} />
+                ))}
+              </ol>
+            </section>
+          )
+        })}
+
+        <div className="pt-16 pb-4">
+          <BookCallout text="The full chronology, year by year, is in the book." />
+        </div>
+      </div>
     </div>
   )
 }
