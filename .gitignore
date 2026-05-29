@@ -56,3 +56,6 @@ __pycache__/
 
 # Scheduler runtime lock
 .claude/scheduled_tasks.lock
+
+# Source book PDF (copyright Charles Rogers Junior, not for public distribution)
+pdf/*.pdf
