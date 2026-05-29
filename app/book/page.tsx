@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 
 import { SectionHeading } from '@/components/SectionHeading'
-import { Prose } from '@/components/Prose'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
+import { BookFlip } from '@/components/BookFlip'
 import { bookFacts, bookDescription, bookContents } from '@/lib/content/book'
+import { bookSamplePages } from '@/lib/content/bookSample'
 
 export const metadata: Metadata = {
   title: 'The book',
@@ -13,77 +14,77 @@ export const metadata: Metadata = {
 }
 
 export default function BookPage() {
+  const [lead, ...rest] = bookDescription
+
   return (
     <div className="mx-auto max-w-content px-6 py-12">
       <SectionHeading
         as="h1"
         eyebrow="Littlecroft Publishing, 2025"
         title="Charlie Rogers, Pursued by Bulldozers"
+        intro={lead}
       />
 
-      <div className="mt-12 grid lg:grid-cols-2 gap-12">
-        {/* Left column: painting image and book facts */}
-        <div>
-          <figure className="mb-8">
-            <div className="bg-paper-warm p-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/paintings/web/page_036_img_000.jpg"
-                alt="Gateshead Cenotaph, an oil painting by Charlie Rogers"
-                loading="lazy"
-                className="block w-full h-auto"
-              />
-            </div>
-            <figcaption className="font-sans text-xs text-ink-mute mt-2 tracking-eyebrow uppercase">
-              Gateshead Cenotaph, oil
-            </figcaption>
-          </figure>
+      {/* Flip-book sample, the centrepiece. */}
+      <section className="mt-14">
+        <Eyebrow>Look inside</Eyebrow>
+        <h2 className="font-serif text-h3 mt-3 max-w-reading">
+          A sample of the opening chapter
+        </h2>
+        <p className="font-serif text-body text-ink-soft mt-2 max-w-reading">
+          Turn the pages with the arrows, the dots, or by clicking the left and
+          right of the book.
+        </p>
+        <div className="mt-8 max-w-4xl">
+          <BookFlip pages={bookSamplePages} />
+        </div>
+      </section>
 
+      {/* About and buy. */}
+      <div className="mt-16 grid gap-12 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Eyebrow>About the book</Eyebrow>
+          <div className="mt-4 max-w-reading font-serif text-body-lg text-ink-soft space-y-5">
+            {rest.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </div>
+
+        <aside>
           <dl className="border-t border-rule">
             {bookFacts.map(({ label, value }) => (
-              <div
-                key={label}
-                className="flex gap-4 py-3 border-b border-rule"
-              >
-                <dt className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute w-32 shrink-0 pt-0.5">
+              <div key={label} className="flex gap-4 py-3 border-b border-rule">
+                <dt className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute w-28 shrink-0 pt-0.5">
                   {label}
                 </dt>
                 <dd className="font-serif text-body text-ink">{value}</dd>
               </div>
             ))}
           </dl>
-        </div>
 
-        {/* Right column: description and buy block */}
-        <div>
-          <Prose paragraphs={bookDescription} />
-
-          <div className="mt-10 border-t border-rule pt-8">
-            <Eyebrow rule={false}>Buy the book</Eyebrow>
-            <div className="mt-4">
-              <Button href="#order" variant="primary">
-                Buy the book
+          <div className="mt-8">
+            <Eyebrow rule={false}>Where to buy</Eyebrow>
+            <p className="font-serif text-body text-ink-soft mt-3">
+              The book is available through Come View My Art Gallery, Sheriffs
+              Highway, Low Fell, Gateshead. Price on request.
+            </p>
+            <p className="font-sans text-small text-ink-mute mt-3">
+              Online ordering is coming soon.
+            </p>
+            <div className="mt-5">
+              <Button href="/places/bigg-market-newcastle" variant="secondary">
+                See where it began
               </Button>
             </div>
-            <p
-              id="order"
-              className="font-sans text-small text-ink-mute mt-4 max-w-reading"
-            >
-              Online ordering is coming soon. The book is currently available
-              through{' '}
-              <strong className="font-medium text-ink">
-                Come View My Art Gallery
-              </strong>
-              , Sheriffs Highway, Low Fell, Gateshead. Price on request.
-            </p>
           </div>
-        </div>
+        </aside>
       </div>
 
-      {/* Contents list */}
+      {/* Contents. */}
       <div className="mt-16 border-t border-rule pt-10">
-        <h2 className="font-serif text-h2 mb-8">What is inside</h2>
-        <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2 max-w-content">
+        <Eyebrow>What is inside</Eyebrow>
+        <ol className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
           {bookContents.map((item, i) => (
             <li key={i} className="flex gap-3 items-baseline">
               <span className="font-sans text-xs text-ink-mute tabular-nums w-5 shrink-0">

@@ -45,3 +45,21 @@
     outline-offset: 2px;
   }
 }
+
+/* Page-turn cross-fade for the book sample reader. 200ms, per docs/DESIGN.md. */
+@keyframes bookPageIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.book-page-in {
+  animation: bookPageIn 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-page-in {
+    animation: none;
+  }
+}
