@@ -8,6 +8,8 @@ const nav = [
   { href: '/work', label: 'The work' },
   { href: '/places', label: 'Places' },
   { href: '/people', label: 'People' },
+  { href: '/timeline', label: 'Timeline' },
+  { href: '/exhibitions', label: 'Exhibitions' },
   { href: '/book', label: 'The book' },
 ]
 
@@ -18,7 +20,7 @@ export function Header() {
         <Link href="/" className="font-serif italic text-2xl leading-none">
           Charlie Rogers
         </Link>
-        <nav className="flex flex-wrap gap-x-5 gap-y-1">
+        <nav className="flex flex-wrap gap-x-4 gap-y-1 lg:gap-x-5">
           {nav.map((n) => (
             <Link
               key={n.href}
