@@ -24,18 +24,20 @@ export default function BookPage() {
       <div className="mt-12 grid lg:grid-cols-2 gap-12">
         {/* Left column: painting image and book facts */}
         <div>
-          <div className="mb-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/paintings/web/page_027_img_000.jpg"
-              alt="Saltwell Park, painted by Charlie Rogers"
-              loading="lazy"
-              className="block w-full h-auto"
-            />
-            <p className="font-sans text-xs text-ink-mute mt-2 tracking-eyebrow uppercase">
-              Saltwell Park, a subject Charlie returned to often
-            </p>
-          </div>
+          <figure className="mb-8">
+            <div className="bg-paper-warm p-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/paintings/web/page_036_img_000.jpg"
+                alt="Gateshead Cenotaph, an oil painting by Charlie Rogers"
+                loading="lazy"
+                className="block w-full h-auto"
+              />
+            </div>
+            <figcaption className="font-sans text-xs text-ink-mute mt-2 tracking-eyebrow uppercase">
+              Gateshead Cenotaph, oil
+            </figcaption>
+          </figure>
 
           <dl className="border-t border-rule">
             {bookFacts.map(({ label, value }) => (

@@ -12,7 +12,7 @@ const config: Config = {
         'paper-warm': '#F2EBDC',
         ink: '#1A1916',
         'ink-soft': '#44423D',
-        'ink-mute': '#7A776E',
+        'ink-mute': '#6B6860',
         rule: '#D9D2C0',
         bensham: '#7A1F1F',
         'bensham-deep': '#5E1414',

@@ -4,9 +4,9 @@ import { Button } from '@/components/Button'
 import { PaintingCard } from '@/components/PaintingCard'
 import { BookCallout } from '@/components/BookCallout'
 
-// Editorial landing. Leads with the bulldozers thesis and the 1964 origin story,
-// then routes into the book's sections. Teaser depth: enough to draw a reader in,
-// the full account is in the book.
+// Editorial landing. Leads with the art and the bulldozers thesis, then the 1964
+// origin story, then routes into the book's sections. Teaser depth: enough to
+// draw a reader in, the full account is in the book.
 
 // Featured uses the page 27 starter set, which the book labels by location.
 const featured = [
@@ -59,30 +59,54 @@ const sections = [
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-content px-6">
-      <section className="py-20 max-w-reading">
-        <Eyebrow>Charlie Rogers &middot; Gateshead, 1930 to 2020</Eyebrow>
-        <h1 className="font-serif text-display-2 mt-4">Pursued by bulldozers</h1>
-        <p className="font-serif text-body-lg text-ink-soft mt-6">
-          For fifty-six years Charlie Rogers painted the back lanes, pubs,
-          churches and corner shops of Tyneside, often days or weeks before the
-          demolition crews arrived. Around a thousand works survive. This is the
-          archive of what he saw, and of what is gone.
-        </p>
-        <blockquote className="font-serif italic text-h3 text-bensham mt-10">
-          &ldquo;As fast as Tyneside&rsquo;s characteristic buildings fall,
-          Charlie Rogers seems to be there to catch them.&rdquo;
-        </blockquote>
-        <p className="font-sans text-small text-ink-mute mt-2">Tom Pickard, 1973</p>
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Button href="/work">Browse the work</Button>
-          <Button href="/story" variant="secondary">
-            Read his story
-          </Button>
+    <div>
+      <section className="mx-auto max-w-content px-6 py-16 lg:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="max-w-reading">
+            <Eyebrow>Charlie Rogers &middot; Gateshead, 1930 to 2020</Eyebrow>
+            <h1 className="font-serif text-display-2 mt-4">
+              Pursued by bulldozers
+            </h1>
+            <p className="font-serif text-body-lg text-ink-soft mt-6">
+              For fifty-six years Charlie Rogers painted the back lanes, pubs,
+              churches and corner shops of Tyneside, often days or weeks before
+              the demolition crews arrived. Around a thousand works survive. This
+              is the archive of what he saw, and of what is gone.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button href="/work">Browse the work</Button>
+              <Button href="/story" variant="secondary">
+                Read his story
+              </Button>
+            </div>
+          </div>
+          <figure className="bg-paper-warm p-4 lg:p-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/paintings/web/page_035_img_000.jpg"
+              alt="A Tyneside back street by Charlie Rogers, terraced houses under a smoking sky with a lone figure and a dog"
+              className="block w-full h-auto"
+            />
+            <figcaption className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute mt-3">
+              A Tyneside street, watercolour
+            </figcaption>
+          </figure>
         </div>
       </section>
 
-      <section className="pb-20">
+      <section className="border-y border-rule bg-paper-warm">
+        <div className="mx-auto max-w-content px-6 py-14">
+          <blockquote className="font-serif italic text-h2 text-bensham max-w-3xl">
+            &ldquo;As fast as Tyneside&rsquo;s characteristic buildings fall,
+            Charlie Rogers seems to be there to catch them.&rdquo;
+          </blockquote>
+          <p className="font-sans text-small text-ink-mute mt-4">
+            Tom Pickard, 1973
+          </p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-content px-6 py-16">
         <Eyebrow>The lucky break</Eyebrow>
         <div className="mt-4 max-w-reading font-serif text-body-lg text-ink-soft space-y-5">
           <p>
@@ -104,7 +128,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="pb-20">
+      <section className="mx-auto max-w-content px-6 pb-16">
         <Eyebrow>From the archive</Eyebrow>
         <div className="mt-6 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((p) => (
@@ -113,7 +137,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="pb-8">
+      <section className="mx-auto max-w-content px-6 pb-8">
         <Eyebrow>Explore the archive</Eyebrow>
         <div className="mt-6 grid gap-px bg-rule sm:grid-cols-2">
           {sections.map((s) => (
@@ -133,7 +157,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="pb-24">
+      <div className="mx-auto max-w-content px-6 pb-24">
         <BookCallout text="Charlie Rogers, Pursued by Bulldozers, compiled by Brian Rankin, gathers more than a hundred paintings alongside the full story of his life and work." />
       </div>
     </div>

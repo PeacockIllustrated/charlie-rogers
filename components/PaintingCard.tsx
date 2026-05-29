@@ -21,8 +21,10 @@ export function PaintingCard({
   const metaTop = [location, year].filter(Boolean).join(' · ')
   return (
     <figure>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt={title} loading="lazy" className="block w-full h-auto" />
+      <div className="bg-paper-warm p-3">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={title} loading="lazy" className="block w-full h-auto" />
+      </div>
       <figcaption className="mt-3">
         <div className="font-serif text-body-lg font-medium">{title}</div>
         {metaTop && (

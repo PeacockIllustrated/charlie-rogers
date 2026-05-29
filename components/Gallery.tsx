@@ -14,15 +14,17 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
     <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
       {paintings.map((p) => (
         <figure key={p.web}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={p.web}
-            alt={`Painting by Charlie Rogers, from page ${p.page} of Pursued by Bulldozers`}
-            loading="lazy"
-            className="block w-full h-auto"
-          />
+          <div className="bg-paper-warm p-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={p.web}
+              alt={`Painting by Charlie Rogers, from page ${p.page} of Pursued by Bulldozers`}
+              loading="lazy"
+              className="block w-full h-auto"
+            />
+          </div>
           <figcaption className="mt-2 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-            Pursued by Bulldozers &middot; p.{p.page}
+            Page {p.page}
           </figcaption>
         </figure>
       ))}

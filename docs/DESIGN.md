@@ -17,7 +17,7 @@ Earthy, slightly desaturated, paper-warm. No neon, no pure white, no pure black.
 --paper-warm:   #F2EBDC;  /* slightly warmer paper for cards, alternating sections */
 --ink:          #1A1916;  /* deep charcoal, primary text */
 --ink-soft:     #44423D;  /* secondary text */
---ink-mute:     #7A776E;  /* tertiary text, metadata */
+--ink-mute:     #6B6860;  /* tertiary text, metadata. Darkened from #7A776E, which failed WCAG AA on paper at 4.15:1; this is 5.16:1. */
 --rule:         #D9D2C0;  /* hairline dividers */
 
 /* Accent: Bensham red, from the book's headers and marker dots */
@@ -139,9 +139,11 @@ No card frame, no shadow. Whitespace does the separating.
 
 Three states, displayed as a small label not a chip:
 
-- **Extant** — sage colour, low emphasis
+- **Extant** — sage marker, low emphasis
 - **Demolished** — Bensham red, slightly higher emphasis
-- **Altered** — ochre, medium emphasis
+- **Altered** — ochre marker, medium emphasis
+
+Sage and ochre fail contrast as text on paper (2.76:1 and 3.06:1), so the hue is shown as a small square marker beside the word, and the word itself is set in an accessible ink colour (Bensham red for demolished, which passes at 9.53:1). The marker carries the at-a-glance coding; the label stays legible. This mirrors the book's coloured map dots.
 
 ### Buttons
 

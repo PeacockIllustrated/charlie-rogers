@@ -2,18 +2,22 @@
 // Colours and emphasis from docs/DESIGN.md.
 export type Status = 'extant' | 'demolished' | 'altered' | 'unknown'
 
-const map: Record<Status, { label: string; cls: string }> = {
-  extant: { label: 'Extant', cls: 'text-sage' },
-  demolished: { label: 'Demolished', cls: 'text-bensham' },
-  altered: { label: 'Altered', cls: 'text-ochre' },
-  unknown: { label: 'Status unknown', cls: 'text-ink-mute' },
+// A small colour marker plus the word. The hue (sage, ochre, bensham) carries
+// the at-a-glance coding the book uses for its map; the word itself stays in an
+// accessible ink colour so it always meets contrast. The dot is decorative.
+const map: Record<Status, { label: string; dot: string; text: string }> = {
+  extant: { label: 'Extant', dot: 'bg-sage', text: 'text-ink-soft' },
+  demolished: { label: 'Demolished', dot: 'bg-bensham', text: 'text-bensham' },
+  altered: { label: 'Altered', dot: 'bg-ochre', text: 'text-ink-soft' },
+  unknown: { label: 'Status unknown', dot: 'bg-ink-mute', text: 'text-ink-mute' },
 }
 
 export function StatusLabel({ status }: { status: Status }) {
   const s = map[status]
   return (
-    <span className={`font-sans text-xs uppercase tracking-eyebrow ${s.cls}`}>
-      {s.label}
+    <span className="inline-flex items-center gap-2 font-sans text-xs uppercase tracking-eyebrow">
+      <span className={`inline-block h-2 w-2 ${s.dot}`} aria-hidden="true" />
+      <span className={s.text}>{s.label}</span>
     </span>
   )
 }

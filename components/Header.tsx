@@ -23,7 +23,7 @@ export function Header() {
             <Link
               key={n.href}
               href={n.href}
-              className="font-sans uppercase text-[13px] tracking-eyebrow text-ink-soft hover:text-ink"
+              className="font-sans uppercase text-[13px] tracking-eyebrow text-ink-soft hover:text-ink py-2"
             >
               {n.label}
             </Link>
