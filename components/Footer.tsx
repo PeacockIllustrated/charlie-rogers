@@ -1,4 +1,15 @@
+import Link from 'next/link'
 import { Eyebrow } from './Eyebrow'
+
+const footerLinks = [
+  { href: '/story', label: 'The story' },
+  { href: '/work', label: 'The work' },
+  { href: '/places', label: 'Places' },
+  { href: '/people', label: 'People' },
+  { href: '/timeline', label: 'Timeline' },
+  { href: '/exhibitions', label: 'Exhibitions' },
+  { href: '/book', label: 'The book' },
+]
 
 export function Footer() {
   return (
@@ -21,6 +32,19 @@ export function Footer() {
             Artwork &copy; Charles Rogers Junior
           </p>
         </div>
+      </div>
+      <div className="mx-auto max-w-content px-6 pb-12">
+        <nav className="flex flex-wrap gap-x-6 gap-y-2 border-t border-rule pt-6">
+          {footerLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft hover:text-ink"
+            >
+              {l.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
   )

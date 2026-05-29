@@ -4,10 +4,11 @@ import Link from 'next/link'
 // nav in Inter small caps. A full-screen mobile overlay (client component) is a
 // later task; for now the nav wraps. See docs/DESIGN.md.
 const nav = [
-  { href: '/paintings', label: 'Paintings' },
+  { href: '/story', label: 'The story' },
+  { href: '/work', label: 'The work' },
   { href: '/places', label: 'Places' },
-  { href: '/about', label: 'About' },
-  { href: '/shop', label: 'Shop' },
+  { href: '/people', label: 'People' },
+  { href: '/book', label: 'The book' },
 ]
 
 export function Header() {
