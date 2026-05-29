@@ -107,7 +107,7 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
                 setIndex(i)
               }}
               style={{ width: w }}
-              className="group max-w-full cursor-pointer border-0 bg-transparent p-0 text-left"
+              className="group min-w-0 max-w-full cursor-pointer border-0 bg-transparent p-0 text-left"
               aria-label={`Enlarge painting from page ${p.page}`}
             >
               <span className="block bg-paper-warm p-2 transition-colors group-hover:bg-rule">
