@@ -61,6 +61,10 @@ Read these carefully. Tom has consistent preferences across all his projects.
 - Co-locate types with the code that uses them.
 - Database access through Supabase server client in Server Components or route handlers, never expose the service role key to the client.
 
+**Database**
+- The Supabase instance is a shared project database. Every table this project creates must use the `charlie_` prefix, for example `charlie_paintings`, `charlie_locations`, `charlie_orders`. This namespaces our tables away from other projects that share the same database.
+- The table names in `/docs/SCHEMA.md` are written without the prefix. Apply `charlie_` to all of them, and to their indexes, foreign keys, RLS policies, and triggers, when writing migrations and seed SQL.
+
 ## Project structure
 
 ```

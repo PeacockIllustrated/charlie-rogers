@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Palette mirrored as CSS variables for any raw CSS that needs it.
+   The Tailwind tokens in tailwind.config.ts are the primary interface. */
+:root {
+  --paper: #faf6ee;
+  --paper-warm: #f2ebdc;
+  --ink: #1a1916;
+  --ink-soft: #44423d;
+  --ink-mute: #7a776e;
+  --rule: #d9d2c0;
+  --bensham: #7a1f1f;
+  --bensham-deep: #5e1414;
+  --slate: #4a5b6e;
+  --ochre: #b8842c;
+  --sage: #8b9b7a;
+  --brick: #a85842;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 500;
+  }
+  ::selection {
+    background: var(--bensham);
+    color: var(--paper);
+  }
+  /* Focus ring per the forms spec in docs/DESIGN.md: ochre, offset. */
+  :focus-visible {
+    outline: 2px solid var(--ochre);
+    outline-offset: 2px;
+  }
+}
