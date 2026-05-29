@@ -32,11 +32,8 @@ export type Place = {
   image?: string
 }
 
-export type TimelineEvent = {
-  year: number
-  title: string
-  body?: string
-}
+// TimelineEvent now lives in lib/content/timeline.ts (it carries era, kind, and
+// media fields specific to that surface).
 
 export type Exhibition = {
   year: string
