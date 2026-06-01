@@ -46,6 +46,33 @@
   }
 }
 
+/* ============================================================
+   Admin and shop form primitives. Square corners, hairline rules,
+   no shadows, per docs/DESIGN.md. Used by the /admin CMS and forms.
+   ============================================================ */
+@layer components {
+  .input {
+    @apply block w-full border border-ink-mute bg-paper px-3 py-2 font-sans text-small text-ink;
+  }
+  .input:focus {
+    @apply outline-none border-ink;
+    outline: 2px solid var(--ochre);
+    outline-offset: 2px;
+  }
+  textarea.input {
+    @apply font-serif text-body leading-relaxed;
+  }
+  .input-label {
+    @apply mb-1 block font-sans text-xs uppercase tracking-eyebrow text-ink-soft;
+  }
+  .btn-admin {
+    @apply inline-flex items-center justify-center border border-transparent bg-bensham px-4 py-2 font-sans text-small font-medium text-paper transition-colors hover:bg-bensham-deep disabled:opacity-50;
+  }
+  .btn-admin-outline {
+    @apply inline-flex items-center justify-center border border-ink-soft bg-transparent px-4 py-2 font-sans text-small font-medium text-ink transition-colors hover:bg-ink-soft hover:text-paper disabled:opacity-50;
+  }
+}
+
 /* Page-turn cross-fade for the book sample reader. 200ms, per docs/DESIGN.md. */
 @keyframes bookPageIn {
   from {

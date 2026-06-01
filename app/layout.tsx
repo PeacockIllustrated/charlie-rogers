@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { EB_Garamond, Inter } from 'next/font/google'
 import './globals.css'
-import { Header } from '@/components/Header'
-import { Footer } from '@/components/Footer'
+
+// Root layout: html/body, fonts, global styles only. The public site chrome
+// (header, footer) lives in app/(public)/layout.tsx so that /admin and /shop
+// checkout surfaces can present their own chrome.
 
 // EB Garamond stands in for the book's Bembo; Inter for its Futura running heads.
 const serif = EB_Garamond({
@@ -37,9 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${serif.variable} ${sans.variable}`}>
       <body className="font-serif bg-paper text-ink min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   )
