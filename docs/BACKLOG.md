@@ -52,11 +52,11 @@ blocking the shop build; they block real artwork and firm listings.
 
 ### Technical follow-ups from the shop audits
 
-- **Authorisation on the shared database.** `requireAdmin()` checks only that a
-  user is signed in, and the RLS policies grant writes on
-  `auth.role() = 'authenticated'`. On a shared instance that lets any signed-in
-  user of any other project write to `charlie_products`. Needs a decision on
-  the admin identity model before it can be fixed.
+- ~~**Authorisation on the shared database.**~~ **Done, 18 Sep 2026.** Writes
+  now require membership of `charlie_admins`, tested through
+  `charlie_is_admin()`, in both `requireAdmin()` and every RLS policy. Applied
+  to the live instance and verified there. See
+  `supabase/migrations/20260918090000_charlie-shop-admin-authz.sql`.
 - **Sold status is unreachable and lossy.** The admin form offers only draft
   and published, so saving a sold listing silently demotes it to draft.
 - **The enquire call to action has no form behind it.** It currently links to

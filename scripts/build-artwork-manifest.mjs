@@ -70,8 +70,13 @@ for (const r of rows) {
 }
 const collisions = [...bySize.entries()].filter(([, v]) => v.length > 1)
 
+// An attachment counts as undescribed when nothing was actually seen. The
+// wording varies by cause: over the connector's size limit, or a format it
+// returns as opaque binary. "Could not be viewed" has to be matched explicitly
+// because it does not contain the substring "not view".
+const UNDESCRIBED = /could not be viewed|not viewable|unviewable|not view|exceed|opaque binary/i
 const undescribed = rows.filter(
-  (r) => !r.visualDescription || /not view|exceed|unviewable/i.test(r.visualDescription),
+  (r) => !r.visualDescription || UNDESCRIBED.test(r.visualDescription),
 )
 
 const manifest = {

@@ -29,9 +29,15 @@ Third Street is the book cover painting and the weakest file of the set, because
 the only copy in the mailbox was a small inline reproduction attached under the
 misleading name `Paul Wright.jpg`.
 
+"Fit for" above is a measurement of the file, not a judgement that the product
+is ready to sell. Town Moor and Bigg Market are the only two with enough pixels
+to print at a sensible size; both still lack a price, stated dimensions and a
+checkout, so neither can actually be sold today. Everything else fails on
+resolution as well.
+
 This confirms what CLAUDE.md already says: print commerce needs original high
-resolution scans from Brian Rankin or Charlie Rogers Junior. Town Moor is the
-single exception and could be sold today.
+resolution scans from Brian Rankin or Charlie Rogers Junior, for seven of the
+nine paintings regardless of anything else.
 
 ## Two corrections to Brian's copy
 
@@ -45,11 +51,18 @@ single exception and could be sold today.
 
 ## Layout
 
-- `public/artwork/` holds the print masters, including the original HEIC for
-  Bigg Market. These are never served to a browser.
-- `public/artwork/web/` holds the derivatives the site actually serves, capped
-  at 1600px on the long edge. The masters total 27MB, which would be the weight
-  of the shop listing page on its own; the derivatives bring it to 3MB.
+- `artwork-masters/`, this directory, holds the print masters, including the
+  original HEIC for Bigg Market. It sits outside `public/`, so Next.js does not
+  serve it and nothing here is reachable from a browser.
+- `public/artwork/web/` holds the derivatives the site serves, capped at 1600px
+  on the long edge. The masters total 27MB, which would be the weight of the
+  shop listing page on its own; the derivatives bring it to 3MB.
+
+These were originally under `public/artwork/`, which meant the 7191x5393 Town
+Moor master, the single most valuable asset in the project and the only one
+that could be sold as a large print, was downloadable by anyone who guessed the
+filename. Moving them out is the fix. Keep it that way: anything added to
+`public/` is published.
 
 Regenerate the derivatives after replacing any master. The HEIC was converted
 with pillow-heif at quality 92.

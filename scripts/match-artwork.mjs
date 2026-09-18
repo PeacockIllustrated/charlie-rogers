@@ -86,7 +86,11 @@ for (const f of files) {
     unknown.push({ file: f, size, mtime, nearest })
     continue
   }
-  for (const c of candidates) seen.add(c)
+  // Only a unique match settles a catalogued row. When a file's size lands in
+  // a collision group, none of the candidates is accounted for, so leaving
+  // them all unseen keeps them in the missing list where they can be chased,
+  // rather than silently clearing several rows on the strength of one file.
+  if (candidates.length === 1) seen.add(candidates[0])
   matched.push({ file: f, size, mtime, candidates })
 }
 

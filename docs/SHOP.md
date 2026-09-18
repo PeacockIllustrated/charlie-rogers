@@ -39,7 +39,10 @@ explains setup, and admin API routes return 503.
    per the shared-database rule in `CLAUDE.md`.
 3. Create an admin user in the Supabase dashboard (Authentication, Add user).
    Accounts are invitation-only; there is no public sign-up.
-4. Sign in at `/admin/login`, then add products at `/admin/products/new`.
+4. **Add that user to `charlie_admins`**, with the SQL under "Adding the first
+   admin" below. Signing in is not enough: the roster is what grants access,
+   and it starts empty. Skip this and the admin area shows "not authorised".
+5. Sign in at `/admin/login`, then add products at `/admin/products/new`.
    Save as draft or publish; published products appear at `/shop`.
 
 ## Security model

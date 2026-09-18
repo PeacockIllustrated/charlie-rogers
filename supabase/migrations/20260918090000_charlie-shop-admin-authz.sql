@@ -55,7 +55,7 @@ ALTER TABLE charlie_admins ENABLE ROW LEVEL SECURITY;
 -- insert, update or delete policy, so writes require the service role.
 DROP POLICY IF EXISTS charlie_admins_select_admin ON charlie_admins;
 CREATE POLICY charlie_admins_select_admin ON charlie_admins
-  FOR SELECT USING (charlie_is_admin());
+  FOR SELECT TO authenticated USING (charlie_is_admin());
 
 -- ============================================================
 -- PRODUCTS AND IMAGES
@@ -67,7 +67,7 @@ DROP POLICY IF EXISTS charlie_products_update_admin ON charlie_products;
 DROP POLICY IF EXISTS charlie_products_delete_admin ON charlie_products;
 
 CREATE POLICY charlie_products_select_admin ON charlie_products
-  FOR SELECT USING (charlie_is_admin());
+  FOR SELECT TO authenticated USING (charlie_is_admin());
 CREATE POLICY charlie_products_insert_admin ON charlie_products
   FOR INSERT WITH CHECK (charlie_is_admin());
 -- USING decides which rows may be updated, WITH CHECK decides what they may
@@ -84,7 +84,7 @@ DROP POLICY IF EXISTS charlie_product_images_update_admin ON charlie_product_ima
 DROP POLICY IF EXISTS charlie_product_images_delete_admin ON charlie_product_images;
 
 CREATE POLICY charlie_product_images_select_admin ON charlie_product_images
-  FOR SELECT USING (charlie_is_admin());
+  FOR SELECT TO authenticated USING (charlie_is_admin());
 CREATE POLICY charlie_product_images_insert_admin ON charlie_product_images
   FOR INSERT WITH CHECK (charlie_is_admin());
 CREATE POLICY charlie_product_images_update_admin ON charlie_product_images
