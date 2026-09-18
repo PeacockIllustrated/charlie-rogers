@@ -15,7 +15,8 @@
 // the manifest, and catalogued attachments not found on disk.
 
 import { readFileSync, readdirSync, statSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { join, resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const dir = process.argv[2]
 if (!dir) {
@@ -23,9 +24,17 @@ if (!dir) {
   process.exit(1)
 }
 
-const manifest = JSON.parse(
-  readFileSync('docs/artwork-inbox/manifest.json', 'utf8'),
+// Resolved from this file rather than the working directory, so the script can
+// be run from anywhere, including a Windows shell sitting in another folder.
+const manifestPath = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'docs',
+  'artwork-inbox',
+  'manifest.json',
 )
+
+const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
 
 const bySize = new Map()
 for (const a of manifest.attachments) {
