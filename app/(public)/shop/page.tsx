@@ -3,6 +3,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { Button } from '@/components/Button'
 import { ProductCard } from '@/components/shop/ProductCard'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
+import { CATALOGUE } from '@/lib/shop/catalogue'
 import type { ShopProduct } from '@/lib/shop/types'
 
 export const metadata: Metadata = {
@@ -24,6 +25,13 @@ export default async function ShopPage() {
       .order('is_featured', { ascending: false })
       .order('updated_at', { ascending: false })
     products = (data as ShopProduct[] | null) ?? []
+  } else {
+    // No database yet, so fall back to the local catalogue. This exists so the
+    // shop can be reviewed before Supabase is pointed at; the live tables win
+    // the moment they are configured.
+    products = [...CATALOGUE].sort(
+      (a, b) => Number(b.is_featured) - Number(a.is_featured),
+    )
   }
 
   return (
@@ -32,7 +40,7 @@ export default async function ShopPage() {
         as="h1"
         eyebrow="Charlie Rogers"
         title="Shop"
-        intro="The book about Charlie Rogers, and, in time, fine art prints of his paintings. Prints are not yet on sale; they wait on high resolution scans of the originals."
+        intro="The book about Charlie Rogers, and fine art prints of his paintings. There is no checkout yet, so everything here is by enquiry."
       />
 
       <div className="mt-12">

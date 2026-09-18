@@ -5,12 +5,14 @@ import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
 import { BackLink } from '@/components/BackLink'
 import { ProductImageGallery } from '@/components/shop/ProductImageGallery'
-import { formatPence, cn } from '@/lib/shop/utils'
+import { formatPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
+import { catalogueBySlug } from '@/lib/shop/catalogue'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
-  if (!isSupabaseConfigured()) return null
+  // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
+  if (!isSupabaseConfigured()) return catalogueBySlug(slug)
   const supabase = await createSupabaseServerClient()
   const { data } = await supabase
     .from('charlie_products')
@@ -74,7 +76,7 @@ export default async function ProductDetailPage({
               isSold && 'line-through opacity-60',
             )}
           >
-            {formatPence(product.price_pence)}
+            {formatPrice(product.price_pence)}
           </p>
 
           {product.description && (

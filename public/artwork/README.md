@@ -10,14 +10,14 @@ from the low resolution book PDF at around 108 ppi.
 
 ## Print viability, measured
 
-Only one of these is fit to sell as a print. The rest were downscaled to
-1920px or smaller somewhere between Brian's phone and the download, so they are
-web assets, not print masters.
+Two of these are fit to sell as prints. The rest were downscaled to 1920px or
+smaller somewhere between Brian's phone and the download, so they are web
+assets, not print masters.
 
 | Painting | Pixels | At 300dpi | Fit for |
 | --- | --- | --- | --- |
 | Town Moor, Newcastle-upon-Tyne, 1966 | 7191 x 5393 | 61cm long edge | Print |
-| Bigg Market, Newcastle-on-Tyne, 1975 | HEIC, unread | unknown | Needs converting first |
+| Bigg Market, Newcastle-on-Tyne, 1975 | 3597 x 2591 | 30cm long edge | Print |
 | The Joke Shop, Gateshead-on-Tyne, 1966 | 2048 x 1386 | 17cm | Web, small print at a push |
 | Pot Pie Bob's, Wellington Street, 1977 | 1920 x 1838 | 16cm | Web |
 | Four Doors at School Street, 1977 | 1920 x 1459 | 16cm | Web |
@@ -43,7 +43,22 @@ single exception and could be sold today.
   of Newcastle Brown Ale, a brown teapot and a jar of Gale's pickled onions on a
   striped cloth, signed GHRogers 1967.
 
-## Missing
+## Layout
 
-`bigg-market-newcastle-on-tyne-1975.heic` needs converting to JPEG or WebP
-before it can go on the site. It is the only HEIC in the set.
+- `public/artwork/` holds the print masters, including the original HEIC for
+  Bigg Market. These are never served to a browser.
+- `public/artwork/web/` holds the derivatives the site actually serves, capped
+  at 1600px on the long edge. The masters total 27MB, which would be the weight
+  of the shop listing page on its own; the derivatives bring it to 3MB.
+
+Regenerate the derivatives after replacing any master. The HEIC was converted
+with pillow-heif at quality 92.
+
+## Still missing
+
+- **Pop, 1967** has no file here. Tom holds it locally; it was not in the folder
+  supplied for matching, so the product renders without an image.
+- The special edition book and the greeting card collection have no product
+  photography. Brian sent a photograph of the embossed and signed title page
+  (`IMG_4874.jpeg`) and a five page PDF of the card designs, both of which are
+  catalogued in the manifest but were not among the downloaded files.
