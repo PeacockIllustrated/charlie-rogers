@@ -34,12 +34,17 @@ export function Footer() {
         </div>
       </div>
       <div className="mx-auto max-w-content px-6 pb-12">
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 border-t border-rule pt-6">
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap gap-x-6 gap-y-1 border-t border-rule pt-6"
+        >
           {footerLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft hover:text-ink"
+              // py-1 lifts the tap target from 17px to 25px, clearing the
+              // WCAG 2.5.8 minimum of 24px.
+              className="py-1 font-sans text-xs uppercase tracking-eyebrow text-ink-soft hover:text-ink"
             >
               {l.label}
             </Link>
