@@ -52,7 +52,10 @@ export function Header() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5">
+        <nav
+          aria-label="Main"
+          className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5"
+        >
           {nav.map((n) => (
             <Link
               key={n.href}
@@ -100,7 +103,10 @@ export function Header() {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-1">
+          <nav
+            aria-label="Main menu"
+            className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-1"
+          >
             {nav.map((n) => (
               <Link
                 key={n.href}

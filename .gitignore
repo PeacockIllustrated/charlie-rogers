@@ -59,3 +59,6 @@ __pycache__/
 
 # Source book PDF (copyright Charles Rogers Junior, not for public distribution)
 pdf/*.pdf
+
+# Audit screenshots: regenerable evidence, kept out of history to avoid bloat
+docs/artwork-inbox/screens/

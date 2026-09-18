@@ -5,19 +5,31 @@ import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
 import { BackLink } from '@/components/BackLink'
 import { ProductImageGallery } from '@/components/shop/ProductImageGallery'
-import { formatPence, cn } from '@/lib/shop/utils'
+import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
+import { formatPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
+import { catalogueBySlug } from '@/lib/shop/catalogue'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
-  if (!isSupabaseConfigured()) return null
+  // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
+  if (!isSupabaseConfigured()) return catalogueBySlug(slug)
   const supabase = await createSupabaseServerClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('charlie_products')
     .select('*, images:charlie_product_images(*)')
     .eq('slug', slug)
     .in('status', ['published', 'sold'])
     .maybeSingle()
+
+  if (error) {
+    // A failed query is not the same as a missing product. Returning null here
+    // would render a 404 for a page that exists, which is worse than showing
+    // the catalogue copy, and it would do so with nothing in the logs.
+    console.error(`[shop] query failed for "${slug}", using local catalogue:`, error.message)
+    return catalogueBySlug(slug)
+  }
+
   return (data as ShopProduct | null) ?? null
 }
 
@@ -74,7 +86,7 @@ export default async function ProductDetailPage({
               isSold && 'line-through opacity-60',
             )}
           >
-            {formatPence(product.price_pence)}
+            {formatPrice(product.price_pence)}
           </p>
 
           {product.description && (
@@ -116,6 +128,14 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Only on prints. The specification is about how a print is made, so it
+          has no bearing on the book or the greeting cards. */}
+      {product.product_type === 'print' && (
+        <div className="mt-16">
+          <PrintSpecifications />
+        </div>
+      )}
     </div>
   )
 }

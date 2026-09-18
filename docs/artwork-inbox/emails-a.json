@@ -1,0 +1,402 @@
+[
+  {
+    "messageIndex": 0,
+    "subject": "Charlie Rogers",
+    "receivedDateTime": "2026-05-26T14:35:40.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n5AAA=",
+    "bodyText": "Hi Tom\n\nPrior to meeting you next Wednesday morning on the 3rd June, I will try and send you a pdf of my book titled Pursued by Bulldozers. \nIt might be helpful to have a telephone number to try via WhatsApp.\n\nCheers \nBrian \n\nSent from my iPhone",
+    "product": null,
+    "mailDrop": null,
+    "attachments": []
+  },
+  {
+    "messageIndex": 1,
+    "subject": "Pursued by Bulldozers ",
+    "receivedDateTime": "2026-05-26T14:41:31.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n4AAA=",
+    "bodyText": "Sent from my iPhone",
+    "product": null,
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "BOOK PDF. Low Res.pdf",
+        "sizeBytes": 15154750,
+        "contentType": "application/pdf",
+        "isInline": false,
+        "visualDescription": "The low resolution PDF of the book Pursued by Bulldozers, 15.1 MB. Not a single image; it is the full book file Brian promised in message 0 and is the same source material referenced in the project docs. Not opened inline here because of its size.",
+        "suggestedSlug": "pursued-by-bulldozers-book-pdf-low-res"
+      }
+    ]
+  },
+  {
+    "messageIndex": 2,
+    "subject": "Re: Charlie Rogers ",
+    "receivedDateTime": "2026-05-27T08:06:23.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n3AAA=",
+    "bodyText": "Cheers Tom \n\nLooking forward to meeting you on Wednesday.\n\nCheers \nBrian \nSent from my iPhone\n\nOn 27 May 2026, at 08:43, Tom Peacock <[email address removed]> wrote:\n\nGood morning Brian,\n\nThat sounds great, I've received it and have glanced through it initially, perfect info for what we're wanting to get up.  Ill dive into it over the next few days and get a better grasp, ahead of our meeting on wednesday. My whatsapp is [phone number removed], feel free to contact through there.\n\nCheers Brian, looking forward to it!\n\n- Tom\n\nFrom: Brian Rankin <[email address removed]>\nSent: 26 May 2026 15:35\nTo: Tom Peacock <[email address removed]>\nSubject: Charlie Rogers \n\nHi Tom\n\nPrior to meeting you next Wednesday morning on the 3rd June, I will try and send you a pdf of my book titled Pursued by Bulldozers. \nIt might be helpful to have a telephone number to try via WhatsApp.\n\nCheers \nBrian \n\nSent from my iPhone",
+    "product": null,
+    "mailDrop": null,
+    "attachments": []
+  },
+  {
+    "messageIndex": 3,
+    "subject": "WEBSITE",
+    "receivedDateTime": "2026-06-03T07:16:34.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n2AAA=",
+    "bodyText": "Download Attachment\nAvailable until 3 Jul 2026",
+    "product": null,
+    "mailDrop": {
+      "label": "Download Attachment",
+      "availableUntil": "3 Jul 2026",
+      "expired": true,
+      "whatIsMissing": "An Apple Mail Drop link to a file named Brian Q R code.mp4, 176,193,637 bytes. The iCloud link lapsed on 3 July 2026, so the video itself cannot be recovered from this email. Brian would need to resend it."
+    },
+    "attachments": [
+      {
+        "name": "ATT00001.htm",
+        "sizeBytes": 9900162,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "An HTML part, not an image, 9.9 MB. Left unopened because of its size; the sibling .htm parts in this message are all Apple Mail Drop placeholder markup rather than picture content, so this is almost certainly the same kind of stub with a very large inline payload.",
+        "suggestedSlug": "website-maildrop-stub-01"
+      },
+      {
+        "name": "ATT00002.htm",
+        "sizeBytes": 2259,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. An Apple Mail Drop placeholder block of HTML describing the expired attachment Brian Q R code.mp4, showing a Click to Download link and a size reading of 0 bytes.",
+        "suggestedSlug": "website-maildrop-stub-02"
+      },
+      {
+        "name": "ATT00003.htm",
+        "sizeBytes": 2353,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-03"
+      },
+      {
+        "name": "ATT00004.htm",
+        "sizeBytes": 2291,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-04"
+      },
+      {
+        "name": "ATT00005.htm",
+        "sizeBytes": 2223,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-05"
+      },
+      {
+        "name": "ATT00006.htm",
+        "sizeBytes": 2352,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-06"
+      },
+      {
+        "name": "ATT00007.htm",
+        "sizeBytes": 2352,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-07"
+      },
+      {
+        "name": "ATT00008.htm",
+        "sizeBytes": 2364,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-08"
+      },
+      {
+        "name": "ATT00009.htm",
+        "sizeBytes": 2352,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-09"
+      },
+      {
+        "name": "ATT00010.htm",
+        "sizeBytes": 2352,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-10"
+      },
+      {
+        "name": "ATT00011.htm",
+        "sizeBytes": 2291,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-11"
+      },
+      {
+        "name": "ATT00012.htm",
+        "sizeBytes": 2223,
+        "contentType": "text/html",
+        "isInline": false,
+        "visualDescription": "Not an image. Apple Mail Drop placeholder HTML of the same pattern as ATT00002.htm.",
+        "suggestedSlug": "website-maildrop-stub-12"
+      }
+    ]
+  },
+  {
+    "messageIndex": 4,
+    "subject": "Website ",
+    "receivedDateTime": "2026-06-06T10:22:21.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n1AAA=",
+    "bodyText": "Hi Tom\nI have looked at the website for L S Lowry and am impressed with the prints for sale section. \nI think we should also offer Charlie’s prints with two options. A similar contemporary black frame or alternatively a single print delivered in a tube. Illustrated in a similar way with single picture and living room scenes to give buyers an idea of how the new painting would look in their home. \nI am wondering if glazed items should only be made available from my gallery ? Otherwise I think we would get many returns. \n\nI propose these words for the introduction to the print section.\n\nI  will send you a selection of the prints to be offered for sale  together with an accompanying  description/story. \nPrices will be confirmed later. \n\nThe first titled  The Men on the Seats is owned by Michael. \n\nWe will need to set up a secure payment system. \nSent from my iPhone",
+    "product": null,
+    "mailDrop": null,
+    "attachments": []
+  },
+  {
+    "messageIndex": 5,
+    "subject": "Prints for sale on Website ",
+    "receivedDateTime": "2026-06-06T13:27:05.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7n0AAA=",
+    "bodyText": "PRINTS\nFINE ART PRINTS\nExplore our collection of Charlie Rogers fine art prints. Choose from a selection of Charlie’s most popular works, ranging from scenes of everyday life in the north of England to the bustling streets of Paris. \n\nCharlie’s life story is unsurpassed and is told perfectly in these precious moments in time. \n\nEach piece captures the unique style and depth that defines Charlie’s work, offering art lovers and collectors the chance to own a piece of recently discovered British art history.\n\nThe collection includes high-quality digital reproductions of Charlie’s paintings and drawings, each print offering something special and unique.\n\nExplore the evocative imagery of Charlie  Rogers and bring the timeless appeal of his art into your home. \n\nYou are invited to view our collection. \n\nStandard introduction for each print…\n\nDiscover the ‘Unknown Collection’ of Charlie Rogers. Create your own personal art collection with the addition of this scene depicting everyday life in the north of England during the second half of the twentieth\n\nSent from my iPhone",
+    "product": null,
+    "mailDrop": null,
+    "attachments": []
+  },
+  {
+    "messageIndex": 6,
+    "subject": "Website print for sale",
+    "receivedDateTime": "2026-06-06T13:28:44.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nzAAA=",
+    "bodyText": "Hi Tom \nHere is the first of the paintings to be made available to purchase on the new website. \n\nThe Men on the Seats, 1973\n\nDESCRIPTION\n\nThis scene created in oil would have captured Charlie’s compulsion to record scenes of human interaction. It is highly probable the location was the sheltered seating area opposite the bandstand at Saltwell Park in Gateshead. Charlie visited the park regularly. Most of his early artwork were in oils before he was forced to stop and turn to painting with watercolours due to health concerns. \n\nA GOOD CHOICE ?\n\nYes, this is a perfect choice for those with the ambition to create their own Charlie Rogers Collection for their home. What an excellent conversation starter for visiting guests !\n\nDimensions \n\nAll images are for illustrative purposes only\n\nSent from my iPhone",
+    "product": {
+      "title": "The Men on the Seats",
+      "year": "1973",
+      "medium": null,
+      "description": "This scene created in oil would have captured Charlie’s compulsion to record scenes of human interaction. It is highly probable the location was the sheltered seating area opposite the bandstand at Saltwell Park in Gateshead. Charlie visited the park regularly. Most of his early artwork were in oils before he was forced to stop and turn to painting with watercolours due to health concerns.",
+      "goodChoice": "Yes, this is a perfect choice for those with the ambition to create their own Charlie Rogers Collection for their home. What an excellent conversation starter for visiting guests !",
+      "dimensions": null,
+      "price": null,
+      "notes": "Heading \"Dimensions\" is present in the email with no value beneath it. Medium is not given as a field, though the description says the scene was created in oil. Message 4 records that this painting is owned by Michael. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "image00001.jpg",
+        "sizeBytes": 3190338,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "Photograph of an unframed oil painting resting against a pale grey wall, with masking tape and paper scraps visible along the top edge of the board. The picture shows a row of eight men in flat caps, suits and waistcoats seated along a green park bench, one man standing at the far right with a hand on his hip, and a small black dog trotting across the pale blue grey foreground. Palette is dominated by greys and slate blues with strong pink, orange and red accents in the waistcoats and background wall. Signed lower right, GHRogers.",
+        "suggestedSlug": "the-men-on-the-seats-1973"
+      }
+    ]
+  },
+  {
+    "messageIndex": 7,
+    "subject": "Print for sale",
+    "receivedDateTime": "2026-06-07T15:39:51.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nyAAA=",
+    "bodyText": "‘The Joke Shop, Gateshead-on-Tyne.’\n1966  Watercolour and pen.\n\nDescription \nYour Charlie Rogers Collection will not be complete without a scene of the Railway Quarter.\nThe Railway Quarter is situated close to both the High Level and Tyne Bridge. It once boasted two railway stations - Gateshead East and Gateshead West. \nThe area provided a wealth of  painting opportunities, including some of the region’s most iconic public houses, and of course the never-to-be-forgotten Joke Shop.\n\nCharlie could always paint here, even in poor weather conditions, as shelter was provided by a large railway arch which features in many of his paintings. \n\n“Look at his paintings and you see scenes that you remember- that Gateshead joke shop by the High Level Bridge, gone but not forgotten.”\n\nA GOOD CHOICE ?\n\nYes, this is a must-have scene to add to your Charlie Rogers Collection. An excellent conversation starter particularly for those interested in the heritage of Tyneside. \n\nDimensions  TBC\n\nAll images are for illustrative purposes only. \n\nSent from my iPhone",
+    "product": {
+      "title": "‘The Joke Shop, Gateshead-on-Tyne.’",
+      "year": "1966",
+      "medium": "Watercolour and pen.",
+      "description": "Your Charlie Rogers Collection will not be complete without a scene of the Railway Quarter.\nThe Railway Quarter is situated close to both the High Level and Tyne Bridge. It once boasted two railway stations - Gateshead East and Gateshead West. \nThe area provided a wealth of  painting opportunities, including some of the region’s most iconic public houses, and of course the never-to-be-forgotten Joke Shop.\n\nCharlie could always paint here, even in poor weather conditions, as shelter was provided by a large railway arch which features in many of his paintings. \n\n“Look at his paintings and you see scenes that you remember- that Gateshead joke shop by the High Level Bridge, gone but not forgotten.”",
+      "goodChoice": "Yes, this is a must-have scene to add to your Charlie Rogers Collection. An excellent conversation starter particularly for those interested in the heritage of Tyneside.",
+      "dimensions": "TBC",
+      "price": null,
+      "notes": "Closing line: \"All images are for illustrative purposes only.\""
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "image.png",
+        "sizeBytes": 11177410,
+        "contentType": "image/png",
+        "isInline": true,
+        "visualDescription": "Could not be viewed. At 11,177,410 bytes the file exceeds the 5,242,880 byte inline read limit, so the connector refused to render it. From the surrounding copy it should be the 1966 watercolour and pen view of the Joke Shop in the Railway Quarter, Gateshead, but that is inference, not observation. Tom will need to open this one in Outlook to confirm.",
+        "suggestedSlug": "the-joke-shop-gateshead-on-tyne-1966"
+      }
+    ]
+  },
+  {
+    "messageIndex": 8,
+    "subject": "Print for sale",
+    "receivedDateTime": "2026-06-07T19:57:22.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nxAAA=",
+    "bodyText": "Download full-resolution images\nAvailable until 7 Jul 2026\n\n“Third Street, Back Lane, Bensham, Gateshead \n1980”\nBased on the original oil on paper. \n\nCharlie Rogers has been described as an “artist of the drunken lamp post and master of the back streets.”\n\nThis classic painting is widely regarded as Charlie’s finest snow scene and therefore a must for any collector.\n\nA Good Choice?\nThis painting was chosen to be the cover of the book Pursued by Bulldozers. Need I say more ?\n\nDimensions \nTBC\n\nAll images are for illustrative purposes only\n\nSent from my iPhone",
+    "product": {
+      "title": "“Third Street, Back Lane, Bensham, Gateshead 1980”",
+      "year": "1980",
+      "medium": "Based on the original oil on paper.",
+      "description": "Charlie Rogers has been described as an “artist of the drunken lamp post and master of the back streets.”\n\nThis classic painting is widely regarded as Charlie’s finest snow scene and therefore a must for any collector.",
+      "goodChoice": "This painting was chosen to be the cover of the book Pursued by Bulldozers. Need I say more ?",
+      "dimensions": "TBC",
+      "price": null,
+      "notes": "Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": {
+      "label": "Download full-resolution images",
+      "availableUntil": "7 Jul 2026",
+      "expired": true,
+      "whatIsMissing": "An Apple Mail Drop link to Images.zip, 51,781,219 bytes, described as the full-resolution images for this print. The iCloud link lapsed on 7 July 2026, so the high-resolution files are unrecoverable from this email. This is the only high-resolution source Brian has sent for Third Street, Back Lane, and it will need requesting again."
+    },
+    "attachments": [
+      {
+        "name": "Paul Wright.jpg",
+        "sizeBytes": 233137,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "The filename is misleading: this is not a photograph of a person. It is a small reproduction of the painting itself, a snow covered back lane between brick terraced houses, back yard walls and doors picked out in green, blue, red and purple, with a tall church tower and spire in the centre distance and two small figures with a dog walking away up the lane. Cool greys and whites with warm brick reds; oil handling. Signed and dated lower left, GHRogers 1980. This is the image used on the cover of Pursued by Bulldozers.",
+        "suggestedSlug": "third-street-back-lane-bensham-gateshead-1980"
+      }
+    ]
+  },
+  {
+    "messageIndex": 9,
+    "subject": "Website Print for sale ",
+    "receivedDateTime": "2026-06-07T20:53:12.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nwAAA=",
+    "bodyText": "Town Moor, Newcastle-upon-Tyne 1966\nBased on the original watercolour.\n\nRogers was the Cezanne of Tyneside, painting the street scenes all around him. Some of his paintings were very gloomy as he was painting the decline of industries and recording social change. Others were more uplifting, the Hoppings at the Town Moor. \n\nIn this painting Charlie has captured a typical day at the Hoppings,Europe's largest travelling funfair held annually at Newcastle Town Moor.\n\nA Good Choice ?\nEspecially for those interested in the heritage of Northern England. \n\nDimensions \n\nAll images are for illustrative purposes only\n\nSent from my iPhone",
+    "product": {
+      "title": "Town Moor, Newcastle-upon-Tyne",
+      "year": "1966",
+      "medium": "Based on the original watercolour.",
+      "description": "Rogers was the Cezanne of Tyneside, painting the street scenes all around him. Some of his paintings were very gloomy as he was painting the decline of industries and recording social change. Others were more uplifting, the Hoppings at the Town Moor. \n\nIn this painting Charlie has captured a typical day at the Hoppings,Europe's largest travelling funfair held annually at Newcastle Town Moor.",
+      "goodChoice": "Especially for those interested in the heritage of Northern England.",
+      "dimensions": null,
+      "price": null,
+      "notes": "Heading \"Dimensions\" is present in the email with no value beneath it. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "IMG_3549.jpeg",
+        "sizeBytes": 9683736,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "Could not be viewed. At 9,683,736 bytes the file exceeds the 5,242,880 byte inline read limit, so the connector refused to render it. From the surrounding copy it should be the 1966 watercolour of the Hoppings funfair on Newcastle Town Moor, but that is inference, not observation. Tom will need to open this one in Outlook to confirm.",
+        "suggestedSlug": "town-moor-newcastle-upon-tyne-1966"
+      }
+    ]
+  },
+  {
+    "messageIndex": 10,
+    "subject": "Prints for sale",
+    "receivedDateTime": "2026-06-08T21:39:31.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nvAAA=",
+    "bodyText": "Four Doors at School Street, Gateshead\n1977  Oil on board \n\nDESCRIPTION \n\nThis vibrant oil painting features a row of four doors which could be found in any northern town during the second half of the twentieth century\n\nThe open door appears to invite the viewer in leaving the viewer with a sense of curiosity. \n\nA GOOD CHOICE ?\n\nThis iwill make an excellent addition to your Charlie Rogers collection. The vibrancy of colours will lift the mood of any room in your home. \n\nDimensions \n\nAll images are for illustrative purposes only",
+    "product": {
+      "title": "Four Doors at School Street, Gateshead",
+      "year": "1977",
+      "medium": "Oil on board",
+      "description": "This vibrant oil painting features a row of four doors which could be found in any northern town during the second half of the twentieth century\n\nThe open door appears to invite the viewer in leaving the viewer with a sense of curiosity.",
+      "goodChoice": "This iwill make an excellent addition to your Charlie Rogers collection. The vibrancy of colours will lift the mood of any room in your home.",
+      "dimensions": null,
+      "price": null,
+      "notes": "Heading \"Dimensions\" is present in the email with no value beneath it. Brian's typo \"This iwill\" is preserved verbatim in goodChoice. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "Image.jpeg",
+        "sizeBytes": 1496244,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "Oil painting, photographed square on and cropped close to the picture edge. A brick terrace frontage with four adjoining front doors, cream, green, dark red and pale grey, each under a glazed fanlight and framed by white painted brick quoins, with stone steps down to the pavement. The green door stands ajar on a dark interior with a striped rug. Sash windows above, one with a blue plant pot on the sill. Muted plum and russet brickwork against cool grey stone. A faint signature and date sit in the bottom left corner.",
+        "suggestedSlug": "four-doors-at-school-street-gateshead-1977"
+      }
+    ]
+  },
+  {
+    "messageIndex": 11,
+    "subject": "Print for sale",
+    "receivedDateTime": "2026-06-08T22:31:45.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nuAAA=",
+    "bodyText": "Bensham Road, Gateshead\n1970  \nOil on paper \n\nDescription \nCharlie Rogers possessed a strong compulsion to record the people around him. This delightful snow scene tells the story of struggle. \n\n. \n\nA GOOD CHOICE ?\n\nThis  moment in time confirms Charlie’s dedication to record the struggles of the people he admired and loved in equal measure. Charlie Rogers was a man of the people. \n\nThis is an excellent addition to your collection. \n\nDimensions \n\nAll images are for illustrative purposes only\n\nSent from my iPhone",
+    "product": {
+      "title": "Bensham Road, Gateshead",
+      "year": "1970",
+      "medium": "Oil on paper",
+      "description": "Charlie Rogers possessed a strong compulsion to record the people around him. This delightful snow scene tells the story of struggle.",
+      "goodChoice": "This  moment in time confirms Charlie’s dedication to record the struggles of the people he admired and loved in equal measure. Charlie Rogers was a man of the people. \n\nThis is an excellent addition to your collection.",
+      "dimensions": null,
+      "price": null,
+      "notes": "Heading \"Dimensions\" is present in the email with no value beneath it. Brian states the medium as oil on paper, though the image reads as watercolour and ink; worth checking with him before the medium goes on the website. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "Image.jpeg",
+        "sizeBytes": 2265381,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "Snow scene looking down a sloping shopping street, painted in washy watercolour and pen over pale board, though Brian labels the original oil on paper. A tall gable on the left carries a hand lettered sign reading CHRIST JESUS CAME INTO THE WORLD TO SAVE SINNERS, with shopfronts below and a BINGO sign and a CASTLE sign further down the hill. A woman in a long blue coat pushes a pram through deep snow with a child and a small dog beside her, and a man in a cap leans against a shop corner in the foreground. A dark stormy blue grey sky with chimney smoke fills the upper right. Signed lower left with the date 1970 and inscribed Bensham Road, Gateshead.",
+        "suggestedSlug": "bensham-road-gateshead-1970"
+      }
+    ]
+  },
+  {
+    "messageIndex": 12,
+    "subject": "Print for sale on Website ",
+    "receivedDateTime": "2026-06-09T13:57:51.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7ntAAA=",
+    "bodyText": "Bigg Market, Newcastle-on-Tyne\n1975\nWatercolour \n\nDescription \nCharlie Rogers was a master at capturing scenes of northern folk going about their daily chores.\nThis typical scene features a variety of characters looking to pick up a bargain or two on market day. \n\nA Good Choice ?\nEvery credible private collection of paintings by Charlie Rogers must include a scene of the Bigg Market. \nAfter all, Charlie said this was one of his favourite places to paint.\n\nDimensions T B C\n\nAll images are for illustrative purposes only",
+    "product": {
+      "title": "Bigg Market, Newcastle-on-Tyne",
+      "year": "1975",
+      "medium": "Watercolour",
+      "description": "Charlie Rogers was a master at capturing scenes of northern folk going about their daily chores.\nThis typical scene features a variety of characters looking to pick up a bargain or two on market day.",
+      "goodChoice": "Every credible private collection of paintings by Charlie Rogers must include a scene of the Bigg Market. \nAfter all, Charlie said this was one of his favourite places to paint.",
+      "dimensions": "T B C",
+      "price": null,
+      "notes": "Brian writes the dimensions as \"T B C\", spaced, rather than TBC. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "IMG_3567.heic",
+        "sizeBytes": 2214317,
+        "contentType": "image/heic",
+        "isInline": false,
+        "visualDescription": "Could not be viewed. HEIC is returned as an opaque binary by the connector, so nothing was rendered. From the surrounding copy it should be the 1975 watercolour of the Bigg Market, Newcastle, but that is inference, not observation. Note this is the only attachment in the batch flagged isInline false while still being the product image, and it will need converting from HEIC before it can go on the website.",
+        "suggestedSlug": "bigg-market-newcastle-on-tyne-1975"
+      }
+    ]
+  },
+  {
+    "messageIndex": 13,
+    "subject": "Print for sale on Website ",
+    "receivedDateTime": "2026-06-09T14:35:20.000Z",
+    "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAB3Z7nsAAA=",
+    "bodyText": "‘POT PIE BOB’S’ WELLINGTON STREET, GATESHEAD. 1977\nWatercolour \n\nDESCRIPTION \nCharlie Rogers painted many cafe scenes during his many visits to Paris. However occasionally he was inspired to paint a cafe closer to home.\nCharlie was a regular visitor to this cafe located near the High Level Bridge. \nThe cafe was immortalised in the song  Fog on the Tyne written by Lindisfarne song writer Alan Hull.\n\n“Sittin' in a sleazy snack bar sucking,\nSickly sausage rolls.\nSlippin' down slowly, slippin' down sideways,\nThink I'll sign off the dole.”\nFOG ON THE TYNE\n\nA GOOD CHOICE ??\nEnough has been said already to convince anyone to own a replica of this delightful scene. \n\nDimensions \nOriginal painting - 22 x 21cm\nMounted print- 30 x 25cm\n\nPrice - TBC\n\nAll images are for illustrative purposes only",
+    "product": {
+      "title": "‘POT PIE BOB’S’ WELLINGTON STREET, GATESHEAD.",
+      "year": "1977",
+      "medium": "Watercolour",
+      "description": "Charlie Rogers painted many cafe scenes during his many visits to Paris. However occasionally he was inspired to paint a cafe closer to home.\nCharlie was a regular visitor to this cafe located near the High Level Bridge. \nThe cafe was immortalised in the song  Fog on the Tyne written by Lindisfarne song writer Alan Hull.\n\n“Sittin' in a sleazy snack bar sucking,\nSickly sausage rolls.\nSlippin' down slowly, slippin' down sideways,\nThink I'll sign off the dole.”\nFOG ON THE TYNE",
+      "goodChoice": "Enough has been said already to convince anyone to own a replica of this delightful scene.",
+      "dimensions": "Original painting - 22 x 21cm\nMounted print- 30 x 25cm",
+      "price": "TBC",
+      "notes": "The only message in this batch that gives real measurements. The Fog on the Tyne lyric is quoted in full and is third party copyright, so it needs clearing before it goes on the website. Closing line: \"All images are for illustrative purposes only\"."
+    },
+    "mailDrop": null,
+    "attachments": [
+      {
+        "name": "IMG_3569.jpeg",
+        "sizeBytes": 4843789,
+        "contentType": "image/jpeg",
+        "isInline": true,
+        "visualDescription": "Watercolour and pen study of a cafe shopfront set inside a dressed stone railway arch. The frontage is painted mid blue, with a white fascia lettered HIGH LEVEL CAFE, flanked by SANDWICHES TO CARRY OUT on the left and OUR MOTTO QUICK SERVICE on the right, and a Snack Bar sign in the right hand window. Red and white gingham half curtains hang in both windows and a pale wooden gate stands across the central doorway. A red pillar box and a yellow sign on a post sit to the right, on a loosely drawn flagstone pavement. Muted stone greys and ochres against the blue joinery. Signed lower left, GHRogers 1977, and inscribed POT-PIE BOB'S WELLINGTON ST. GATESHEAD.",
+        "suggestedSlug": "pot-pie-bobs-wellington-street-gateshead-1977"
+      }
+    ]
+  }
+]

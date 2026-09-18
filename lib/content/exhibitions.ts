@@ -163,4 +163,22 @@ export const exhibitions: Exhibition[] = [
     note: '"Blackwell Lane, Gateshead, 1981" selected for this group exhibition.',
     posthumous: true,
   },
+  // The two below are from Brian Rankin's own account rather than the book's
+  // chronology, which ends at 2024. See docs/artwork-inbox/manifest.json.
+  {
+    year: '2025',
+    name: 'Charlie Rogers Summer Exhibition',
+    venue: 'Gateshead Central Library',
+    city: 'Gateshead',
+    note: '12 July to 27 September. Covered by Tyne Tees, who interviewed Brian Rankin at the exhibition. Photography by Ashlee Kennedy.',
+    posthumous: true,
+  },
+  {
+    year: '2026',
+    name: 'Charlie Rogers at Saltwell Park',
+    venue: 'Saltwell Towers',
+    city: 'Gateshead',
+    note: 'Opened February. Designed and created by Onesign and Digital. A series of QR codes was added later, linking panels to further material. Photography by Darren Turner.',
+    posthumous: true,
+  },
 ]
