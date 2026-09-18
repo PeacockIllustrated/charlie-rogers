@@ -43,10 +43,19 @@ if (!manifestPath) {
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
 
-const bySize = new Map()
-for (const a of manifest.attachments) {
-  if (!bySize.has(a.sizeBytes)) bySize.set(a.sizeBytes, [])
-  bySize.get(a.sizeBytes).push(a)
+// Microsoft Graph reports an attachment's MIME-encoded size, including the part
+// headers, not the size of the decoded file. A saved file is therefore a few
+// hundred bytes SMALLER than the catalogued figure. Measured overhead across
+// confirmed matches ran from 242 to 1063 bytes, so allow a window rather than
+// requiring equality. The window is one-sided: the manifest figure is always
+// the larger of the two.
+const OVERHEAD_MAX = 1200
+
+function candidatesFor(size) {
+  return manifest.attachments.filter((a) => {
+    const delta = a.sizeBytes - size
+    return delta >= 0 && delta <= OVERHEAD_MAX
+  })
 }
 
 // Walk the directory recursively; downloads often land in dated subfolders.
@@ -66,15 +75,24 @@ const unknown = []
 const seen = new Set()
 
 for (const f of files) {
-  const size = statSync(f).size
-  const candidates = bySize.get(size)
-  if (!candidates) {
-    unknown.push({ file: f, size })
+  const { size, mtime } = statSync(f)
+  const candidates = candidatesFor(size)
+  if (candidates.length === 0) {
+    // Report the nearest catalogued row, so a near miss caused by re-encoding
+    // is distinguishable from a file that simply is not from these emails.
+    const nearest = manifest.attachments.reduce((best, a) =>
+      Math.abs(a.sizeBytes - size) < Math.abs(best.sizeBytes - size) ? a : best,
+    )
+    unknown.push({ file: f, size, mtime, nearest })
     continue
   }
   for (const c of candidates) seen.add(c)
-  matched.push({ file: f, size, candidates })
+  matched.push({ file: f, size, mtime, candidates })
 }
+
+// Saved in download order, which usually tracks the order the emails arrived.
+matched.sort((a, b) => a.mtime - b.mtime)
+unknown.sort((a, b) => a.mtime - b.mtime)
 
 const missing = manifest.attachments.filter((a) => !seen.has(a))
 
@@ -94,7 +112,13 @@ for (const m of matched) {
 
 if (unknown.length) {
   console.log(`\n${unknown.length} files on disk not in the manifest:`)
-  for (const u of unknown) console.log(`  ${u.file}  (${u.size} bytes)`)
+  for (const u of unknown) {
+    const delta = u.nearest.sizeBytes - u.size
+    console.log(`  ${u.file}  (${u.size} bytes)`)
+    console.log(
+      `     nearest catalogued: ${u.nearest.sizeBytes} bytes (${delta > 0 ? '+' : ''}${delta}), ${u.nearest.name}`,
+    )
+  }
 }
 
 if (missing.length) {
