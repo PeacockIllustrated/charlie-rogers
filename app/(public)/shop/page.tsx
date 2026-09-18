@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { SectionHeading } from '@/components/SectionHeading'
 import { Button } from '@/components/Button'
 import { ProductCard } from '@/components/shop/ProductCard'
+import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { CATALOGUE } from '@/lib/shop/catalogue'
 import type { ShopProduct } from '@/lib/shop/types'
@@ -81,6 +82,15 @@ export default async function ShopPage() {
           </div>
         )}
       </div>
+
+      {/* Brian asked for the printer's specification to appear on the site.
+          Shown once here rather than on every card, and again on each print's
+          own page where it bears on a decision. */}
+      {products.some((p) => p.product_type === 'print') && (
+        <div className="mt-16">
+          <PrintSpecifications />
+        </div>
+      )}
     </div>
   )
 }

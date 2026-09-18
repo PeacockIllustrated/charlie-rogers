@@ -5,6 +5,7 @@ import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
 import { BackLink } from '@/components/BackLink'
 import { ProductImageGallery } from '@/components/shop/ProductImageGallery'
+import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
 import { formatPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
@@ -127,6 +128,14 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Only on prints. The specification is about how a print is made, so it
+          has no bearing on the book or the greeting cards. */}
+      {product.product_type === 'print' && (
+        <div className="mt-16">
+          <PrintSpecifications />
+        </div>
+      )}
     </div>
   )
 }

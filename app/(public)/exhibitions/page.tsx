@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { SectionHeading } from '@/components/SectionHeading'
-import { Eyebrow } from '@/components/Eyebrow'
 import { BookCallout } from '@/components/BookCallout'
 import { exhibitions } from '@/lib/content/exhibitions'
 import type { Exhibition } from '@/lib/content/types'
@@ -9,6 +8,20 @@ export const metadata: Metadata = {
   title: 'Exhibitions',
   description:
     'Selected exhibitions from the career of Gateshead painter Charlie Rogers, including four showings at the Royal Academy Summer Exhibition.',
+}
+
+// The eyebrow rendered as a real heading carrying the id. The sections here
+// referenced aria-labelledby ids that no element had, because Eyebrow renders
+// an unlabelled span, so each section was announced with no name at all.
+function SectionLabel({ id, children }: { id: string; children: string }) {
+  return (
+    <h2
+      id={id}
+      className="mb-4 font-sans text-xs uppercase tracking-eyebrow text-bensham"
+    >
+      {children}
+    </h2>
+  )
 }
 
 function ExhibitionRow({ exhibition }: { exhibition: Exhibition }) {
@@ -51,9 +64,7 @@ export default function ExhibitionsPage() {
       />
 
       <section className="mt-12 max-w-reading" aria-labelledby="ra-heading">
-        <Eyebrow rule={false} className="mb-4">
-          Royal Academy
-        </Eyebrow>
+        <SectionLabel id="ra-heading">Royal Academy</SectionLabel>
         <ol aria-labelledby="ra-heading">
           {royalAcademy.map((exhibition) => (
             <li key={`${exhibition.year}-${exhibition.name}`}>
@@ -67,9 +78,7 @@ export default function ExhibitionsPage() {
         className="mt-12 max-w-reading"
         aria-labelledby="lifetime-heading"
       >
-        <Eyebrow rule={false} className="mb-4">
-          Selected lifetime exhibitions
-        </Eyebrow>
+        <SectionLabel id="lifetime-heading">Selected lifetime exhibitions</SectionLabel>
         <ol aria-labelledby="lifetime-heading">
           {lifetime.map((exhibition) => (
             <li key={`${exhibition.year}-${exhibition.name}`}>
@@ -83,9 +92,7 @@ export default function ExhibitionsPage() {
         className="mt-12 max-w-reading"
         aria-labelledby="posthumous-heading"
       >
-        <Eyebrow rule={false} className="mb-4">
-          Posthumous
-        </Eyebrow>
+        <SectionLabel id="posthumous-heading">Posthumous</SectionLabel>
         <ol aria-labelledby="posthumous-heading">
           {posthumous.map((exhibition) => (
             <li key={`${exhibition.year}-${exhibition.name}`}>
@@ -93,6 +100,26 @@ export default function ExhibitionsPage() {
             </li>
           ))}
         </ol>
+      </section>
+
+      {/* Brian Rankin offers these and asked for them on the site, 12 June 2026.
+          His wording: "Charlie Rogers Talks personally presented by Brian
+          Rankin. Ask for details." Deliberately no link: the site has no
+          contact page or address to send an enquiry to yet, and inventing one
+          would be worse than leaving his "ask for details" as written. */}
+      <section className="mt-16 max-w-reading" aria-labelledby="talks-heading">
+        <SectionLabel id="talks-heading">Talks</SectionLabel>
+        <p className="font-serif text-h4 text-ink">
+          Charlie Rogers talks, presented by Brian Rankin
+        </p>
+        <p className="mt-2 font-serif text-body text-ink-soft">
+          Talks on Charlie Rogers and the story behind the paintings are
+          available to schools, art groups and other organisations, presented in
+          person by Brian Rankin, who compiled Pursued by Bulldozers.
+        </p>
+        <p className="mt-4 font-sans text-small text-ink-mute">
+          Ask for details.
+        </p>
       </section>
 
       <BookCallout text="The complete exhibition chronology is in the book." />
