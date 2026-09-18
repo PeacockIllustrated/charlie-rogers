@@ -14,7 +14,7 @@
 // Prints three lists: files matched to an email, files on disk that are not in
 // the manifest, and catalogued attachments not found on disk.
 
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join, resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -24,15 +24,22 @@ if (!dir) {
   process.exit(1)
 }
 
-// Resolved from this file rather than the working directory, so the script can
-// be run from anywhere, including a Windows shell sitting in another folder.
-const manifestPath = resolve(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'docs',
-  'artwork-inbox',
-  'manifest.json',
-)
+// Resolved from this file rather than the working directory, so the script runs
+// from anywhere. Looks beside itself first, which is the case when both files
+// have been downloaded into one folder, then falls back to the repo layout.
+const here = dirname(fileURLToPath(import.meta.url))
+const candidates = [
+  resolve(here, 'manifest.json'),
+  resolve(here, '..', 'docs', 'artwork-inbox', 'manifest.json'),
+]
+
+const manifestPath = candidates.find((p) => existsSync(p))
+if (!manifestPath) {
+  console.error('Could not find manifest.json. Looked in:')
+  for (const p of candidates) console.error(`  ${p}`)
+  console.error('\nPut manifest.json in the same folder as this script.')
+  process.exit(1)
+}
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'))
 
