@@ -45,9 +45,36 @@ explains setup, and admin API routes return 503.
 ## Security model
 
 - Public (anon) RLS allows reading only `published` and `sold` products and
-  their images. All writes require an authenticated session.
-- Admin API routes call `requireAdmin()` before any mutation, and the
-  service-role key is used only server-side for image upload and cleanup.
+  their images.
+- **All writes require membership of `charlie_admins`, not merely a session.**
+  This is a shared project database, so a signed-in user of any other project
+  on the same instance would otherwise have been able to write to
+  `charlie_products`. Every write policy tests `charlie_is_admin()`, a
+  `SECURITY DEFINER` function that reads the roster without tripping row level
+  security on itself. The same test guards the storage bucket.
+- The roster has no insert, update or delete policy, so it can only be changed
+  by the service role or through the Supabase dashboard. There is no path for a
+  user to grant themselves access.
+- Admin API routes call `requireAdmin()` before any mutation, which now returns
+  403 for a valid session that is not on the roster. The admin UI shows a "not
+  authorised" panel in the same case. Both are conveniences: the row level
+  security policy is the real boundary and applies regardless.
+- The service-role key is used only server-side, for image upload and cleanup,
+  after `requireAdmin()` has passed.
+
+### Adding the first admin
+
+Applying `20260918090000_charlie-shop-admin-authz.sql` leaves the roster empty,
+so nobody can administer the shop until one is added. Run this once in the
+Supabase SQL editor, which runs as the service role:
+
+```sql
+INSERT INTO charlie_admins (user_id, email, note)
+SELECT id, email, 'first admin'
+FROM auth.users
+WHERE email = 'you@example.com'
+ON CONFLICT (user_id) DO NOTHING;
+```
 
 ## Not yet built
 
