@@ -18,13 +18,24 @@ export default async function ShopPage() {
 
   if (isSupabaseConfigured()) {
     const supabase = await createSupabaseServerClient()
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('charlie_products')
       .select('*, images:charlie_product_images(*)')
       .in('status', ['published', 'sold'])
       .order('is_featured', { ascending: false })
       .order('updated_at', { ascending: false })
-    products = (data as ShopProduct[] | null) ?? []
+
+    if (error) {
+      // Swallowing this silently turns any outage, bad key or policy change
+      // into an empty shop that looks deliberate. Say so in the logs, and show
+      // the local catalogue rather than an "opening soon" panel that is not
+      // true. Found while testing against the live database from a host whose
+      // egress policy blocked supabase.co: the page looked fine and was wrong.
+      console.error('[shop] product query failed, using local catalogue:', error.message)
+      products = [...CATALOGUE]
+    } else {
+      products = (data as ShopProduct[] | null) ?? []
+    }
   } else {
     // No database yet, so fall back to the local catalogue. This exists so the
     // shop can be reviewed before Supabase is pointed at; the live tables win

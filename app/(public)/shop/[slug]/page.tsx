@@ -14,12 +14,21 @@ async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
   if (!isSupabaseConfigured()) return catalogueBySlug(slug)
   const supabase = await createSupabaseServerClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('charlie_products')
     .select('*, images:charlie_product_images(*)')
     .eq('slug', slug)
     .in('status', ['published', 'sold'])
     .maybeSingle()
+
+  if (error) {
+    // A failed query is not the same as a missing product. Returning null here
+    // would render a 404 for a page that exists, which is worse than showing
+    // the catalogue copy, and it would do so with nothing in the logs.
+    console.error(`[shop] query failed for "${slug}", using local catalogue:`, error.message)
+    return catalogueBySlug(slug)
+  }
+
   return (data as ShopProduct | null) ?? null
 }
 
