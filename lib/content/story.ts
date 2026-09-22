@@ -91,9 +91,11 @@ export const storySections: StorySection[] = [
     slug: 'the-final-years',
     title: 'The final years',
     period: '2015 to 2020',
-    // Same painting as the book extract page_028_img_000, but photographed
-    // from the original by Brian Rankin rather than scanned from the page, so
-    // the heavy blue cast of the book reproduction is gone.
+    // Same painting as the book extract page_028_img_000, confirmed feature by
+    // feature, but photographed from the original by Brian Rankin rather than
+    // scanned from the page: 1600x1073 against 759x515, and deeper in the
+    // brickwork. The scene itself is a dusk snow scene, so both are cool
+    // toned; the gain here is resolution, not colour correction.
     image: '/artwork/web/bensham-road-gateshead-1970.jpg',
     imageAlt:
       'A snowbound Bensham Road, Gateshead, a woman pushing a pram uphill past shopfronts, painted by Charlie Rogers',
