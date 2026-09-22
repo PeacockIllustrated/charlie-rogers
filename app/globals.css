@@ -133,9 +133,11 @@
     transform: none;
     animation: none;
   }
-  /* Safety net: no transition or animation anywhere inside the timeline. */
+  /* Safety net: no transition or time-based animation anywhere inside the
+     timeline. The progress track is exempt because it is not time-based; it is
+     tied to the reader's own scrolling and is quantised separately below. */
   .timeline-page,
-  .timeline-page *,
+  .timeline-page *:not(.tl-track),
   .timeline-page *::before,
   .timeline-page *::after {
     animation-duration: 0.01ms !important;
@@ -152,5 +154,57 @@
     opacity: 1;
     transform: none;
     animation: none;
+  }
+}
+
+/* ============================================================
+   Timeline progress track. The spine thickens and darkens behind the
+   reader, so the line doubles as a position indicator for the chronology.
+   Scroll-linked rather than time-based: it is driven by the reader's own
+   scrolling, in step with it, and settles the instant scrolling stops.
+   See the Motion section of docs/DESIGN.md.
+   ============================================================ */
+@keyframes timelineTrackFill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Empty by default. With no scroll-driven animation support and no
+   JavaScript, the track stays at zero height and the timeline reads exactly
+   as it did before: a plain hairline, nothing hidden, nothing moved. */
+.tl-track {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* The preferred path. view(block 60% 40%) collapses the scrollport to a
+   single reading line 60% down the viewport, so progress runs from 0 when
+   that line meets the top of the era's spine to 1 when it reaches the
+   bottom. No JavaScript involved. */
+@supports (animation-timeline: view()) {
+  .tl-track {
+    animation: timelineTrackFill linear both;
+    animation-timeline: view(block 60% 40%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The track is a position indicator, not decoration, so it keeps working.
+     What goes is the continuous slide: steps() advances it in one jump per
+     entry instead. TrackFallback quantises the same way. */
+  .tl-track {
+    animation-timing-function: steps(var(--tl-steps, 1), end);
+  }
+}
+
+/* The track carries no information on paper, where the whole page is visible
+   at once. */
+@media print {
+  .tl-track {
+    display: none;
   }
 }

@@ -3,6 +3,8 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { Eyebrow } from '@/components/Eyebrow'
 import { BookCallout } from '@/components/BookCallout'
 import { Reveal } from '@/components/timeline/Reveal'
+import { ProgressTrack } from '@/components/timeline/ProgressTrack'
+import { TrackFallback } from '@/components/timeline/TrackFallback'
 import {
   timelineEras,
   eventsByEra,
@@ -152,11 +154,18 @@ export default function TimelinePage() {
                 </p>
               </Reveal>
 
-              <ol className="mt-8">
-                {events.map((event) => (
-                  <Event key={`${event.year}-${event.title}`} event={event} />
-                ))}
-              </ol>
+              {/* The wrapper positions the progress track over the hairline
+                  rule the entries draw. It sits outside the list because only
+                  list items belong inside an ol, and before it so that the
+                  entry markers paint on top of it. */}
+              <div className="relative mt-8">
+                <ProgressTrack steps={events.length} />
+                <ol>
+                  {events.map((event) => (
+                    <Event key={`${event.year}-${event.title}`} event={event} />
+                  ))}
+                </ol>
+              </div>
             </section>
           )
         })}
@@ -164,6 +173,10 @@ export default function TimelinePage() {
         <div className="pt-16 pb-4">
           <BookCallout text="The full chronology, year by year, is in the book." />
         </div>
+
+        {/* Renders nothing. Only runs in browsers without CSS scroll-driven
+            animations, where it drives the progress tracks instead. */}
+        <TrackFallback />
       </div>
     </div>
   )
