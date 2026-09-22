@@ -4,8 +4,24 @@ The Places page plots the Tyneside places Charlie painted, so the argument the
 page makes is visible rather than asserted: he worked a few square miles, and
 most of what he painted in them is gone.
 
-Built on Leaflet. Loaded inside an effect, so it stays out of the first load
-bundle and the page costs nothing extra to anyone who never reaches it.
+Built on Leaflet, and built late. The library is imported inside an effect, so
+it stays out of the first load bundle, and the effect itself waits on an
+IntersectionObserver until the map is within about a screen of the viewport
+before creating anything or requesting a tile.
+
+A dynamic import alone defers the bundle but not the work: an earlier version
+built the map and pulled a screenful of tiles on mount regardless of whether
+the reader ever scrolled to it.
+
+Be honest about what the observer buys, though, because it is less than it
+sounds. Measured on the built page, the map starts 542px from the top of the
+document, which is inside the first viewport at 1280x900, 1000x600 and 390x844.
+Nearly every visitor therefore trips the observer immediately and the map
+builds anyway. The guard earns its keep only where the map is genuinely off
+screen, on a very short window, or later, if the writing above it grows. An
+earlier version of this file claimed the page cost nothing extra to anyone who
+never reached the map. That was wrong when written, and it would still be wrong
+to claim it now: on the current layout there is barely such a visitor.
 
 ## What is on it
 

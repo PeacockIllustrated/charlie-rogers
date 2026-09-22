@@ -39,8 +39,15 @@ const historicMinZoom = process.env.NEXT_PUBLIC_HISTORIC_TILE_MIN_ZOOM
 const baseUrl = process.env.NEXT_PUBLIC_BASE_TILE_URL
 const baseAttribution = process.env.NEXT_PUBLIC_BASE_TILE_ATTRIBUTION
 
+// A blank environment variable has to count as unset, not as zero. Number('')
+// is 0 and Number.isFinite(0) is true, so an empty NEXT_PUBLIC_..._MAX_ZOOM
+// sailed past the fallback and handed Leaflet maxZoom: 0. That is not a
+// hypothetical: .env.example ships these keys present and empty, so following
+// the documented setup and filling in only the URL and the attribution, which
+// is exactly what the instructions ask for, produced an overlay that rendered
+// nothing above zoom 0 and looked like a dead layer.
 function toZoom(value: string | undefined, fallback: number): number {
-  const n = Number(value)
+  const n = value?.trim() ? Number(value) : Number.NaN
   return Number.isFinite(n) ? n : fallback
 }
 

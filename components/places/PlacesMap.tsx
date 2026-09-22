@@ -126,8 +126,16 @@ export function PlacesMap({ places }: Props) {
     const container = containerRef.current
     if (!container) return
 
-    import('leaflet')
-      .then(({ default: L }) => {
+    // The map sits below the fold on /places, and a dynamic import only defers
+    // the bundle: the effect still built the map and requested a screenful of
+    // tiles on mount, for everyone, including readers who never scrolled to it.
+    // docs/MAP.md claimed the page cost nothing extra to anyone who never
+    // reached the map, which was simply not true as written. Initialising on
+    // approach makes the claim true and stops needless tile requests.
+    const buildMap = () => {
+      if (cancelled || !containerRef.current) return
+      import('leaflet')
+        .then(({ default: L }) => {
         if (cancelled || !containerRef.current) return
         leafletRef.current = L
 
@@ -190,13 +198,37 @@ export function PlacesMap({ places }: Props) {
         map.fitBounds(bounds, { padding: [40, 40] })
 
         setReady(true)
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true)
-      })
+        })
+        .catch(() => {
+          if (!cancelled) setFailed(true)
+        })
+    }
+
+    // rootMargin starts the work a screen early, so the map is ready by the
+    // time it is scrolled to rather than building in front of the reader.
+    // Where IntersectionObserver is missing, build immediately: a map that
+    // loads eagerly beats one that never loads.
+    let observer: IntersectionObserver | null = null
+    if (typeof IntersectionObserver === 'undefined') {
+      buildMap()
+    } else {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            observer?.disconnect()
+            observer = null
+            buildMap()
+          }
+        },
+        { rootMargin: '600px 0px' },
+      )
+      observer.observe(container)
+    }
 
     return () => {
       cancelled = true
+      observer?.disconnect()
+      observer = null
       mapRef.current?.remove()
       mapRef.current = null
       markersRef.current = {}
@@ -289,11 +321,11 @@ export function PlacesMap({ places }: Props) {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
           <span className="inline-flex items-center gap-2 font-sans text-xs uppercase tracking-eyebrow text-ink-soft">
             <span className="inline-block h-3 w-3 border-2 border-ink-mute bg-ink-mute" aria-hidden="true" />
-            Exact site
+            Site estimate
           </span>
           <span className="inline-flex items-center gap-2 font-sans text-xs uppercase tracking-eyebrow text-ink-soft">
             <span className="inline-block h-3 w-3 border-2 border-ink-mute bg-paper" aria-hidden="true" />
-            Street or area only
+            Street or area
           </span>
 
           {historicLayer ? (
