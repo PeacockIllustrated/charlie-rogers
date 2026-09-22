@@ -43,6 +43,13 @@ export default async function PlacePage({
     .filter(Boolean)
     .join(', ')
 
+  // Images under /artwork are photographs of the original paintings supplied by
+  // Brian Rankin, not reproductions scanned out of the book, so they cannot
+  // carry the "from the book" credit the extracts do.
+  const imageCredit = place.image?.startsWith('/artwork/')
+    ? 'photographed from the original'
+    : 'from the book'
+
   return (
     <div className="mx-auto max-w-content px-6 py-12">
       <BackLink href="/places">All places</BackLink>
@@ -58,7 +65,7 @@ export default async function PlacePage({
                 className="block w-full h-auto"
               />
               <figcaption className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute mt-3">
-                {place.name}, from the book
+                {place.name}, {imageCredit}
               </figcaption>
             </figure>
           )}

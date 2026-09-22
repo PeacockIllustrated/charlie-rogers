@@ -53,8 +53,10 @@ export const storySections: StorySection[] = [
     title: "Charlie's Gateshead",
     period: '1964 to 1974',
     image: '/paintings/web/page_035_img_000.jpg',
+    // Alt corrected: the painting shows no snow. It is a Gateshead street with
+    // a newspaper hoarding, a lone figure and a dog, smoke over the rooftops.
     imageAlt:
-      'A snow-covered Tyneside street under a smoking sky, with a lone figure and a dog',
+      'A Gateshead street under a smoking sky, a newspaper hoarding on the gable end, a lone figure and a dog',
     imageCaption: 'A Gateshead street, ahead of the bulldozers',
     paragraphs: [
       'The first painting led to more. Charlie walked Bensham looking for subjects: corner shops, cobbled lanes, ancient green gas-lamps, the odd up-and-down streets that he said nobody else seemed to be painting. He attended drawing classes at Gateshead Technical College and later at Newcastle\'s College of Art and Design, where his teacher recognised his instinctive eye and passed his name on to gallery owner Harry Lord.',
@@ -89,9 +91,13 @@ export const storySections: StorySection[] = [
     slug: 'the-final-years',
     title: 'The final years',
     period: '2015 to 2020',
-    image: '/paintings/web/page_028_img_000.jpg',
-    imageAlt: 'A snowbound Bensham Road at dusk, painted by Charlie Rogers',
-    imageCaption: 'Bensham Road in snow',
+    // Same painting as the book extract page_028_img_000, but photographed
+    // from the original by Brian Rankin rather than scanned from the page, so
+    // the heavy blue cast of the book reproduction is gone.
+    image: '/artwork/web/bensham-road-gateshead-1970.jpg',
+    imageAlt:
+      'A snowbound Bensham Road, Gateshead, a woman pushing a pram uphill past shopfronts, painted by Charlie Rogers',
+    imageCaption: 'Bensham Road, Gateshead, 1970',
     paragraphs: [
       'Ann died in 2015. Charlie dedicated his last exhibition to her memory: a retrospective at Low Fell Library in Gateshead, running from November 2016 into early 2017, curated by his friend Dennis Donnelly.',
       'In 2019 he moved into Aspen Court Care Home in Gateshead. He continued to paint. On 27 April 2020, aged 90, he died there, one of eleven residents lost to the first wave of the Covid pandemic. He and Ann are buried together at Saltwell Cemetery. His final painting, left unfinished on the easel, was the view from his bedroom window across the rooftops of St Vincent Street.',
