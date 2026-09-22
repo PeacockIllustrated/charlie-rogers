@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { SectionHeading } from '@/components/SectionHeading'
 import { Eyebrow } from '@/components/Eyebrow'
 import { BookCallout } from '@/components/BookCallout'
+import { Reveal } from '@/components/timeline/Reveal'
+import { ProgressTrack } from '@/components/timeline/ProgressTrack'
+import { TrackFallback } from '@/components/timeline/TrackFallback'
 import {
   timelineEras,
   eventsByEra,
@@ -28,7 +31,12 @@ function Marker({ event }: { event: TimelineEvent }) {
 
 function Event({ event }: { event: TimelineEvent }) {
   return (
-    <li className="grid grid-cols-[3.5rem_1fr] gap-x-4 sm:grid-cols-[4.5rem_1fr] sm:gap-x-6">
+    // Reveal renders the list item and fades it up as it scrolls into view.
+    // Its children are server rendered; see components/timeline/Reveal.tsx.
+    <Reveal
+      as="li"
+      className="grid grid-cols-[3.5rem_1fr] gap-x-4 sm:grid-cols-[4.5rem_1fr] sm:gap-x-6"
+    >
       <div className="pt-0.5 text-right">
         <span className="font-sans text-small tabular-nums text-ink-mute">
           {event.year}
@@ -82,13 +90,14 @@ function Event({ event }: { event: TimelineEvent }) {
           </figure>
         )}
       </div>
-    </li>
+    </Reveal>
   )
 }
 
 export default function TimelinePage() {
   return (
-    <div>
+    // timeline-page scopes the motion rules in globals.css to this page.
+    <div className="timeline-page">
       <div className="mx-auto max-w-content px-6 pt-12">
         <SectionHeading
           as="h1"
@@ -123,7 +132,7 @@ export default function TimelinePage() {
             <a
               key={era.slug}
               href={`#${era.slug}`}
-              className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft hover:text-bensham"
+              className="font-sans text-xs uppercase tracking-eyebrow text-ink-soft transition-colors duration-200 ease-out hover:text-bensham"
             >
               {era.label}
             </a>
@@ -137,19 +146,26 @@ export default function TimelinePage() {
           if (events.length === 0) return null
           return (
             <section key={era.slug} id={era.slug} className="scroll-mt-32 pt-14">
-              <header className="max-w-reading">
+              <Reveal as="header" className="max-w-reading">
                 <Eyebrow>{era.range}</Eyebrow>
                 <h2 className="mt-3 font-serif text-h2">{era.label}</h2>
                 <p className="mt-3 font-serif text-body-lg text-ink-soft">
                   {era.blurb}
                 </p>
-              </header>
+              </Reveal>
 
-              <ol className="mt-8">
-                {events.map((event) => (
-                  <Event key={`${event.year}-${event.title}`} event={event} />
-                ))}
-              </ol>
+              {/* The wrapper positions the progress track over the hairline
+                  rule the entries draw. It sits outside the list because only
+                  list items belong inside an ol, and before it so that the
+                  entry markers paint on top of it. */}
+              <div className="relative mt-8">
+                <ProgressTrack steps={events.length} />
+                <ol>
+                  {events.map((event) => (
+                    <Event key={`${event.year}-${event.title}`} event={event} />
+                  ))}
+                </ol>
+              </div>
             </section>
           )
         })}
@@ -157,6 +173,10 @@ export default function TimelinePage() {
         <div className="pt-16 pb-4">
           <BookCallout text="The full chronology, year by year, is in the book." />
         </div>
+
+        {/* Renders nothing. Only runs in browsers without CSS scroll-driven
+            animations, where it drives the progress tracks instead. */}
+        <TrackFallback />
       </div>
     </div>
   )

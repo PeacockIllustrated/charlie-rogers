@@ -22,6 +22,23 @@ export type Person = {
   image?: string
 }
 
+// How closely a coordinate matches its subject. Recorded rather than implied,
+// because a pin on a map reads as a precise claim whether or not it is one, and
+// half of these places were demolished before anyone thought to record where
+// exactly they stood.
+//   site     the building or feature itself
+//   street   the street, pinned at its midpoint
+//   district the area, pinned at its rough centre
+export type Precision = 'site' | 'street' | 'district'
+
+export type Coords = {
+  lat: number
+  lng: number
+  precision: Precision
+  // Where the position came from, so it can be checked or corrected later.
+  basis: string
+}
+
 export type Place = {
   slug: string
   name: string
@@ -30,6 +47,8 @@ export type Place = {
   status: Status
   paragraphs: string[]
   image?: string
+  // Absent for places off the Tyneside map, which are listed but not plotted.
+  coords?: Coords
 }
 
 // TimelineEvent now lives in lib/content/timeline.ts (it carries era, kind, and

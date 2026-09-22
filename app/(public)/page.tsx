@@ -8,22 +8,27 @@ import { BookCallout } from '@/components/BookCallout'
 // origin story, then routes into the book's sections. Teaser depth: enough to
 // draw a reader in, the full account is in the book.
 
-// Featured uses the page 27 starter set, which the book labels by location.
+// The same three paintings the page 27 contact sheet labels by location, but
+// taken from where the book prints them large rather than from that sheet.
+// Page 27 keys the paintings to the map on page 26, so its reproductions are
+// thumbnails: about 176x143. Note these come from paintings/web/, which holds
+// native resolution. paintings/thumbs/ is a uniform 400px upscale of the same
+// files, so it reports a size it does not actually carry.
 const featured = [
   {
-    src: '/paintings/thumbs/page_027_img_000.jpg',
+    src: '/paintings/web/page_039_img_000.jpg',
     title: 'Saltwell Park',
     location: 'Saltwell',
     status: 'extant' as const,
   },
   {
-    src: '/paintings/thumbs/page_027_img_006.jpg',
+    src: '/paintings/web/page_031_img_003.jpg',
     title: 'Cotfield Street',
     location: 'Bensham',
     status: 'demolished' as const,
   },
   {
-    src: '/paintings/thumbs/page_027_img_003.jpg',
+    src: '/paintings/web/page_038_img_001.jpg',
     title: 'Shipley Art Gallery',
     location: 'Gateshead',
     status: 'extant' as const,

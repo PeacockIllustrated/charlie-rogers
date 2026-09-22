@@ -4,7 +4,7 @@
     "emails-b.json",
     "emails-c.json"
   ],
-  "messageCount": 40,
+  "messageCount": 41,
   "attachmentCount": 89,
   "uniqueByteSizes": 83,
   "collisionCount": 4,
@@ -57,6 +57,15 @@
       "receivedDateTime": "2026-06-12T06:55:40.000Z",
       "availableUntil": "12 Jul 2026",
       "whatIsMissing": "An iCloud Mail Drop video file named 8d71ad95893742578bb60c08d47ff870 2.mov, 60274285 bytes, described by Brian as the Charlie Rogers at Saltwell Park video and proposed for the website. The link lapsed on 12 July 2026 and the file is unrecoverable from this message. Nothing of the video content survives in the mailbox, so Brian would need to resend it or supply it another way."
+    }
+  ],
+  "newMessagesSinceBuild": [
+    {
+      "subject": "Website: The print and card collections",
+      "receivedDateTime": "2026-09-18T12:07:32.000Z",
+      "messageId": "AAMkADMwOWMzMDhiLTU1MTctNDgzYi1iNDNhLWNkMzQwYTNkMmY2NABGAAAAAAD334GKUTvxQ5VxyXne1ZHmBwBbCCK8PNOUSblqkWoUxGR_AAB3ZlNlAABbCCK8PNOUSblqkWoUxGR_AAC6SyGAAAA=",
+      "hasAttachments": false,
+      "note": "Arrived after this manifest was built and carries nothing. The body reads \"Can we include this on the website to confirm the images available for both the print and greeting card collections\", but the message has no attachments and no inline images: read back from Graph on 22 September 2026 as a plain text body with an empty attachment list. Whatever Brian meant by \"this\" did not send. It does carry two facts not recorded anywhere else: the prints will be A3 and the greeting cards A6. Ask him to resend the collection sheet."
     }
   ],
   "attachments": [

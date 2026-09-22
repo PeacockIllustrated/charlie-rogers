@@ -90,3 +90,121 @@
     animation: none;
   }
 }
+
+/* ============================================================
+   Timeline motion. One fade-up as each entry scrolls into view, plus
+   smooth scrolling for the era jump links. 200ms ease-out, matching the
+   cross-fade timing in docs/DESIGN.md; the Motion section there records
+   the decision. Scoped to .timeline-page so no other surface inherits it.
+   ============================================================ */
+@keyframes timelineRevealIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Applied only once JavaScript has taken over, and only to entries that are
+   still below the fold. The server-rendered page carries neither class, so
+   with JavaScript off every entry is visible. */
+.tl-reveal-pending {
+  opacity: 0;
+}
+.tl-reveal-in {
+  animation: timelineRevealIn 200ms ease-out both;
+}
+
+/* Smooth scrolling for the era jump links, on the timeline page only. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.timeline-page) {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nothing on this page may hide content or move when motion is refused. */
+  .tl-reveal-pending,
+  .tl-reveal-in {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  /* Safety net: no transition or time-based animation anywhere inside the
+     timeline. The progress track is exempt because it is not time-based; it is
+     tied to the reader's own scrolling and is quantised separately below. */
+  .timeline-page,
+  .timeline-page *:not(.tl-track),
+  .timeline-page *::before,
+  .timeline-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Printing must never lose an entry that has not been scrolled past. */
+@media print {
+  .tl-reveal-pending,
+  .tl-reveal-in {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Timeline progress track. The spine thickens and darkens behind the
+   reader, so the line doubles as a position indicator for the chronology.
+   Scroll-linked rather than time-based: it is driven by the reader's own
+   scrolling, in step with it, and settles the instant scrolling stops.
+   See the Motion section of docs/DESIGN.md.
+   ============================================================ */
+@keyframes timelineTrackFill {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Empty by default. With no scroll-driven animation support and no
+   JavaScript, the track stays at zero height and the timeline reads exactly
+   as it did before: a plain hairline, nothing hidden, nothing moved. */
+.tl-track {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* The preferred path. view(block 60% 40%) collapses the scrollport to a
+   single reading line 60% down the viewport, so progress runs from 0 when
+   that line meets the top of the era's spine to 1 when it reaches the
+   bottom. No JavaScript involved. */
+@supports (animation-timeline: view()) {
+  .tl-track {
+    animation: timelineTrackFill linear both;
+    animation-timeline: view(block 60% 40%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The track is a position indicator, not decoration, so it keeps working.
+     What goes is the continuous slide: steps() advances it in one jump per
+     entry instead. TrackFallback quantises the same way. */
+  .tl-track {
+    animation-timing-function: steps(var(--tl-steps, 1), end);
+  }
+}
+
+/* The track carries no information on paper, where the whole page is visible
+   at once. */
+@media print {
+  .tl-track {
+    display: none;
+  }
+}

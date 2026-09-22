@@ -139,9 +139,9 @@ No card frame, no shadow. Whitespace does the separating.
 
 Three states, displayed as a small label not a chip:
 
-- **Extant** — sage marker, low emphasis
-- **Demolished** — Bensham red, slightly higher emphasis
-- **Altered** — ochre marker, medium emphasis
+- **Extant**, sage marker, low emphasis
+- **Demolished**, Bensham red, slightly higher emphasis
+- **Altered**, ochre marker, medium emphasis
 
 Sage and ochre fail contrast as text on paper (2.76:1 and 3.06:1), so the hue is shown as a small square marker beside the word, and the word itself is set in an accessible ink colour (Bensham red for demolished, which passes at 9.53:1). The marker carries the at-a-glance coding; the label stays legible. This mirrors the book's coloured map dots.
 
@@ -175,8 +175,19 @@ Reduce on principle. The site is about quiet observation.
 
 - Cross-fades on image transitions, 200ms ease-out.
 - No parallax scrolling.
-- No on-scroll animations beyond a subtle fade-up for image gallery loads.
+- On-scroll motion is limited to one subtle fade-up as an element first enters the viewport. It was originally allowed for image gallery loads only. It now also covers the Timeline page, decided September 2026: a chronology is the one surface where a reveal carries meaning, because it makes reading the page feel like moving through the years rather than down a list. The terms are unchanged and the restraint is the point. One pass per element, 200ms ease-out, 0.5rem of travel, opacity and transform only, never replayed on scroll back, and nothing else on the page moves.
+- Smooth scrolling is allowed where a page carries in-page jump links, currently the Timeline era navigation. It is scoped to that page; elsewhere the browser default stands.
+- Scroll-linked progress indicators are allowed where a page is long enough that the reader can lose their place, currently the Timeline spine, decided September 2026. The hairline rule running down each era thickens to 3px in `ink-soft` behind the reader, so the line doubles as a position indicator for the chronology. Treat it as a reading instrument rather than decoration, and hold it to these terms: it moves only in step with the reader's own scrolling, it never runs on a clock of its own, it settles the instant scrolling stops, it is an overlay so that thickening it cannot shift the entries sideways, and it carries no information that is not already in the page. `ink-soft` and not Bensham red, which stays reserved for the uses listed under Palette.
 - Map interactions are exempted from this restraint when the time comes, because the comparison slider needs to feel direct.
+
+Two rules apply to every animation on the site, without exception.
+
+1. It must answer `@media (prefers-reduced-motion: reduce)`. For anything decorative that means switching it off outright. Follow the precedent in `app/globals.css`: a named keyframe, a duration, and a reduce block that sets `animation: none`.
+2. Content must never depend on an animation having run in order to be visible. A reveal is an enhancement layered on top of markup that is already readable with JavaScript off, with motion off, and in print. If in doubt, load the page with scripting disabled and check that nothing has vanished.
+
+One qualification to the first rule, added September 2026 when the Timeline progress indicator was built. Switching a functional indicator off under reduced motion would take away information the reader was relying on, which is not the same favour as taking away decoration. So an indicator keeps working under reduce, but it stops sliding: the Timeline spine advances in discrete steps instead, one jump per entry in the era, measured at exactly a quarter of the spine per entry in a four-entry era. Nothing glides, and the reader still knows where they are. This qualification covers indicators only. Anything decorative is still switched off outright, and the safety net in `app/globals.css` that kills animation and transition durations across the Timeline page continues to do so for everything except the indicator.
+
+Both Timeline behaviours degrade to plain markup. The progress indicator is a CSS scroll-driven animation (`animation-timeline: view()`), so it needs no JavaScript at all in a browser that supports it, and `components/timeline/TrackFallback.tsx` drives the same transform from a passive, requestAnimationFrame-throttled scroll listener where support is missing. With neither, the spine simply stays the hairline it has always been.
 
 ## Don'ts
 
