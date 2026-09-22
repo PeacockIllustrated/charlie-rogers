@@ -175,8 +175,14 @@ Reduce on principle. The site is about quiet observation.
 
 - Cross-fades on image transitions, 200ms ease-out.
 - No parallax scrolling.
-- No on-scroll animations beyond a subtle fade-up for image gallery loads.
+- On-scroll motion is limited to one subtle fade-up as an element first enters the viewport. It was originally allowed for image gallery loads only. It now also covers the Timeline page, decided September 2026: a chronology is the one surface where a reveal carries meaning, because it makes reading the page feel like moving through the years rather than down a list. The terms are unchanged and the restraint is the point. One pass per element, 200ms ease-out, 0.5rem of travel, opacity and transform only, never replayed on scroll back, and nothing else on the page moves.
+- Smooth scrolling is allowed where a page carries in-page jump links, currently the Timeline era navigation. It is scoped to that page; elsewhere the browser default stands.
 - Map interactions are exempted from this restraint when the time comes, because the comparison slider needs to feel direct.
+
+Two rules apply to every animation on the site, without exception.
+
+1. It must be switched off under `@media (prefers-reduced-motion: reduce)`. Follow the precedent in `app/globals.css`: a named keyframe, a duration, and a reduce block that sets `animation: none`.
+2. Content must never depend on an animation having run in order to be visible. A reveal is an enhancement layered on top of markup that is already readable with JavaScript off, with motion off, and in print. If in doubt, load the page with scripting disabled and check that nothing has vanished.
 
 ## Don'ts
 
