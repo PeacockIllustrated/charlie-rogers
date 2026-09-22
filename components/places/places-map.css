@@ -1,0 +1,52 @@
+/* House styling for Leaflet, loaded by components/places/PlacesMap.tsx.
+   
+   This lives beside the component rather than in globals.css for a reason that
+   cost a rebuild to find: Leaflet's own stylesheet is imported by that
+   component, so it lands AFTER globals.css in the bundle. These selectors have
+   the same specificity as Leaflet's, so from globals.css they lost on source
+   order and the map kept Leaflet's grey background. Imported after Leaflet in
+   the same module, they win. Keep the import order in PlacesMap.tsx as it is.
+
+   Leaflet ships rounded corners, drop shadows and a blue focus ring, all three
+   of which the house rules in CLAUDE.md exclude. These override its stylesheet
+   rather than fork it, so an upgrade brings its own fixes and only the styling
+   stays ours. */
+.leaflet-container {
+  background: var(--paper-warm);
+  font-family: inherit;
+}
+.leaflet-bar,
+.leaflet-bar a,
+.leaflet-control-attribution,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  border-radius: 0;
+  box-shadow: none;
+}
+.leaflet-bar a {
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+}
+.leaflet-bar a:hover {
+  background: var(--paper-warm);
+  color: var(--bensham);
+}
+.leaflet-control-attribution {
+  border: 1px solid var(--rule);
+  border-right: 0;
+  border-bottom: 0;
+  background: var(--paper);
+  color: var(--ink-mute);
+  font-size: 0.6875rem;
+}
+.leaflet-control-attribution a {
+  color: var(--ink-soft);
+}
+/* Keyboard focus must stay visible: Leaflet markers are reachable by tab, and
+   the divIcon carries no styling of its own. */
+.charlie-marker:focus-visible,
+.leaflet-container a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}

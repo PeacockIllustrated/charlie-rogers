@@ -5,6 +5,7 @@ import { Eyebrow } from '@/components/Eyebrow'
 import { StatusLabel } from '@/components/StatusLabel'
 import { BookCallout } from '@/components/BookCallout'
 import { places } from '@/lib/content/places'
+import { PlacesMap } from '@/components/places/PlacesMap'
 import type { Region, Status } from '@/lib/content/types'
 
 export const metadata: Metadata = {
@@ -63,6 +64,29 @@ export default function PlacesIndex() {
           </div>
         ))}
       </dl>
+
+      <section className="mt-12" aria-labelledby="places-map-heading">
+        <h2
+          id="places-map-heading"
+          className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute"
+        >
+          Where they stood
+        </h2>
+        <p className="mt-3 max-w-reading font-serif text-body text-ink-soft">
+          The Tyneside places, plotted. A solid marker is the site itself. A
+          hollow one is a street or an area, which is all that can honestly be
+          said for the buildings that came down before anyone recorded exactly
+          where they stood.
+        </p>
+        <div className="mt-6">
+          <PlacesMap places={places} />
+        </div>
+        <p className="mt-4 max-w-reading font-sans text-small text-ink-mute">
+          Positions are working estimates and have not yet been checked against
+          survey records. Paris and Spennymoor sit outside the frame and are
+          listed below rather than plotted.
+        </p>
+      </section>
 
       {regionOrder.map((region) => {
         const regionPlaces = byRegion(region)
