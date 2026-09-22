@@ -148,7 +148,11 @@ export const places: Place[] = [
       basis:
         'Rough centre of the railway approaches east of the town centre. This is an area rather than an address.',
     },
-    image: '/paintings/thumbs/page_027_img_007.jpg',
+    // Photograph of the original supplied by Brian Rankin, in place of the
+    // 175x143 book extract. The Joke Shop, 1966: West Street under the
+    // Gateshead railway viaduct. The same painting is reproduced in the book
+    // on page 50.
+    image: '/artwork/web/the-joke-shop-gateshead-on-tyne-1966.jpg',
     paragraphs: [
       "The area around Gateshead East station and the railway approaches was working industrial townscape: brick arches, goods yards, the infrastructure of a town that moved things by rail. Charlie painted its textures and geometries at a time when the whole eastern approach to Gateshead was being reconsidered by planners.",
       'The area has been heavily altered. The flyover and Gateshead town centre redevelopments reshaped what Charlie recorded. His paintings document a grain of the city that has been largely smoothed away.',
@@ -188,7 +192,11 @@ export const places: Place[] = [
       basis:
         'The market place itself. The Univision Gallery that gave Charlie his first show in 1965 stood on it.',
     },
-    image: '/paintings/thumbs/page_027_img_009.jpg',
+    // Photograph of the original supplied by Brian Rankin, in place of the
+    // 176x143 book extract. Bigg Market, Newcastle-on-Tyne, 1975: stalls and a
+    // fruit and vegetable lorry below the Victorian frontages. A different
+    // Bigg Market painting of the same year appears in the book on page 81.
+    image: '/artwork/web/bigg-market-newcastle-on-tyne-1975.jpg',
     paragraphs: [
       "Bigg Market has a particular significance in Charlie's story: the Univision Gallery on the market gave him his first exhibition in March 1965. Harry Lord, the gallerist, took the work and showed it. Charlie had been painting for less than two years. The show sold well.",
       "He returned to Bigg Market as a subject throughout his career. The market's Victorian commercial buildings, the pub fronts, and the particular light of a covered urban space recur in his Newcastle work.",
