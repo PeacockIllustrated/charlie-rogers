@@ -4,7 +4,16 @@ import type { Config } from 'tailwindcss'
 // No pure white, no pure black. Square corners and no shadows are house rules,
 // enforced by simply not using rounded-* or shadow-* utilities.
 const config: Config = {
-  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  // lib/ is scanned because class names live in content modules too, for
+  // example kindDotClass in lib/content/timeline.ts. Leaving it out silently
+  // dropped bg-slate from the build, so every "life" marker and the Life
+  // swatch in the timeline legend rendered transparent. Tailwind never warns
+  // about a class it was not asked to look for.
+  content: [
+    './app/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './lib/**/*.{ts,tsx}',
+  ],
   theme: {
     extend: {
       colors: {

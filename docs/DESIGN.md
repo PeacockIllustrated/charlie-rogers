@@ -139,9 +139,9 @@ No card frame, no shadow. Whitespace does the separating.
 
 Three states, displayed as a small label not a chip:
 
-- **Extant** — sage marker, low emphasis
-- **Demolished** — Bensham red, slightly higher emphasis
-- **Altered** — ochre marker, medium emphasis
+- **Extant**, sage marker, low emphasis
+- **Demolished**, Bensham red, slightly higher emphasis
+- **Altered**, ochre marker, medium emphasis
 
 Sage and ochre fail contrast as text on paper (2.76:1 and 3.06:1), so the hue is shown as a small square marker beside the word, and the word itself is set in an accessible ink colour (Bensham red for demolished, which passes at 9.53:1). The marker carries the at-a-glance coding; the label stays legible. This mirrors the book's coloured map dots.
 

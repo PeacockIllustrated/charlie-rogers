@@ -15,6 +15,13 @@
   background: var(--paper-warm);
   font-family: inherit;
 }
+/* Leaflet rounds the ends of the zoom bar through :first-child and :last-child,
+   which outrank a bare .leaflet-bar a. Square corners are a house rule, so the
+   overrides have to match that specificity. */
+.leaflet-bar a:first-child,
+.leaflet-bar a:last-child,
+.leaflet-touch .leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:last-child,
 .leaflet-bar,
 .leaflet-bar a,
 .leaflet-control-attribution,
