@@ -133,21 +133,21 @@ export default function Styleguide() {
       <Section eyebrow="Painting card">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <PaintingCard
-            src="/paintings/thumbs/page_027_img_000.jpg"
+            src="/paintings/web/page_039_img_000.jpg"
             title="Saltwell Park"
             location="Saltwell"
             medium="Watercolour"
             status="extant"
           />
           <PaintingCard
-            src="/paintings/thumbs/page_027_img_006.jpg"
+            src="/paintings/web/page_031_img_003.jpg"
             title="Cotfield Street"
             location="Bensham"
             medium="Pen and wash"
             status="demolished"
           />
           <PaintingCard
-            src="/paintings/thumbs/page_027_img_004.jpg"
+            src="/paintings/web/page_036_img_000.jpg"
             title="Gateshead Cenotaph"
             location="Shipcote"
             medium="Oil on board"
