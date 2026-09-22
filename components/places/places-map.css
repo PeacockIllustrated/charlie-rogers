@@ -57,3 +57,89 @@
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
+
+/* THE BASE MAP IS TONED BACK.
+   Standard OpenStreetMap cartography is built to be read on its own: every
+   road class its own colour, green parks, blue water, dense labels. Against
+   that, a 12px sage square is lost, and the page stops being about the
+   paintings. Desaturating and warming the tiles, then letting the paper ground
+   show through, turns the map into a setting rather than a competing subject.
+   The markers are then the only saturated thing on it, which is the point.
+   The historic overlay is deliberately excluded: it is already close to
+   monochrome and the same treatment would only muddy it. */
+.map-base-tiles {
+  filter: grayscale(1) sepia(0.35) brightness(1.08) contrast(0.78);
+}
+
+/* The divIcon root is sized by iconSize, and Leaflet writes that inline. The
+   chip inside it must fill it, or the marker renders narrower than it is tall. */
+.charlie-marker > span {
+  width: 100%;
+  height: 100%;
+}
+
+/* POPUPS.
+   Leaflet's default popup is a white rounded card with a drop shadow, which
+   breaks two house rules at once. This is a paper panel with a square border,
+   sized to the artwork inside it. */
+.charlie-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border: 1px solid var(--ink-soft);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--paper);
+  color: var(--ink);
+}
+.charlie-popup .leaflet-popup-content {
+  margin: 0;
+  padding: 0.75rem;
+}
+/* The tip is a rotated square, so a full border on it draws the two edges that
+   form the arrow and hides the rest behind the wrapper. */
+.charlie-popup .leaflet-popup-tip {
+  border: 1px solid var(--ink-soft);
+  box-shadow: none;
+  background: var(--paper);
+}
+.charlie-popup .leaflet-popup-close-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.25rem 0 0 0;
+  color: var(--ink-mute);
+  font-size: 1.125rem;
+}
+.charlie-popup .leaflet-popup-close-button:hover {
+  color: var(--bensham);
+  background: transparent;
+}
+
+/* Leaflet cross-fades popups and eases pans. Both are motion, so both go under
+   the same rule the rest of the site follows. */
+@media (prefers-reduced-motion: reduce) {
+  .leaflet-fade-anim .leaflet-popup,
+  .leaflet-zoom-anim .leaflet-zoom-animated {
+    transition: none !important;
+  }
+}
+
+/* Leaflet colours every link inside the map with its own blue, via
+   `.leaflet-container a`. That selector carries a class plus an element, so it
+   beats a single Tailwind colour utility on the anchor and the popup button
+   rendered #0078A8 against the heritage palette. Matching its specificity is
+   the fix; raising the utility's would mean !important on a class. */
+.leaflet-container .charlie-popup a {
+  color: var(--ink);
+}
+.leaflet-container .charlie-popup a:hover,
+.leaflet-container .charlie-popup a:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+}
+.leaflet-container .charlie-popup .leaflet-popup-close-button {
+  color: var(--ink-mute);
+  background: transparent;
+}
+.leaflet-container .charlie-popup .leaflet-popup-close-button:hover {
+  color: var(--bensham);
+  background: transparent;
+}

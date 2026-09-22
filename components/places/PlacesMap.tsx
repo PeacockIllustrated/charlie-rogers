@@ -5,7 +5,6 @@ import 'leaflet/dist/leaflet.css'
 import './places-map.css'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import Link from 'next/link'
 import type { Map as LeafletMap, Marker, TileLayer } from 'leaflet'
 import { baseLayer, historicLayer } from '@/lib/map/tiles'
 import type { Place, Status } from '@/lib/content/types'
@@ -34,17 +33,72 @@ const outline: Record<Status, string> = {
   unknown: 'border-ink-mute',
 }
 
-// A solid square is a position we can stand behind. A hollow one is a street or
-// an area, not an address. Half of these buildings came down before anyone
+const statusWord: Record<Status, string> = {
+  demolished: 'Demolished',
+  altered: 'Altered',
+  extant: 'Still standing',
+  unknown: 'Status unknown',
+}
+
+// Marker content is handed to Leaflet as an HTML string, so anything
+// interpolated into it has to be escaped. The place data is ours and static,
+// but a name like "St Cuthbert's Church" is one apostrophe away from proving
+// why you do this by default rather than when it bites.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+// Each marker is a paper chip with the status square inside it, rather than a
+// bare coloured square. The chip is what makes it legible: a 12px square of
+// sage sitting directly on map detail disappears into it, while the same square
+// on a paper ground reads at a glance and repeats the swatch language the
+// legend and the status labels already use.
+//
+// A filled square is a position we can stand behind. A hollow one is a street
+// or an area, not an address. Half of these buildings came down before anyone
 // recorded where exactly they stood, and the map should not pretend otherwise.
 function markerHtml(place: Place, selected: boolean): string {
   const exact = place.coords?.precision === 'site'
   const size = selected ? 'h-4 w-4' : 'h-3 w-3'
-  const body = exact
-    ? `${fill[place.status]} ${outline[place.status]}`
-    : `bg-paper ${outline[place.status]}`
-  const ring = selected ? 'outline outline-2 outline-offset-2 outline-ink' : ''
-  return `<span class="block border-2 ${size} ${body} ${ring}"></span>`
+  const inner = exact
+    ? fill[place.status]
+    : `bg-paper border-2 ${outline[place.status]}`
+  const chip = selected ? 'border-ink' : 'border-rule'
+  return `<span class="block border bg-paper p-[3px] ${chip}"><span class="block ${size} ${inner}"></span></span>`
+}
+
+// Popup markup. Kept to the artwork, three lines of context and one link, so it
+// sits over the map without covering the places around it.
+function popupHtml(place: Place): string {
+  const name = escapeHtml(place.name)
+  const image = place.image
+    ? `<img src="${escapeHtml(place.image)}" alt="${name}" width="224" height="168" class="block w-full h-auto" />`
+    : ''
+  const district = place.district
+    ? `<p class="mt-2 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">${escapeHtml(place.district)}</p>`
+    : ''
+  const approximate =
+    place.coords && place.coords.precision !== 'site'
+      ? `<p class="mt-1 font-sans text-xs text-ink-mute">Approximate position, ${escapeHtml(place.coords.precision)} level</p>`
+      : ''
+  // Width is set by the popup's own minWidth/maxWidth, not here. A fixed width
+  // on this div plus the wrapper's padding overflowed the popup by the padding
+  // and pushed the artwork past the right border.
+  return `
+    <div class="w-full">
+      ${image}
+      <h3 class="mt-3 font-serif text-h4 leading-tight text-ink">${name}</h3>
+      ${district}
+      <p class="mt-2 font-sans text-xs uppercase tracking-eyebrow ${place.status === 'demolished' ? 'text-bensham' : 'text-ink-soft'}">${statusWord[place.status]}</p>
+      ${approximate}
+      <a href="/places/${escapeHtml(place.slug)}" class="mt-3 block border border-ink-soft px-3 py-2 text-center font-sans text-small text-ink no-underline hover:bg-ink hover:text-paper">View this place</a>
+    </div>
+  `
 }
 
 export function PlacesMap({ places }: Props) {
@@ -63,11 +117,6 @@ export function PlacesMap({ places }: Props) {
   const plotted = useMemo(
     () => places.filter((p) => p.coords && p.region !== 'beyond'),
     [places],
-  )
-
-  const selectedPlace = useMemo(
-    () => plotted.find((p) => p.slug === selected) ?? null,
-    [plotted, selected],
   )
 
   // Build the map once. plotted is derived from a module-level constant, so it
@@ -89,10 +138,19 @@ export function PlacesMap({ places }: Props) {
         })
         mapRef.current = map
 
+        // className lets places-map.css tone this layer back without touching
+        // the historic overlay, which is already close to monochrome and would
+        // only be muddied by the same treatment.
         L.tileLayer(baseLayer.url, {
           attribution: baseLayer.attribution,
           minZoom: baseLayer.minZoom,
           maxZoom: baseLayer.maxZoom,
+          className: 'map-base-tiles',
+          // Set here rather than in CSS: Leaflet writes opacity inline on the
+          // layer element, so a stylesheet rule is overridden and silently
+          // does nothing. Letting the paper ground show through is half of
+          // what quietens the map.
+          opacity: 0.75,
         }).addTo(map)
 
         for (const place of plotted) {
@@ -101,15 +159,27 @@ export function PlacesMap({ places }: Props) {
             icon: L.divIcon({
               className: 'charlie-marker',
               html: markerHtml(place, false),
-              iconSize: [12, 12],
-              iconAnchor: [6, 6],
+              iconSize: [20, 20],
+              iconAnchor: [10, 10],
             }),
             keyboard: true,
             title: place.name,
             alt: `${place.name}, ${place.status}`,
           })
-          marker.on('click', () => setSelected(place.slug))
-          marker.on('keypress', () => setSelected(place.slug))
+          // autoPan keeps a popup near the edge from opening half off screen,
+          // and the padding stops it from tucking under the attribution strip.
+          marker.bindPopup(popupHtml(place), {
+            className: 'charlie-popup',
+            minWidth: 248,
+            maxWidth: 248,
+            offset: [0, -6],
+            autoPanPadding: [24, 24],
+            closeButton: true,
+          })
+          marker.on('popupopen', () => setSelected(place.slug))
+          marker.on('popupclose', () =>
+            setSelected((current) => (current === place.slug ? null : current)),
+          )
           marker.addTo(map)
           markersRef.current[place.slug] = marker
         }
@@ -146,8 +216,11 @@ export function PlacesMap({ places }: Props) {
         L.divIcon({
           className: 'charlie-marker',
           html: markerHtml(place, isSelected),
-          iconSize: isSelected ? [16, 16] : [12, 12],
-          iconAnchor: isSelected ? [8, 8] : [6, 6],
+          // Must match the sizes used when the marker is created, or the
+          // repaint on first selection silently resizes every marker.
+          // 20 = 1px border + 3px padding + 12px swatch, doubled.
+          iconSize: isSelected ? [24, 24] : [20, 20],
+          iconAnchor: isSelected ? [12, 12] : [10, 10],
         }),
       )
     }
@@ -177,10 +250,14 @@ export function PlacesMap({ places }: Props) {
   }, [historicOpacity])
 
   const focusPlace = useCallback((slug: string) => {
-    setSelected(slug)
     const marker = markersRef.current[slug]
     const map = mapRef.current
-    if (marker && map) map.panTo(marker.getLatLng())
+    if (!marker || !map) return
+    map.panTo(marker.getLatLng())
+    // openPopup fires popupopen, which sets the selection, so it is not set
+    // here as well. Doing both left the icon and the popup out of step
+    // whenever Leaflet closed one popup to open another.
+    marker.openPopup()
   }, [])
 
   if (failed) {
@@ -249,43 +326,6 @@ export function PlacesMap({ places }: Props) {
           ) : null}
         </div>
       </div>
-
-      {selectedPlace ? (
-        <div className="border-t border-rule p-4 sm:p-6">
-          <div className="flex flex-wrap items-start gap-6">
-            {selectedPlace.image ? (
-              <div className="bg-paper-warm p-2">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedPlace.image}
-                  alt={selectedPlace.name}
-                  width={120}
-                  height={90}
-                  className="block h-auto w-[120px]"
-                />
-              </div>
-            ) : null}
-            <div className="max-w-reading">
-              <h3 className="font-serif text-h4">{selectedPlace.name}</h3>
-              <p className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-                {selectedPlace.district}
-              </p>
-              {selectedPlace.coords &&
-              selectedPlace.coords.precision !== 'site' ? (
-                <p className="mt-3 font-sans text-small text-ink-soft">
-                  {selectedPlace.coords.basis}
-                </p>
-              ) : null}
-              <Link
-                href={`/places/${selectedPlace.slug}`}
-                className="mt-3 inline-block font-sans text-small text-bensham underline underline-offset-4"
-              >
-                Read about {selectedPlace.name}
-              </Link>
-            </div>
-          </div>
-        </div>
-      ) : null}
 
       {/* The map is a view of the list, never the only way to reach a place.
           These buttons give keyboard and screen reader users the same pins. */}
