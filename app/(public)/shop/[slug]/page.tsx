@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
@@ -59,6 +58,8 @@ export default async function ProductDetailPage({
   if (!product) notFound()
 
   const isSold = product.status === 'sold'
+  // Read literally: Next inlines NEXT_PUBLIC_ variables by matching source text.
+  const enquiryEmail = process.env.NEXT_PUBLIC_ENQUIRY_EMAIL
 
   const spec: Array<{ label: string; value: string }> = []
   spec.push({ label: 'Type', value: PRODUCT_TYPE_LABELS[product.product_type] })
@@ -108,22 +109,35 @@ export default async function ProductDetailPage({
             </dl>
           )}
 
+          {/* There is no checkout yet, so this is an enquiry, and it has to
+              lead somewhere real. It used to send every enquiry to /book, the
+              book's own product page, which is the wrong destination for a
+              painting and a dead end for the book. "Sold" was a link to "#":
+              focusable, announced as a link, and going nowhere.
+
+              The address comes from the environment because none of the people
+              involved has been asked which one to publish. Unset, the page says
+              plainly that enquiries are not open rather than offering a button
+              that does nothing. */}
           <div className="mt-8">
             {isSold ? (
-              <Button href="#" variant="secondary">
+              <p className="inline-block border border-rule px-4 py-2 font-sans text-small uppercase tracking-eyebrow text-ink-mute">
                 Sold
-              </Button>
-            ) : (
-              <Button href="/book" variant="primary">
+              </p>
+            ) : enquiryEmail ? (
+              <Button
+                href={`mailto:${enquiryEmail}?subject=${encodeURIComponent(`Enquiry: ${product.title}`)}`}
+                variant="primary"
+              >
                 Enquire about this
               </Button>
-            )}
+            ) : null}
             <p className="mt-3 font-sans text-small text-ink-mute">
-              Online checkout is coming soon. To enquire, contact{' '}
-              <Link href="/book" className="text-ink hover:text-bensham">
-                the gallery
-              </Link>
-              .
+              {isSold
+                ? 'This piece has been sold. It stays listed as part of the record.'
+                : enquiryEmail
+                  ? 'There is no online checkout yet, so this goes by email.'
+                  : 'There is no online checkout yet, and no enquiry address has been set.'}
             </p>
           </div>
         </div>

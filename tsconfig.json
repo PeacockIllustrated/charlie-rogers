@@ -6,6 +6,10 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // Tests import with an explicit .ts specifier because that is what
+    // node --experimental-strip-types resolves. Safe here: noEmit is on, and
+    // Next compiles the app with its own pipeline.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
