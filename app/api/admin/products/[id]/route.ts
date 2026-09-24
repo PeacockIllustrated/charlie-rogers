@@ -1,34 +1,8 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
-import {
-  createSupabaseServerClient,
-  createSupabaseServiceClient,
-} from '@/lib/supabase/server'
-import { SHOP_BUCKET } from '@/lib/shop/utils'
-import type { ProductType, ProductStatus } from '@/lib/shop/types'
-
-interface ImagePayload {
-  id?: string
-  storage_path: string
-  alt_text: string | null
-  display_order: number
-  is_primary: boolean
-}
-
-interface UpdateBody {
-  title: string
-  description: string | null
-  price_pence: number
-  product_type: ProductType
-  status: ProductStatus
-  medium: string | null
-  dimensions: string | null
-  year_text: string | null
-  edition: string | null
-  stock_count: number
-  is_featured: boolean
-  images: ImagePayload[]
-}
+import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { validateProductInput } from '@/lib/shop/product-input'
+import { replaceProductImages, type ImagePayload } from '@/lib/shop/product-images'
 
 export async function PUT(
   request: Request,
@@ -39,12 +13,24 @@ export async function PUT(
 
   const { id } = await params
 
-  let body: UpdateBody
+  let body: unknown
   try {
-    body = (await request.json()) as UpdateBody
+    body = await request.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
+
+  // PUT used to write whatever it was given. A request that did not come from
+  // the form could clear a title or set a negative price on a live listing,
+  // because only POST checked anything.
+  const parsed = validateProductInput(body)
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.errors.join('. ') }, { status: 400 })
+  }
+
+  const images = Array.isArray((body as { images?: unknown }).images)
+    ? ((body as { images: ImagePayload[] }).images)
+    : []
 
   const supabase = await createSupabaseServerClient()
 
@@ -60,70 +46,32 @@ export async function PUT(
 
   const { error: updateErr } = await supabase
     .from('charlie_products')
-    .update({
-      title: body.title.trim(),
-      description: body.description,
-      price_pence: body.price_pence,
-      product_type: body.product_type,
-      status: body.status,
-      medium: body.medium,
-      dimensions: body.dimensions,
-      year_text: body.year_text,
-      edition: body.edition,
-      stock_count: body.stock_count,
-      is_featured: body.is_featured,
-    })
+    .update(parsed.value)
     .eq('id', id)
 
   if (updateErr) {
+    if (updateErr.code === '23505') {
+      return NextResponse.json(
+        { error: `The web address "${parsed.value.slug}" is already used by another listing. Give this one a different slug.` },
+        { status: 409 },
+      )
+    }
     return NextResponse.json({ error: updateErr.message }, { status: 500 })
   }
 
-  // Reconcile images: delete removed rows (with storage cleanup), upsert the rest.
-  const { data: currentImgs } = await supabase
-    .from('charlie_product_images')
-    .select('id, storage_path')
-    .eq('product_id', id)
-
-  const incomingIds = new Set(
-    body.images.map((i) => i.id).filter(Boolean) as string[],
-  )
-  const removed = (currentImgs ?? []).filter((row) => !incomingIds.has(row.id))
-
-  if (removed.length > 0) {
-    const ids = removed.map((r) => r.id)
-    await supabase.from('charlie_product_images').delete().in('id', ids)
-    const paths = removed.map((r) => r.storage_path)
-    if (paths.length > 0) {
-      await createSupabaseServiceClient().storage.from(SHOP_BUCKET).remove(paths)
-    }
+  const imgErr = await replaceProductImages(supabase, id, images)
+  if (imgErr) {
+    return NextResponse.json(
+      { error: `Listing saved, but its images failed: ${imgErr}`, id },
+      { status: 500 },
+    )
   }
 
-  for (const img of body.images) {
-    if (img.id) {
-      await supabase
-        .from('charlie_product_images')
-        .update({
-          alt_text: img.alt_text,
-          display_order: img.display_order,
-          is_primary: img.is_primary,
-        })
-        .eq('id', img.id)
-    } else {
-      await supabase.from('charlie_product_images').insert({
-        product_id: id,
-        storage_path: img.storage_path,
-        alt_text: img.alt_text,
-        display_order: img.display_order,
-        is_primary: img.is_primary,
-      })
-    }
-  }
-
-  return NextResponse.json({ id })
+  return NextResponse.json({ id, slug: parsed.value.slug })
 }
 
-// Soft delete: set status to archived (hidden from the shop).
+// Soft delete: archive rather than remove, so a listing can be brought back and
+// so nothing that once had a public URL disappears without trace.
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },

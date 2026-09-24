@@ -5,6 +5,8 @@ import {
   ProductForm,
   type ProductFormInitial,
 } from '@/components/admin/ProductForm'
+import { penceToPounds } from '@/lib/shop/product-input'
+import { PRODUCT_STATUS_LABELS } from '@/lib/shop/types'
 import type { ShopProduct, ShopProductImage } from '@/lib/shop/types'
 
 export const metadata = { title: 'Edit product' }
@@ -33,8 +35,11 @@ export default async function EditProductPage({
   const initial: ProductFormInitial = {
     id: typed.id,
     title: typed.title,
+    slug: typed.slug,
     description: typed.description ?? '',
-    price_gbp: (typed.price_pence / 100).toFixed(2),
+    // Zero means price on application, so show it as blank rather than
+    // "0.00", which reads like the listing is free.
+    price_gbp: typed.price_pence === 0 ? '' : penceToPounds(typed.price_pence),
     product_type: typed.product_type,
     status: typed.status,
     medium: typed.medium ?? '',
@@ -43,6 +48,8 @@ export default async function EditProductPage({
     edition: typed.edition ?? '',
     stock_count: typed.stock_count.toString(),
     is_featured: typed.is_featured,
+    meta_title: typed.meta_title ?? '',
+    meta_description: typed.meta_description ?? '',
     images: sortedImages.map((img, i) => ({
       id: img.id,
       storage_path: img.storage_path,
@@ -65,7 +72,7 @@ export default async function EditProductPage({
         <p className="mt-1 font-sans text-small text-ink-mute">
           {typed.status === 'published'
             ? 'Live in the shop.'
-            : `Status: ${typed.status}`}
+            : `Status: ${PRODUCT_STATUS_LABELS[typed.status].toLowerCase()}`}
         </p>
       </div>
       <ProductForm mode="edit" initial={initial} />
