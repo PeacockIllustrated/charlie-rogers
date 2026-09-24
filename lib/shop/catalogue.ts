@@ -88,6 +88,24 @@ function image(slug: string, file: string, alt: string) {
   ]
 }
 
+// The card pack is five separate designs, so it gets a gallery rather than one
+// image. Order is the order of Brian's own Christmas Card Selection PDF.
+function images(
+  slug: string,
+  files: Array<{ file: string; alt: string }>,
+  dir = 'artwork/cards',
+) {
+  return files.map((f, i) => ({
+    id: `${slug}-${i + 1}`,
+    product_id: slug,
+    storage_path: `/${dir}/${f.file}`,
+    alt_text: f.alt,
+    display_order: i,
+    is_primary: i === 0,
+    created_at: NOW,
+  }))
+}
+
 export const CATALOGUE: CatalogueProduct[] = [
   product({
     title: 'Pursued by Bulldozers, special edition',
@@ -295,13 +313,19 @@ export const CATALOGUE: CatalogueProduct[] = [
       'Charlie Rogers included a bottle of Brown Ale in many of his interior and bar paintings, particularly when his father, Pop, features in the same painting. It seems this was Pop’s drink of choice.\n\nThis exceptional domestic scene features a rare glimpse inside the living room of the Rogers family home during their residency at Westbourne Avenue, near Saltwell Park.\n\nThis watercolour painting is generally regarded by supporters and academics as Charlie’s finest interior painting.',
     goodChoice:
       'Charlie’s finest domestic scene simply has to be introduced into your Charlie Rogers collection.',
+    // 14.8cm at 300dpi. Supplied on 24 September 2026 as Pop.png, a photograph
+    // of the sheet lying on a patterned blanket, so the master here is cropped
+    // to the paper edge. Nowhere near the A3 Brian states.
+    printLongEdgeCm: 15,
     // Brian adds a note under this one: "Newcastle Brown Ale is perceived in
     // the UK as a working-man's beer, with a long association with heavy
     // industry, the traditional economic staple of the North East of England."
     // Editorial background rather than product copy, so it is not rendered.
-    //
-    // No image file. Tom holds this one locally; it was not in the folder
-    // supplied for matching.
+    images: image(
+      'pop-1967',
+      'pop-1967.jpg',
+      'Watercolour of the Rogers family living room with a bottle of Brown Ale, 1967',
+    ),
   }),
 
   product({
@@ -315,6 +339,35 @@ export const CATALOGUE: CatalogueProduct[] = [
     dimensions: 'A6, 105 x 148mm',
     description:
       'A pack of five cards reproducing Charlie Rogers paintings and sketches: The Monument with Snow, Newcastle-on-Tyne 1996; St Cuthbert’s Church, Gateshead-on-Tyne 1982; Bensham Road, Gateshead 1970; Street meeting with snow, Gateshead 1972; and Cotfield Street, Bensham, Gateshead-on-Tyne.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    // The five designs, extracted from Brian's Charlie Rogers Christmas Card
+    // Selection PDF of 17 September 2026. Alt text is his own caption wording.
+    //
+    // These are proofs, not print artwork. Only the first design is anywhere
+    // near A6 at 300dpi: 1622px, against the 1748px A6 needs. The other four
+    // are around 635px, roughly a third of it. Fine on screen, not printable.
+    // Brian holds the originals; see docs/artwork-inbox/brian-spec-audit.md.
+    images: images('greeting-card-collection', [
+      {
+        file: 'the-monument-with-snow-newcastle-on-tyne-1996.jpg',
+        alt: 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour',
+      },
+      {
+        file: 'st-cuthberts-church-gateshead-on-tyne-1982.jpg',
+        alt: 'St Cuthbert’s Church, Gateshead-on-Tyne, 1982, oil',
+      },
+      {
+        file: 'bensham-road-gateshead-1970.jpg',
+        alt: 'Bensham Road, Gateshead, 1970, watercolour',
+      },
+      {
+        file: 'street-meeting-with-snow-gateshead-1972.jpg',
+        alt: 'Street meeting with snow, Gateshead, 1972, watercolour',
+      },
+      {
+        file: 'cotfield-street-bensham-gateshead.jpg',
+        alt: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour',
+      },
+    ]),
   }),
 ]
 

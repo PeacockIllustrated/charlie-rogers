@@ -50,6 +50,47 @@ blocking the shop build; they block real artwork and firm listings.
   The PDF carries the rights line "All Charlie Rogers paintings and sketches
   © Charles Rogers Junior", which should appear on the product page.
 
+### For Brian Rankin, from the email reconciliation, 24 Sep 2026
+
+Raised by the full audit of all 40 archived messages against the live copy.
+Working detail is in `docs/artwork-inbox/brian-spec-audit.md`.
+
+- **A3 prints against the files we hold.** His 18 September message says "The
+  prints will be A3 size". A3 is 42cm on the long edge. Of the nine paintings,
+  only Town Moor reaches it. Bigg Market gets to 30cm, five reach 16 to 17cm,
+  Pop 15cm and Third Street 5cm. His own 9 June email also gives Pot Pie Bob's
+  a "Mounted print- 30 x 25cm", eight days earlier and more specific. Either he
+  supplies originals at A3 resolution or the stated size comes down. A3 is held
+  unrendered in `statedPrintSize` until he settles it.
+- **The missing attachment.** The same message says "Can we include this on the
+  website to confirm the images available for both the print and greeting card
+  collections". Outlook reports no attachment on it. Nobody can confirm which
+  paintings make up each collection until he resends whatever "this" was.
+- **The card designs are proofs, not artwork.** The five images inside the
+  Christmas Card Selection PDF measure 1622px on the long edge for the Monument
+  and roughly 635px for the other four. A6 at 300dpi needs 1748px. They are
+  wired into the product page because they are the only record of what is in
+  the pack, but none of them can be printed. Originals needed.
+- **The prints introduction is unfinished.** His 6 June copy breaks off mid
+  sentence at "during the second half of the twentieth", and promises "the
+  bustling streets of Paris" when no Paris painting is in the collection. The
+  shop currently carries site-written copy instead.
+- **Two media stated for Bensham Road 1970.** "Oil on paper" on 8 June, then
+  "Watercolour" on the card caption of 17 September. The site follows the card
+  caption. Worth one line from him to close it.
+- **Two purchase options per print.** "A similar contemporary black frame or
+  alternatively a single print delivered in a tube", with room mock-ups. There
+  is no variant concept in the data model. Real scope, uncosted.
+- **Glazed items from the gallery only?** He asked the question on 9 June and
+  it was never answered. It decides fulfilment.
+- **The Joke Shop quotation.** The closing line "gone but not forgotten" is
+  unattributed and appears nowhere else. Left off the page until he names the
+  speaker.
+- **Product photography for the two priced products.** The special edition is
+  the only thing on the site that could take money today, and there is no
+  picture of the embossed, signed copy a buyer receives. `IMG_4874.jpeg` is
+  still sitting in the mailbox.
+
 ### Technical follow-ups from the shop audits
 
 - ~~**Authorisation on the shared database.**~~ **Done, 18 Sep 2026.** Writes

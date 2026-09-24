@@ -79,9 +79,29 @@ FROM (VALUES
   ('third-street-back-lane-bensham-gateshead-1980', '/artwork/web/third-street-back-lane-bensham-gateshead-1980.jpg', 'Snow-covered back lane between brick terraces with a church spire beyond, Bensham, Gateshead, 1980'),
   ('four-doors-at-school-street-gateshead-1977', '/artwork/web/four-doors-at-school-street-gateshead-1977.jpg', 'Oil painting of four adjoining front doors in a brick terrace, School Street, Gateshead, 1977'),
   ('bensham-road-gateshead-1970', '/artwork/web/bensham-road-gateshead-1970.jpg', 'Snow scene on Bensham Road, Gateshead, with a woman pushing a pram uphill past shopfronts, 1970'),
-  ('pot-pie-bobs-wellington-street-gateshead-1977', '/artwork/web/pot-pie-bobs-wellington-street-gateshead-1977.jpg', 'Watercolour of the High Level Cafe shopfront set in a stone railway arch, Wellington Street, Gateshead, 1977')
+  ('pot-pie-bobs-wellington-street-gateshead-1977', '/artwork/web/pot-pie-bobs-wellington-street-gateshead-1977.jpg', 'Watercolour of the High Level Cafe shopfront set in a stone railway arch, Wellington Street, Gateshead, 1977'),
+  ('pop-1967', '/artwork/web/pop-1967.jpg', 'Watercolour of the Rogers family living room with a bottle of Brown Ale, 1967')
 ) AS v(slug, path, alt)
 JOIN charlie_products p ON p.slug = v.slug
+WHERE NOT EXISTS (
+  SELECT 1 FROM charlie_product_images i WHERE i.product_id = p.id
+);
+
+-- The card pack is five designs rather than one image, so it carries its own
+-- statement with explicit ordinals. Extracted from Brian's Charlie Rogers
+-- Christmas Card Selection PDF of 17 September 2026, in the order he set them.
+-- The same NOT EXISTS guard applies: if the product already has any image,
+-- none of the five is inserted, so re-running this cannot half-fill a gallery.
+INSERT INTO charlie_product_images (product_id, storage_path, alt_text, display_order, is_primary)
+SELECT p.id, v.path, v.alt, v.ord, v.ord = 0
+FROM (VALUES
+  (0, '/artwork/cards/the-monument-with-snow-newcastle-on-tyne-1996.jpg', 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour'),
+  (1, '/artwork/cards/st-cuthberts-church-gateshead-on-tyne-1982.jpg', 'St Cuthbert''s Church, Gateshead-on-Tyne, 1982, oil'),
+  (2, '/artwork/cards/bensham-road-gateshead-1970.jpg', 'Bensham Road, Gateshead, 1970, watercolour'),
+  (3, '/artwork/cards/street-meeting-with-snow-gateshead-1972.jpg', 'Street meeting with snow, Gateshead, 1972, watercolour'),
+  (4, '/artwork/cards/cotfield-street-bensham-gateshead.jpg', 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour')
+) AS v(ord, path, alt)
+JOIN charlie_products p ON p.slug = 'greeting-card-collection'
 WHERE NOT EXISTS (
   SELECT 1 FROM charlie_product_images i WHERE i.product_id = p.id
 );

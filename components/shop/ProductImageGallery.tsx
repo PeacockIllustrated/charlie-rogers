@@ -55,7 +55,12 @@ export function ProductImageGallery({
                       ? 'border-bensham'
                       : 'border-transparent hover:border-rule',
                   )}
-                  aria-label={`View image ${i + 1} of ${sorted.length}`}
+                  // The card pack's five thumbnails are five different
+                  // paintings, so "image 2 of 5" tells a screen reader nothing
+                  // useful. Use the caption where there is one.
+                  aria-label={
+                    img.alt_text ?? `View image ${i + 1} of ${sorted.length}`
+                  }
                   aria-current={i === activeIndex}
                 >
                   {url && (
