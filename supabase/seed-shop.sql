@@ -63,11 +63,15 @@ All Charlie Rogers paintings and sketches © Charles Rogers Junior.', 1000, 'oth
 ON CONFLICT (slug) DO NOTHING;
 
 -- Note: DO NOTHING, not DO UPDATE. This file was applied to the live instance
--- on 18 September 2026, so re-running it will NOT push the 24 September copy
--- and media corrections into rows that already exist there. Those have to be
--- made in the admin, or with a deliberate UPDATE written for the purpose.
--- Turning this into an upsert would silently overwrite anything edited through
--- the CMS since, which is the worse failure on a shared database.
+-- on 18 September 2026, so re-running it does NOT push the 24 September copy
+-- and media corrections into rows that already exist there. Turning it into an
+-- upsert would silently overwrite anything edited through the CMS since, which
+-- is the worse failure on a shared database.
+--
+-- Those corrections reach the live rows through
+-- supabase/migrations/20260924071500_charlie-shop-copy-corrections.sql, which
+-- guards each update on the value it replaces, so an edited row is left alone.
+-- This file stays the record of what a fresh instance should start with.
 
 INSERT INTO charlie_product_images (product_id, storage_path, alt_text, display_order, is_primary)
 SELECT p.id, v.path, v.alt, 0, true

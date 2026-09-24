@@ -57,9 +57,11 @@ export function ProductImageGallery({
                   )}
                   // The card pack's five thumbnails are five different
                   // paintings, so "image 2 of 5" tells a screen reader nothing
-                  // useful. Use the caption where there is one.
+                  // useful. Use the caption where there is one. Trimmed, not
+                  // null-checked: the thumbnail itself is alt="", so a caption
+                  // of "" or "   " would leave the button with no name at all.
                   aria-label={
-                    img.alt_text ?? `View image ${i + 1} of ${sorted.length}`
+                    img.alt_text?.trim() || `View image ${i + 1} of ${sorted.length}`
                   }
                   aria-current={i === activeIndex}
                 >

@@ -172,3 +172,64 @@ export function productWarnings(p: {
   }
   return out
 }
+
+// The shape of one image row as the form posts it. Kept here rather than
+// imported from product-images.ts so that this module stays free of the
+// Supabase client, which is what lets the tests run without a database.
+export interface ImageInput {
+  id?: string
+  storage_path: string
+  alt_text: string | null
+  display_order: number
+  is_primary: boolean
+}
+
+export type ImagesResult =
+  // Absent from the payload. Not the same as an empty array: an empty array
+  // means "this listing has no images", and absent means "do not touch them".
+  | { ok: true; images: undefined }
+  | { ok: true; images: ImageInput[] }
+  | { ok: false; error: string }
+
+// Both routes used to cast body.images straight to the payload type. A null or
+// a string in the array then threw inside replaceProductImages, on a line that
+// runs after the product row has already been written, so the caller got an
+// unhandled 500 and a listing that had been half saved.
+export function validateImages(raw: unknown): ImagesResult {
+  if (raw === undefined || raw === null) return { ok: true, images: undefined }
+  if (!Array.isArray(raw)) return { ok: false, error: 'images must be an array' }
+
+  const out: ImageInput[] = []
+  for (let i = 0; i < raw.length; i++) {
+    const img = raw[i]
+    const where = `Image ${i + 1}`
+    if (typeof img !== 'object' || img === null || Array.isArray(img)) {
+      return { ok: false, error: `${where} is not an object` }
+    }
+    const rec = img as Record<string, unknown>
+    if (typeof rec.storage_path !== 'string' || rec.storage_path.trim() === '') {
+      return { ok: false, error: `${where} has no storage path` }
+    }
+    if (rec.id !== undefined && typeof rec.id !== 'string') {
+      return { ok: false, error: `${where} has an invalid id` }
+    }
+    if (
+      rec.alt_text !== undefined &&
+      rec.alt_text !== null &&
+      typeof rec.alt_text !== 'string'
+    ) {
+      return { ok: false, error: `${where} has invalid alt text` }
+    }
+    out.push({
+      // display_order and is_primary are deliberately not read from the
+      // payload. replaceProductImages sets both from array position, because
+      // trusting the caller lets two images arrive marked primary.
+      ...(typeof rec.id === 'string' ? { id: rec.id } : {}),
+      storage_path: rec.storage_path,
+      alt_text: typeof rec.alt_text === 'string' ? rec.alt_text : null,
+      display_order: i,
+      is_primary: i === 0,
+    })
+  }
+  return { ok: true, images: out }
+}

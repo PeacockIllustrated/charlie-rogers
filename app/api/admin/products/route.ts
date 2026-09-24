@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { validateProductInput } from '@/lib/shop/product-input'
-import { replaceProductImages, type ImagePayload } from '@/lib/shop/product-images'
+import { validateProductInput, validateImages } from '@/lib/shop/product-input'
+import { replaceProductImages } from '@/lib/shop/product-images'
 
 export async function POST(request: Request) {
   const { error: authErr } = await requireAdmin()
@@ -20,9 +20,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.errors.join('. ') }, { status: 400 })
   }
 
-  const images = Array.isArray((body as { images?: unknown }).images)
-    ? ((body as { images: ImagePayload[] }).images)
-    : []
+  // Checked before anything is written. A malformed entry used to throw inside
+  // replaceProductImages, after the product row had already been inserted.
+  const imgs = validateImages((body as { images?: unknown }).images)
+  if (!imgs.ok) {
+    return NextResponse.json({ error: imgs.error }, { status: 400 })
+  }
+  // On create there is nothing to preserve, so an absent array means none.
+  const images = imgs.images ?? []
 
   const supabase = await createSupabaseServerClient()
 

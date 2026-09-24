@@ -30,7 +30,11 @@ export default async function AdminProductsPage({
   searchParams: Promise<{ status?: string; q?: string }>
 }) {
   const { status, q } = await searchParams
-  const filter = (status ?? 'all') as ProductStatus | 'all'
+  // Validated against STATUSES rather than cast. ?status=foo used to reach the
+  // empty state, where PRODUCT_STATUS_LABELS['foo'] is undefined and the
+  // .toLowerCase() on it threw, so a typed URL crashed the page.
+  const filter: ProductStatus | 'all' =
+    STATUSES.find((s) => s.value === status)?.value ?? 'all'
   const search = (q ?? '').trim()
 
   const supabase = await createSupabaseServerClient()
@@ -138,7 +142,7 @@ export default async function AdminProductsPage({
               ? `Nothing matches "${search}"`
               : filter === 'all'
                 ? 'No products yet'
-                : `No ${PRODUCT_STATUS_LABELS[filter as ProductStatus].toLowerCase()} listings`}
+                : `No ${PRODUCT_STATUS_LABELS[filter].toLowerCase()} listings`}
           </p>
           <p className="mt-2 font-sans text-small text-ink-mute">
             {search

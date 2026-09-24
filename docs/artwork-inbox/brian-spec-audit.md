@@ -116,10 +116,10 @@ a commerce page.
 | The Men on the Seats, 1973 | 16cm | No |
 | Bensham Road, 1970 | 16cm | No |
 | Third Street, 1980 | 5cm | No |
-| Pop, 1967 | no file at all | Unknown |
+| Pop, 1967 | 15cm | No |
 
 One of the nine. This is not a reason to argue with the specification; it is a
-reason to say plainly that seven of the eight held files cannot be printed at
+reason to say plainly that eight of the nine held files cannot be printed at
 the size he has chosen, and that the originals have to come from him or from
 Charlie Rogers Junior. `CLAUDE.md` already says print commerce waits on those
 scans, and this measurement is the arithmetic behind it.
@@ -188,8 +188,11 @@ The PDF's per card media (watercolour for four, oil for St Cuthbert's Church)
 are not listed on the product page. That is a choice about density rather than
 accuracy, and could go either way.
 
-The card designs themselves have never been seen. The PDF is still in the
-mailbox and has not been downloaded, so the product has no imagery at all. See
+The card designs are now on the product page, extracted from the Christmas
+Card Selection PDF supplied on 24 September 2026. They are proofs rather than
+artwork: 1622px on the long edge for the Monument and around 635px for the
+other four, against the 1748px A6 needs at 300dpi. They show what is in the
+pack and nothing more. The printable originals are still outstanding; see
 `STILL-NEEDED.md`, tier 1 item 4.
 
 ---
@@ -296,10 +299,12 @@ text and not a claim about the work.
 - **Whether the eight paintings in the shop are the print collection he
   means.** The 18 September message that was supposed to confirm it arrived
   without its attachment.
-- **The greeting card designs.** The captions were read; the reproductions
-  themselves have never been rendered or downloaded.
-- **Pop, 1967.** No file has been seen. The whole product, including the
-  medium, rests on Brian's email and on the file Tom holds locally.
+- **The greeting card designs at printable size.** The five proofs from the
+  PDF are on the site and confirm what is in the pack, but none of them could
+  be printed at A6.
+- **Pop, 1967 at printable size.** Tom supplied the painting on 24 September
+  2026, photographed on a patterned blanket and cropped to the sheet, so the
+  product now has an image. At 15cm on the long edge it is a web file only.
 - **Whether A3 supersedes the 30 x 25cm mounted print he gave for Pot Pie
   Bob's.** Both are his, eight days apart in the opposite order to their
   specificity.

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { validateProductInput } from '@/lib/shop/product-input'
-import { replaceProductImages, type ImagePayload } from '@/lib/shop/product-images'
+import { validateProductInput, validateImages } from '@/lib/shop/product-input'
+import { replaceProductImages } from '@/lib/shop/product-images'
 
 export async function PUT(
   request: Request,
@@ -28,9 +28,15 @@ export async function PUT(
     return NextResponse.json({ error: parsed.errors.join('. ') }, { status: 400 })
   }
 
-  const images = Array.isArray((body as { images?: unknown }).images)
-    ? ((body as { images: ImagePayload[] }).images)
-    : []
+  // An absent images field leaves the existing images alone. It used to become
+  // an empty array, and replaceProductImages reads that as "keep none", so any
+  // request that updated a title without resending the whole gallery deleted
+  // every picture on the listing and its files from the bucket. The form always
+  // sends the array; nothing else has to.
+  const imgs = validateImages((body as { images?: unknown }).images)
+  if (!imgs.ok) {
+    return NextResponse.json({ error: imgs.error }, { status: 400 })
+  }
 
   const supabase = await createSupabaseServerClient()
 
@@ -59,12 +65,14 @@ export async function PUT(
     return NextResponse.json({ error: updateErr.message }, { status: 500 })
   }
 
-  const imgErr = await replaceProductImages(supabase, id, images)
-  if (imgErr) {
-    return NextResponse.json(
-      { error: `Listing saved, but its images failed: ${imgErr}`, id },
-      { status: 500 },
-    )
+  if (imgs.images !== undefined) {
+    const imgErr = await replaceProductImages(supabase, id, imgs.images)
+    if (imgErr) {
+      return NextResponse.json(
+        { error: `Listing saved, but its images failed: ${imgErr}`, id },
+        { status: 500 },
+      )
+    }
   }
 
   return NextResponse.json({ id, slug: parsed.value.slug })

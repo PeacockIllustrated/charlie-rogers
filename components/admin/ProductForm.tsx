@@ -66,13 +66,17 @@ const STATUSES: ProductStatus[] = ['draft', 'published', 'sold', 'archived']
 export function ProductForm({
   initial,
   mode,
+  initialErrors = [],
 }: {
   initial: ProductFormInitial
   mode: 'create' | 'edit'
+  // Carried across the redirect from a create that saved the listing but not
+  // its images. See the partial-create branch in submit().
+  initialErrors?: string[]
 }) {
   const router = useRouter()
   const [form, setForm] = useState(initial)
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<string[]>(initialErrors)
   const [saving, setSaving] = useState(false)
   const [archiving, setArchiving] = useState(false)
 
@@ -175,8 +179,24 @@ export function ProductForm({
         },
       )
       if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as { error?: string } | null
-        throw new Error(data?.error || `Save failed (${res.status})`)
+        const data = (await res.json().catch(() => null)) as
+          | { error?: string; id?: string }
+          | null
+        const message = data?.error || `Save failed (${res.status})`
+        // A create that returns an id has already written the listing; only its
+        // images failed. Staying on the create form is the trap: saving again
+        // hits the slug conflict, and changing the slug to get past it creates a
+        // second listing for the same painting. Go to the one that exists and
+        // carry the message, since the edit page is a Server Component and this
+        // component's state does not survive the navigation.
+        if (mode === 'create' && data?.id) {
+          setForm((f) => ({ ...f }))
+          router.push(
+            `/admin/products/${data.id}/edit?error=${encodeURIComponent(message)}`,
+          )
+          return
+        }
+        throw new Error(message)
       }
       // Reset the dirty check before navigating, or the guard fires on our own
       // redirect and asks the person whether they want to discard work we have

@@ -10,6 +10,7 @@ import {
   slugify,
   poundsToPence,
   penceToPounds,
+  validateImages,
   validateProductInput,
   productWarnings,
 } from '../lib/shop/product-input.ts'
@@ -137,4 +138,62 @@ test('warnings fire only where they are useful', () => {
     productWarnings({ status: 'sold', price_pence: 2500, stock_count: 3, imageCount: 1, description: 'x' }),
     ['Marked sold but stock remains'],
   )
+})
+
+// validateImages: the gap that let a malformed payload through to the database
+// layer, and the one that turned an absent field into "delete them all".
+test('validateImages treats absent as untouched, not empty', () => {
+  const r = validateImages(undefined)
+  assert.equal(r.ok, true)
+  assert.equal(r.ok && r.images, undefined)
+})
+
+test('validateImages keeps an explicit empty array distinct from absent', () => {
+  const r = validateImages([])
+  assert.equal(r.ok, true)
+  assert.deepEqual(r.ok && r.images, [])
+})
+
+test('validateImages rejects a non-array', () => {
+  assert.equal(validateImages('nope').ok, false)
+})
+
+test('validateImages rejects null and non-object entries', () => {
+  assert.equal(validateImages([null]).ok, false)
+  assert.equal(validateImages(['/a.jpg']).ok, false)
+  assert.equal(validateImages([[]]).ok, false)
+})
+
+test('validateImages requires a non-empty storage path', () => {
+  assert.equal(validateImages([{ storage_path: '' }]).ok, false)
+  assert.equal(validateImages([{ storage_path: '   ' }]).ok, false)
+  assert.equal(validateImages([{ alt_text: 'x' }]).ok, false)
+})
+
+test('validateImages rejects a bad id or alt text', () => {
+  assert.equal(validateImages([{ storage_path: '/a.jpg', id: 7 }]).ok, false)
+  assert.equal(validateImages([{ storage_path: '/a.jpg', alt_text: 7 }]).ok, false)
+})
+
+test('validateImages orders by position and makes only the first primary', () => {
+  const r = validateImages([
+    { storage_path: '/a.jpg', alt_text: null, display_order: 9, is_primary: false },
+    { storage_path: '/b.jpg', alt_text: 'B', display_order: 0, is_primary: true },
+  ])
+  assert.equal(r.ok, true)
+  assert.deepEqual(
+    r.ok && r.images,
+    [
+      { storage_path: '/a.jpg', alt_text: null, display_order: 0, is_primary: true },
+      { storage_path: '/b.jpg', alt_text: 'B', display_order: 1, is_primary: false },
+    ],
+  )
+})
+
+test('validateImages keeps a string id and normalises missing alt text', () => {
+  const r = validateImages([{ storage_path: '/a.jpg', id: 'abc' }])
+  assert.equal(r.ok, true)
+  assert.deepEqual(r.ok && r.images, [
+    { id: 'abc', storage_path: '/a.jpg', alt_text: null, display_order: 0, is_primary: true },
+  ])
 })

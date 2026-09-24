@@ -78,6 +78,11 @@ export async function replaceProductImages(
           is_primary: img.is_primary,
         })
         .eq('id', img.id)
+        // Scoped to this product as well as the row id. An admin is allowed to
+        // write every row, so an image id belonging to another listing would
+        // otherwise rewrite that listing's order and caption from here. The
+        // delete above is already scoped, through the rows it read back.
+        .eq('product_id', productId)
       if (error) return error.message
     } else {
       const { error } = await supabase.from('charlie_product_images').insert({

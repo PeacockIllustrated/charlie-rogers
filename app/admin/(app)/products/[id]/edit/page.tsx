@@ -13,10 +13,16 @@ export const metadata = { title: 'Edit product' }
 
 export default async function EditProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  // Set when a create saved the listing but failed on its images and sent the
+  // person here rather than leaving them on a create form for a listing that
+  // already exists.
+  searchParams: Promise<{ error?: string }>
 }) {
   const { id } = await params
+  const { error: carriedError } = await searchParams
   const supabase = await createSupabaseServerClient()
 
   const { data: product } = await supabase
@@ -75,7 +81,11 @@ export default async function EditProductPage({
             : `Status: ${PRODUCT_STATUS_LABELS[typed.status].toLowerCase()}`}
         </p>
       </div>
-      <ProductForm mode="edit" initial={initial} />
+      <ProductForm
+        mode="edit"
+        initial={initial}
+        initialErrors={carriedError ? [carriedError] : []}
+      />
     </div>
   )
 }
