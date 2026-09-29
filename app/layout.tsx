@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { EB_Garamond, Inter } from 'next/font/google'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 // Root layout: html/body, fonts, global styles only. The public site chrome
@@ -23,6 +24,7 @@ const sans = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Charlie Rogers, Pursued by Bulldozers',
     template: '%s · Charlie Rogers',

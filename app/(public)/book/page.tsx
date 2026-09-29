@@ -67,7 +67,7 @@ export default function BookPage() {
             <Eyebrow rule={false}>Where to buy</Eyebrow>
             <p className="font-serif text-body text-ink-soft mt-3">
               The book is available through Come View My Art Gallery, Sheriffs
-              Highway, Low Fell, Gateshead. Price on request.
+              Highway, Low Fell, Gateshead, priced at £25.
             </p>
             <p className="font-sans text-small text-ink-mute mt-3">
               Online ordering is coming soon.
