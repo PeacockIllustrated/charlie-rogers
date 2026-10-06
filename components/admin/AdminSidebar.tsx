@@ -7,6 +7,7 @@ import { cn } from '@/lib/shop/utils'
 const SECTIONS = [
   { href: '/admin', label: 'Dashboard', exact: true },
   { href: '/admin/products', label: 'Products' },
+  { href: '/admin/orders', label: 'Orders' },
 ]
 
 export function AdminSidebar({ userEmail }: { userEmail: string }) {

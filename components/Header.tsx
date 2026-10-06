@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Roundel } from './Roundel'
+import { BasketLink } from './shop/BasketLink'
 
 // Sticky, paper background, 1px bottom rule. The roundel and a wordmark in
 // EB Garamond italic. Desktop: inline Jost small-caps nav. Mobile: a hamburger reveals a full-screen
@@ -53,37 +54,41 @@ export function Header() {
           <span className="font-serif text-[1.4375rem] italic leading-none">Charlie Rogers</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav
-          aria-label="Main"
-          className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5"
-        >
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              aria-current={isActive(pathname, n.href) ? 'page' : undefined}
-              className={`relative py-2 font-sans text-xs uppercase tracking-eyebrow transition-colors duration-colour hover:text-ink ${
-                isActive(pathname, n.href) ? 'text-bensham' : 'text-ink-soft'
-              }`}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-x-5">
+          {/* Desktop nav */}
+          <nav
+            aria-label="Main"
+            className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5"
+          >
+            {nav.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                aria-current={isActive(pathname, n.href) ? 'page' : undefined}
+                className={`relative py-2 font-sans text-xs uppercase tracking-eyebrow transition-colors duration-colour hover:text-ink ${
+                  isActive(pathname, n.href) ? 'text-bensham' : 'text-ink-soft'
+                }`}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={open}
-          className="md:hidden -mr-2.5 p-2.5 text-ink"
-        >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
-        </button>
+          <BasketLink />
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={open}
+            className="md:hidden -mr-2.5 p-2.5 text-ink"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile full-screen overlay */}

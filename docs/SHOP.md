@@ -3,8 +3,9 @@
 A test commerce surface for the Charlie Rogers site, modelled on the
 durham-stickmakers product CMS. Products (books, prints, originals) are managed
 through an admin dashboard backed by Supabase, and shown on a public `/shop`.
-There is no Stripe checkout yet; the public product page shows an "enquire"
-call to action.
+The book and the greeting card pack can be put in a basket and ordered;
+everything else is by enquiry. Payment is a plug-in point: orders are taken
+without online payment until Stripe is added. See "Checkout and payment".
 
 `/shop` is deliberately not linked from the site header or footer. It is a test
 surface, reachable only by visiting the URL directly. It is also set to
@@ -79,8 +80,78 @@ WHERE email = 'you@example.com'
 ON CONFLICT (user_id) DO NOTHING;
 ```
 
+## Checkout and payment
+
+### What can be bought
+
+Only published, priced products of type `book` or `other` with stock left
+(`purchasability()` in `lib/shop/commerce.ts`). Prints and originals are always
+by enquiry: the files we hold are not print quality, and CLAUDE.md rules out a
+print purchase flow against them. `charlie_place_order` applies the same rule
+in the database, so the two must be widened together when scans arrive.
+
+### The flow
+
+1. **Product page.** "Add to basket" with a quantity, shown only when the
+   checkout is open. Otherwise the book and cards fall back to enquiry.
+2. **Basket** (`/shop/basket`). Stored in the browser's localStorage as slugs
+   and quantities only. Every view is priced by the server
+   (`quoteBasketAction`), so a stale basket can never carry an old price.
+   Anything no longer saleable is removed with a sentence saying why. The
+   header shows a basket link only while something is in it.
+3. **Checkout** (`/shop/checkout`). Name, email, optional phone, UK address,
+   optional note. Validated in `lib/shop/checkout-input.ts` (tested).
+4. **Placing the order** (`placeOrderAction`). Re-prices, then calls the
+   `charlie_place_order` database function through the service role. That
+   function locks the product rows, re-reads prices, checks stock, refuses the
+   order if the subtotal differs from what the customer saw, writes the order
+   and its lines, and takes the stock, all in one transaction.
+5. **Payment.** The saved order is handed to a `PaymentProvider`
+   (`lib/shop/payments.ts`), which returns where to send the customer.
+6. **Confirmation** (`/shop/order/CR-2026-0001?t=<token>`). Read through the
+   service role by order number and a 64 character access token. Empties the
+   basket.
+7. **Admin** (`/admin/orders`). Every order, with buttons to mark it paid,
+   posted, completed, refunded or cancelled. Cancelling returns the stock
+   (database trigger); a cancelled order cannot be reopened.
+
+### Switching it on
+
+`SHOP_CHECKOUT` chooses the mode. Unset or `closed` is the default and takes
+no orders. `manual` takes and reserves orders with no online payment: the shop
+emails the customer to arrange payment and postage, then marks the order paid
+in the admin. Either way the checkout also needs `SUPABASE_SERVICE_ROLE_KEY`,
+and the `20261006150000_charlie-shop-orders.sql` migration applied.
+
+Optional: set `RESEND_API_KEY`, `SHOP_EMAIL_FROM` and `SHOP_ORDER_NOTIFY_EMAIL`
+and the shop is emailed each new manual order. Without them, orders only
+appear in the admin.
+
+### Adding Stripe
+
+Nothing outside these files needs to change:
+
+1. `pnpm add stripe`, and set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`.
+2. Add a `stripe` provider in `lib/shop/payments.ts` whose `startPayment`
+   creates a Checkout Session for the order (line items from
+   `charlie_order_items`, `client_reference_id` set to the order id,
+   `success_url` set to `confirmationPath(order)`), stores the session id in
+   `payment_reference`, and returns the session URL. Return `'stripe'` from
+   `getCheckoutMode()` when `SHOP_CHECKOUT=stripe`.
+3. Add `app/api/stripe/webhook/route.ts`. On `checkout.session.completed`, set
+   the order `paid` and `paid_at` (service role). On
+   `checkout.session.expired`, set it `cancelled`, which returns the stock.
+4. The checkout copy for Stripe is already in
+   `app/(public)/shop/checkout/page.tsx`; check the wording.
+
+### Still to decide
+
+- **UK postage.** Not stated by Brian. `UK_POSTAGE_PENCE` in
+  `lib/shop/commerce.ts` is null, so totals read "before postage". Stripe
+  needs a figure.
+- **Card pack stock.** No print run stated; set to 100 as a placeholder.
+- **Customer receipt email.** Only the shop is emailed today.
+
 ## Not yet built
 
-- Stripe checkout, orders, and a webhook (the durham version has these; this is
-  CMS plus shop only for now).
 - A link from the public navigation (intentionally omitted while it is a test).
