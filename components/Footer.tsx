@@ -18,10 +18,14 @@ const footerLinks = [
 export function Footer() {
   const edition = catalogueBySlug('pursued-by-bulldozers-special-edition')
   return (
-    <footer className="mt-16">
-      <Skyline />
-      <section className="bg-bensham-deep text-paper">
-        <div className="mx-auto grid max-w-content items-center gap-10 px-6 py-16 md:grid-cols-12 lg:py-20">
+    // The street at dusk runs straight down into the footer: one deep red
+    // block, the book first, then the way around the site.
+    <footer className="mt-16 bg-bensham-deep text-paper">
+      <div className="bg-paper">
+        <Skyline />
+      </div>
+      <div className="border-t border-[#4A1010] bg-[#4A1010]">
+        <div className="mx-auto grid max-w-content items-center gap-10 px-6 py-14 md:grid-cols-12 lg:py-20">
           <div className="md:col-span-3">
             <Roundel size={168} tone="paper" title="The Charlie Rogers roundel, embossed on every copy of the special edition" />
           </div>
@@ -49,42 +53,50 @@ export function Footer() {
             )}
             <Link
               href="/book"
-              className="inline-block py-2.5 font-sans text-small text-paper underline-offset-4 hover:underline"
+              className="inline-block border border-paper/40 px-4 py-2.5 font-sans text-small text-paper transition-colors duration-colour hover:border-paper"
             >
               About the book
             </Link>
           </div>
         </div>
-      </section>
+      </div>
 
-      <div className="mx-auto max-w-content px-6 py-12">
-        <div className="grid gap-8 md:grid-cols-12">
+      <div className="mx-auto max-w-content px-6 pb-10 pt-14">
+        <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-6">
-            <div className="font-serif text-h3 italic">Charlie Rogers</div>
-            <p className="mt-2 max-w-reading font-serif text-body text-ink-soft">
-              Self-taught Gateshead painter, 1930 to 2020. He documented the back
-              lanes, pubs and churches of Tyneside, often days before the
-              bulldozers arrived.
+            <p className="font-serif text-display-2 italic leading-none">Charlie Rogers</p>
+            <p className="mt-3 font-sans text-xs uppercase tracking-eyebrow text-paper/70">
+              Gateshead, 1930 to 2020
+            </p>
+            <p className="mt-5 max-w-reading font-serif text-body text-paper/85">
+              Self-taught painter of the back lanes, pubs and churches of
+              Tyneside, often days before the bulldozers arrived.
             </p>
           </div>
           <nav aria-label="Footer" className="md:col-span-6">
-            <ul className="grid grid-cols-2 gap-x-6 sm:grid-cols-3">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-paper/70">
+              The archive
+            </p>
+            <ul className="mt-3 grid grid-cols-2 gap-x-6 border-t border-paper/20 sm:grid-cols-3">
               {footerLinks.map((l) => (
-                <li key={l.href}>
+                <li key={l.href} className="border-b border-paper/20">
                   <Link
                     href={l.href}
-                    // py-1.5 keeps the tap target above the WCAG 2.5.8
+                    // py-3 keeps the tap target above the WCAG 2.5.8
                     // minimum of 24px.
-                    className="inline-block py-1.5 font-sans text-xs uppercase tracking-eyebrow text-ink-soft transition-colors duration-colour hover:text-bensham"
+                    className="group flex items-center justify-between py-3 font-serif text-body text-paper transition-colors duration-colour hover:text-mount"
                   >
                     {l.label}
+                    <span aria-hidden="true" className="font-sans text-xs text-paper/50 transition-transform duration-colour group-hover:translate-x-1">
+                      &rarr;
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
         </div>
-        <p className="mt-10 border-t border-rule pt-6 font-sans text-xs text-ink-mute">
+        <p className="mt-14 border-t border-paper/20 pt-6 font-sans text-xs text-paper/70">
           Artwork &copy; Charles Rogers Junior. Built around the book by Brian
           Rankin, Littlecroft Publishing, 2025.
         </p>

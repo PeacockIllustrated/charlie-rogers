@@ -200,7 +200,7 @@ Three flat planes, separated by tone and a 1px `--rule` edge, never by shadow or
 
 A coloured 2px top edge marks a card's kind where it helps, such as the place tallies (red, ochre, sage) or the special edition (red). Paintings keep their mount, now with a rule edge so the mount reads as a board on the page.
 
-Introduced in October 2026 after Tom noted the first redesign left too much content sitting straight on the page.
+Every page now follows this: chapters on the story page and eras on the timeline alternate between page and full-width panel; exhibitions, people, the shop and the product pages put their lists on panels and their items on cards; the closing book callout is a panel with a red top edge. Introduced in October 2026 after Tom noted the first redesign left too much content sitting straight on the page.
 
 ## Signature devices
 
@@ -235,7 +235,7 @@ Pen and wash drawings made for the site in Charlie's manner, never passed off as
 - **Snow over Bensham Road** on the home page, over the painting itself, because it is a snow scene.
 - **The race** (`Demolition`) on the home and places pages: a bulldozer works along a terrace, shoving each house in turn: the house shakes, its chimney topples, the front folds down into a cloud of brick dust, bricks arc out and land on a rubble heap, and the dozer moves on to the next. Meanwhile a man in a flat cap paints the last of the row at his easel. The cycle takes 30 seconds, then the street is drawn again.
 - **The view from the window** (`BackLane`) in the 1964 section: the back lane from 262 Bensham Road, framed as a sash window. Its lines draw themselves in when it scrolls into view, in the order a sketch is built (yard walls, the house backs and stacks behind, gates and setts, then people). Washing sways on the line, the cat on the wall flicks its tail, the gas lamp glows, the man and his dog walk away up the lane. The caption says it was drawn for the site and that Charlie's painting has not been found.
-- **The street** (`Skyline`) above every footer: a freehand roofline in Bensham deep red, pitched roofs at uneven heights, leaning chimney pots, TV aerials, a chapel spire and a corner pub whose sign swings. Pigeons cross, chimneys smoke, a few windows light and dim.
+- **The street** (`Skyline`) at the top of every footer: a Tyneside street at dusk, cut freehand in Bensham deep red over a paler far row of roofs that drifts slower than the page. As it scrolls into view the windows light one by one, and a lamplighter walks the pavement lighting each gas lamp as he reaches it. There is also a chapel spire, a swinging pub sign, aerials, pigeons and smoke. The footer below is one deep red block: the book, then the wordmark and the archive links.
 
 With `prefers-reduced-motion` the smoke, snow and dust are removed, and every drawing shows complete and at rest, with the bulldozer halfway along the street.
 

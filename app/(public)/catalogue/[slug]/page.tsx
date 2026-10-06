@@ -191,7 +191,7 @@ export default async function EntryPage({
       )}
 
       {e.photograph && (
-        <section className="mt-16 border-t border-rule pt-6">
+        <section className="mt-16 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-4">
               <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">

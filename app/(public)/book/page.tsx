@@ -114,7 +114,7 @@ export default function BookPage() {
         </div>
 
         {/* Flip-book sample */}
-        <section id="inside" className="mt-20 border-t border-rule pt-6">
+        <section id="inside" className="mt-20 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10">
           <div className="grid gap-6 lg:grid-cols-12">
             <div className="lg:col-span-4">
               <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
@@ -133,7 +133,7 @@ export default function BookPage() {
         </section>
 
         {/* Contents */}
-        <section className="mt-20 border-t border-rule pt-6">
+        <section className="mt-20 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10">
           <div className="grid gap-6 lg:grid-cols-12">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham lg:col-span-4">
               What is inside

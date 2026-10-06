@@ -10,7 +10,10 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   const sold = product.status === 'sold'
 
   return (
-    <Link href={`/shop/${product.slug}`} className="group block">
+    <Link
+      href={`/shop/${product.slug}`}
+      className="group flex h-full flex-col border border-rule bg-paper p-3 transition-colors duration-colour hover:border-ink-mute"
+    >
       {/* Fixed aspect box so titles sit on a common baseline across a row.
           The painting is contained, never cropped: these are artworks, and
           Charlie's signature sits in a corner on most of them. */}
@@ -38,7 +41,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
         )}
       </div>
 
-      <div className="mt-3">
+      <div className="px-2 pb-2 pt-4">
         <h3 className="font-serif text-h4 transition-colors duration-colour group-hover:text-bensham">
           {product.title}
         </h3>

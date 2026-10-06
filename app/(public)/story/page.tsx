@@ -12,11 +12,17 @@ export const metadata: Metadata = {
 }
 
 function Chapter({ section, number }: { section: StorySection; number: number }) {
+  const warm = number % 2 === 0
   const info = section.image ? imageInfo(section.image) : undefined
   const entry = info?.entry
   return (
-    <section className="border-t border-rule pt-6" aria-labelledby={`ch-${section.slug}`}>
-      <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+    // Chapters alternate between the page and a warm panel running the full
+    // width, so each period reads as its own room rather than one long column.
+    <section
+      className={warm ? 'border-y border-rule bg-paper-warm' : ''}
+      aria-labelledby={`ch-${section.slug}`}
+    >
+      <div className="mx-auto grid max-w-content gap-8 px-6 py-16 lg:grid-cols-12 lg:gap-10 lg:py-24">
         {/* The period hangs in the rail, as the book sets its chapter heads */}
         <div className="lg:col-span-3">
           <div className="lg:sticky lg:top-24">
@@ -42,7 +48,7 @@ function Chapter({ section, number }: { section: StorySection; number: number })
             ))}
           </div>
           {section.quote && (
-            <figure className="mt-10 border border-rule border-t-2 border-t-bensham bg-paper-warm p-6">
+            <figure className="mt-10 border border-rule border-t-2 border-t-bensham bg-paper p-6">
               <blockquote className="font-serif text-lead italic text-bensham">
                 {section.quote.text}
               </blockquote>
@@ -83,8 +89,8 @@ function Chapter({ section, number }: { section: StorySection; number: number })
 
 export default function StoryPage() {
   return (
-    <div className="mx-auto max-w-content px-6 pb-16 pt-12">
-      <header className="grid gap-8 lg:grid-cols-12">
+    <div className="pt-12">
+      <header className="mx-auto grid max-w-content gap-8 px-6 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
             1930 to 2020
@@ -96,7 +102,7 @@ export default function StoryPage() {
         </p>
       </header>
 
-      <div className="mt-20 space-y-24">
+      <div className="mt-16 border-t border-rule">
         {storySections.map((section, i) => (
           <Chapter key={section.slug} section={section} number={i + 1} />
         ))}

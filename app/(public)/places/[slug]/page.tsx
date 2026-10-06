@@ -114,7 +114,7 @@ export default async function PlacePage({
       </div>
 
       {photo && photoImage && (
-        <section className="mt-20 border-t border-rule pt-6">
+        <section className="mt-20 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-5">
               <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
@@ -141,11 +141,11 @@ export default async function PlacePage({
       )}
 
       {others.length > 0 && (
-        <section className="mt-20 border-t border-rule pt-6">
+        <section className="mt-20 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10">
           <h2 className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
             More of {place.name} in the catalogue
           </h2>
-          <div className="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {others.map((e) => (
               <CatalogueCard key={e.slug} entry={e} />
             ))}

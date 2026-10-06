@@ -337,6 +337,27 @@
   100% { transform: rotate(9deg); }
 }
 
+/* Footer street at dusk: windows come on one by one as it scrolls into
+   view (DrawIn adds is-drawn), and the far row of roofs drifts slower than
+   the page where the browser supports scroll-driven animation. */
+.draw .dusk-window {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.draw.is-drawn .dusk-window {
+  opacity: 0.92;
+}
+@supports (animation-timeline: view()) {
+  .sky-far {
+    animation: sky-far linear both;
+    animation-timeline: view();
+  }
+  @keyframes sky-far {
+    0% { transform: translateY(18px); }
+    100% { transform: translateY(-6px); }
+  }
+}
+
 .window-glow {
   opacity: 0.85;
   animation: window-glow 9s ease-in-out infinite;
@@ -379,6 +400,13 @@
   .wingbeat,
   .pub-sign {
     animation: none;
+  }
+  .sky-far {
+    animation: none;
+  }
+  .draw .dusk-window {
+    transition: none;
+    opacity: 0.92;
   }
   .flock {
     display: none;
