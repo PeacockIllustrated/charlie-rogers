@@ -159,13 +159,28 @@ export function productWarnings(p: {
   stock_count: number
   imageCount: number
   description: string | null
+  // Optional so older callers still work; with it, the price and stock
+  // warnings follow what can be ordered online (see lib/shop/commerce.ts).
+  product_type?: ProductType
 }): string[] {
   const out: string[] = []
+  // Books and the card pack are ordered online, so their price and stock
+  // matter. Prints and originals are by enquiry, where stock means nothing
+  // and no price is the norm until Brian sets one.
+  const online = p.product_type === undefined || p.product_type === 'book' || p.product_type === 'other'
   if (p.status === 'published') {
     if (p.imageCount === 0) out.push('Published with no image')
-    if (p.price_pence === 0) out.push('Published at price on application')
+    // An unpriced print is the norm until Brian prices them, so it is not
+    // flagged once the type is known: nine permanent warnings bury the real
+    // ones on the dashboard.
+    if (p.price_pence === 0) {
+      if (p.product_type === undefined) out.push('Published at price on application')
+      else if (online) out.push('No price, so it cannot be ordered online')
+    }
     if (!p.description) out.push('Published with no description')
-    if (p.stock_count === 0) out.push('Published but out of stock')
+    if (online && p.stock_count === 0) {
+      out.push(p.product_type === undefined ? 'Published but out of stock' : 'Sold out online: stock is zero')
+    }
   }
   if (p.status === 'sold' && p.stock_count > 0) {
     out.push('Marked sold but stock remains')

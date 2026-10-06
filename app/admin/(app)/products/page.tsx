@@ -136,7 +136,7 @@ export default async function AdminProductsPage({
       )}
 
       {products.length === 0 ? (
-        <div className="border border-dashed border-rule bg-paper p-10 text-center">
+        <div className="border border-rule bg-paper p-10 text-center">
           <p className="font-serif text-h3">
             {search
               ? `Nothing matches "${search}"`
@@ -180,6 +180,7 @@ export default async function AdminProductsPage({
                 const thumbUrl = primary ? shopImageUrl(primary.storage_path) : null
                 const warnings = productWarnings({
                   status: p.status,
+                  product_type: p.product_type,
                   price_pence: p.price_pence,
                   stock_count: p.stock_count,
                   imageCount: p.images?.length ?? 0,

@@ -122,6 +122,7 @@ export function ProductForm({
 
   const warnings = productWarnings({
     status: form.status,
+    product_type: form.product_type,
     price_pence: pricePence ?? 0,
     stock_count: Number.isFinite(stockCount) ? stockCount : 0,
     imageCount: form.images.length,
@@ -295,7 +296,11 @@ export function ProductForm({
               </div>
             </Field>
 
-            <Field label="Type" htmlFor="product_type">
+            <Field
+              label="Type"
+              htmlFor="product_type"
+              help="A book or other item can be ordered online once it has a price and stock. Prints and originals are always by enquiry."
+            >
               <select
                 id="product_type"
                 className="input"
@@ -438,7 +443,7 @@ export function ProductForm({
             <Field
               label="Price (£)"
               htmlFor="price_gbp"
-              help="Leave blank or zero to show price on application."
+              help="Leave blank or zero to show price on application. A book or other item needs a price to be ordered online."
             >
               <input
                 id="price_gbp"
@@ -458,7 +463,7 @@ export function ProductForm({
             <Field
               label="Stock count"
               htmlFor="stock_count"
-              help="One for an original. Zero reads as out of stock."
+              help="For a book or other item, each order takes from this and a cancelled order puts it back; ordering stops at zero. One for an original."
             >
               <input
                 id="stock_count"

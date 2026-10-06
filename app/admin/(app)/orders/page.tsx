@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ORDER_COLUMNS, ORDER_STATUS_LABELS, type Order, type OrderStatus } from '@/lib/shop/orders'
 import { formatPence, cn } from '@/lib/shop/utils'
 import { setOrderStatus } from './actions'
+import { StatusButton } from './StatusButton'
 
 const FILTERS: Array<{ value: OrderStatus | 'all'; label: string }> = [
   { value: 'all', label: 'All' },
@@ -133,9 +134,12 @@ export default async function AdminOrdersPage({
                       <form key={next} action={setOrderStatus}>
                         <input type="hidden" name="id" value={o.id} />
                         <input type="hidden" name="status" value={next} />
-                        <button type="submit" className={next === 'cancelled' || next === 'refunded' ? 'btn-admin-outline' : 'btn-admin'}>
-                          {ACTION_LABELS[next]}
-                        </button>
+                        <StatusButton
+                          label={ACTION_LABELS[next] ?? next}
+                          orderNumber={o.order_number}
+                          confirmFirst={next === 'cancelled' || next === 'refunded'}
+                          outline={next === 'cancelled' || next === 'refunded'}
+                        />
                       </form>
                     ))}
                   </div>

@@ -162,3 +162,15 @@ test('normalisePostcode', () => {
   assert.equal(normalisePostcode(' SW1A   1AA '), 'SW1A 1AA')
   assert.equal(normalisePostcode('bfpo 801'), 'BFPO 801')
 })
+
+import { productWarnings } from '../lib/shop/product-input.ts'
+
+test('productWarnings: stock and price matter only for what is ordered online', () => {
+  const base = { status: 'published' as const, imageCount: 1, description: 'x' }
+  assert.deepEqual(productWarnings({ ...base, product_type: 'print', price_pence: 0, stock_count: 0 }), [])
+  assert.deepEqual(productWarnings({ ...base, product_type: 'book', price_pence: 0, stock_count: 0 }), [
+    'No price, so it cannot be ordered online',
+    'Sold out online: stock is zero',
+  ])
+  assert.deepEqual(productWarnings({ ...base, product_type: 'other', price_pence: 1000, stock_count: 5 }), [])
+})
