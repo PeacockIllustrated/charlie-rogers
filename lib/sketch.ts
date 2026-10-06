@@ -70,6 +70,20 @@ export function wash(r: Rng, pts: [number, number][], spill = 2.5): string {
 
 export type Shape = { d: string; fill?: string; opacity?: number }
 
+export type Range = [number, number]
+
+export type House = {
+  left: number
+  right: number
+  ridge: number
+  stackTop: number
+  base: number
+  ink: Range
+  wash: Range
+  stackInk: Range
+  stackWash: Range
+}
+
 export type Terrace = {
   ink: string[]
   washes: Shape[]
@@ -77,6 +91,10 @@ export type Terrace = {
   blocks: string[]
   // Window openings as [x, y, w, h], for lighting them at dusk.
   windows: [number, number, number, number][]
+  // Each house's share of ink and washes, as index ranges into the arrays
+  // above, so a house can be animated on its own. The stack is kept apart
+  // from the rest of the house so it can fall first.
+  houses: House[]
   // Tops of the chimney pots, where smoke rises from.
   pots: [number, number][]
   width: number
@@ -113,6 +131,7 @@ export function terrace(
   const pots: [number, number][] = []
   const blocks: string[] = []
   const windows: [number, number, number, number][] = []
+  const houses: House[] = []
   let cx = x
   for (let i = 0; i < count; i++) {
     const hw = w[0] + r() * (w[1] - w[0])
@@ -121,6 +140,9 @@ export function terrace(
     const ridge = eave - 16 - r() * 10
     const left = cx
     const right = cx + hw
+
+    const inkStart = ink.length
+    const washStart = fills.length
 
     // In silhouette a terrace reads as a stepped roofline, each house's ridge
     // a little higher or lower than the next, as the row climbs the bank.
@@ -148,6 +170,8 @@ export function terrace(
     // Chimney stack on the party wall, with two or three pots
     const sx = right - 9
     const stackTop = ridge - 14 - r() * 6
+    const stackInkStart = ink.length
+    const stackWashStart = fills.length
     ink.push(outline(r, [[sx, ridge + 2], [sx, stackTop], [sx + 16, stackTop], [sx + 16, ridge + 2]], false, 0.6))
     blocks.push(`M${r1(sx)} ${r1(ridge + 4)}L${r1(sx)} ${r1(stackTop)}L${r1(sx + 16)} ${r1(stackTop)}L${r1(sx + 16)} ${r1(ridge + 4)}Z`)
     if (washes) fills.push({ d: wash(r, [[sx, ridge], [sx, stackTop], [sx + 16, stackTop], [sx + 16, ridge]], 1), fill: BRICK, opacity: 0.3 })
@@ -159,6 +183,8 @@ export function terrace(
       ink.push(stroke(r, px + 3, stackTop, px + 3.2, stackTop - 5, 0.3))
       pots.push([px + 1.5, stackTop - 6])
     }
+    const stackInk: Range = [stackInkStart, ink.length]
+    const stackWash: Range = [stackWashStart, fills.length]
 
     // Windows: two up, one down, and a door
     const winW = hw * 0.24
@@ -183,8 +209,19 @@ export function terrace(
     }
     ink.push(stroke(r, doorX - 3, base - 2, doorX + doorW + 3, base - 2, 0.3))
 
+    houses.push({
+      left,
+      right,
+      ridge,
+      stackTop,
+      base,
+      ink: [inkStart, ink.length],
+      wash: [washStart, fills.length],
+      stackInk,
+      stackWash,
+    })
     cx = right
   }
   ink.push(stroke(r, x - 10, base, cx + 10, base, 0.6))
-  return { ink, washes: fills, blocks, windows, pots, width: cx - x }
+  return { ink, washes: fills, blocks, windows, houses, pots, width: cx - x }
 }

@@ -1,9 +1,8 @@
-import { rng, stroke, outline, wash, terrace } from '@/lib/sketch'
+import { rng, stroke, outline, wash, terrace, type House, type Range } from '@/lib/sketch'
 import { InkDefs, Smoke } from './Ink'
 
 // The race, drawn. A terrace stands across the frame; a bulldozer works along
-// it from the left and the houses come down behind its blade, leaving brick
-// rubble. At the far end a man in a flat cap stands at his easel, painting
+// it from the left, knocking each house down in turn into dust and rubble. At the far end a man in a flat cap stands at his easel, painting
 // the last of the row before it goes. Then the street is drawn again and the
 // race restarts. This is the book's whole argument in one moving line.
 
@@ -78,80 +77,238 @@ function Painter({ r, x }: { r: () => number; x: number }) {
   )
 }
 
-function Rubble({ r }: { r: () => number }) {
-  const mounds: string[] = []
-  const bricks: string[] = []
-  for (let x = 10; x < 1000; x += 38 + r() * 30) {
-    const w = 60 + r() * 50
-    const h = 10 + r() * 14
-    mounds.push(`M${x} ${BASE}Q${x + w * 0.3} ${BASE - h} ${x + w * 0.55} ${BASE - h * 0.8}Q${x + w * 0.8} ${BASE - h * 0.5} ${x + w} ${BASE}Z`)
-    for (let b = 0; b < 4; b++) {
-      const bx = x + r() * w
-      const by = BASE - 2 - r() * h * 0.7
-      bricks.push(outline(r, [[bx, by], [bx + 6, by - 1], [bx + 6.5, by + 2.5], [bx + 0.5, by + 3.5]], true, 0.3))
-    }
-  }
-  return (
-    <g>
-      {mounds.map((d, i) => (
-        <path key={i} d={d} fill="#A85842" opacity={0.2} />
-      ))}
-      {bricks.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke="#44423D" strokeWidth={0.8} />
-      ))}
-    </g>
+const CYCLE = 30
+const pc = (n: number) => `${Math.round(n * 100) / 100}%`
+
+type Plan = { arrive: number[]; dozer: string }
+
+// The choreography, worked out from where each house actually stands. The
+// bulldozer drives up to a house, shoves, and the house shakes, loses its
+// chimney, then folds away from the blade into a cloud of brick dust and a
+// heap of rubble. It reverses a touch, drives on to the next. After the last
+// house it rolls off, the street is drawn up again, and the race restarts.
+function plan(lefts: number[], last: number): Plan {
+  const n = lefts.length
+  const first = 6
+  const step = (84 - first) / n
+  const arrive = lefts.map((_, i) => first + i * step)
+  const T0 = -110
+  const at = (left: number) => left - 98
+  const frames: [number, number, number][] = [[0, T0, 0]]
+  arrive.forEach((a, i) => {
+    const t = at(lefts[i])
+    frames.push([a, t, 0])
+    frames.push([a + 0.8, t + 6, -1.6])
+    frames.push([a + 2.2, t + 3, 0])
+    frames.push([a + step * 0.62, t + 1, 0])
+  })
+  frames.push([88, at(last) + 60, 0])
+  frames.push([100, at(last) + 60, 0])
+  const body = frames
+    .map(([p, x, rot]) => `${pc(p)}{transform:translateX(${Math.round(x)}px) rotate(${rot}deg)}`)
+    .join('')
+  return { arrive, dozer: body }
+}
+
+function choreography(id: string, houses: House[], last: number): string {
+  const { arrive, dozer } = plan(
+    houses.map((h) => h.left),
+    last,
   )
+  const k = (name: string) => `${id}-${name}`
+  const css: string[] = []
+  css.push(`@keyframes ${k('dz')}{${dozer}}`)
+  css.push(`@keyframes ${k('dzf')}{0%{opacity:0}2%{opacity:1}89%{opacity:1}94%,100%{opacity:0}}`)
+  css.push(`.${id} .dz{animation:${k('dz')} ${CYCLE}s linear infinite,${k('dzf')} ${CYCLE}s linear infinite}`)
+  arrive.forEach((a, i) => {
+    css.push(
+      `@keyframes ${k(`h${i}`)}{0%,${pc(a)}{transform:none;opacity:1}${pc(a + 0.6)}{transform:translateX(1.6px)}${pc(a + 1.2)}{transform:translateX(-1.6px) rotate(-0.4deg)}${pc(a + 1.9)}{transform:translateX(1.2px) rotate(0.8deg);opacity:1}${pc(a + 4.6)}{transform:translate(12px,8px) rotate(10deg) scaleY(0.2);opacity:0}95.9%{transform:translate(12px,8px) rotate(10deg) scaleY(0.2);opacity:0}96%{transform:none;opacity:0}99.5%,100%{transform:none;opacity:1}}`,
+    )
+    css.push(
+      `@keyframes ${k(`c${i}`)}{0%,${pc(a + 0.5)}{transform:none;opacity:1}${pc(a + 2.8)}{transform:translate(18px,34px) rotate(80deg);opacity:0}95.9%{transform:translate(18px,34px) rotate(80deg);opacity:0}96%{transform:none;opacity:0}99.5%,100%{transform:none;opacity:1}}`,
+    )
+    css.push(
+      `@keyframes ${k(`d${i}`)}{0%,${pc(a + 1.4)}{transform:scale(0.3);opacity:0}${pc(a + 2.6)}{transform:scale(1);opacity:0.75}${pc(a + 10)}{transform:translateY(-16px) scale(2.4);opacity:0}100%{transform:scale(0.3);opacity:0}}`,
+    )
+    css.push(
+      `@keyframes ${k(`m${i}`)}{0%,${pc(a + 2.6)}{transform:scaleY(0);opacity:1}${pc(a + 5.5)}{transform:scaleY(1);opacity:1}95%{transform:scaleY(1);opacity:1}97.5%,100%{transform:scaleY(0.6);opacity:0}}`,
+    )
+    css.push(`.${id} .h${i}{animation:${k(`h${i}`)} ${CYCLE}s linear infinite}`)
+    css.push(`.${id} .c${i}{animation:${k(`c${i}`)} ${CYCLE}s linear infinite}`)
+    css.push(`.${id} .d${i}{animation:${k(`d${i}`)} ${CYCLE}s ease-out infinite}`)
+    css.push(`.${id} .m${i}{animation:${k(`m${i}`)} ${CYCLE}s ease-out infinite}`)
+    bricksFor(houses[i], i).forEach((br, b) => {
+      const land = `translate(${Math.round(br.dx)}px,${Math.round(br.land)}px) rotate(${Math.round(br.rot * 2)}deg)`
+      css.push(
+        `@keyframes ${k(`b${i}-${b}`)}{0%,${pc(a + 1.8)}{transform:none;opacity:0}${pc(a + 2)}{opacity:1}${pc(a + 3.2)}{transform:translate(${Math.round(br.dx * 0.55)}px,-${Math.round(br.up)}px) rotate(${Math.round(br.rot)}deg)}${pc(a + 4.6)}{transform:${land};opacity:1}${pc(a + 11)}{transform:${land};opacity:1}${pc(a + 13)},100%{transform:${land};opacity:0}}`,
+      )
+      css.push(`.${id} .b${i}-${b}{animation:${k(`b${i}-${b}`)} ${CYCLE}s cubic-bezier(.3,.6,.6,1) infinite}`)
+    })
+  })
+  // At rest, for readers who ask for less motion: half the street gone, the
+  // bulldozer at the next house, rubble where the first houses stood.
+  const half = Math.floor(houses.length / 2)
+  const rest: string[] = [`.${id} *{animation:none!important}`, `.${id} .dz{transform:translateX(${Math.round(houses[half].left - 98)}px)}`]
+  for (let i = 0; i < houses.length; i++) {
+    if (i < half) rest.push(`.${id} .h${i},.${id} .c${i}{opacity:0}.${id} .m${i}{transform:scaleY(1)}`)
+    else rest.push(`.${id} .m${i}{transform:scaleY(0)}`)
+    rest.push(`.${id} .d${i},.${id} [class^="b${i}-"]{opacity:0}`)
+  }
+  css.push(`@media (prefers-reduced-motion:reduce){${rest.join('')}}`)
+  return css.join('')
+}
+
+const BRICKS = 7
+
+type Brick = { x: number; y: number; w: number; dx: number; up: number; land: number; rot: number }
+
+// Where each brick starts in the wall and where it lands, worked out once so
+// the drawing and its animation agree. Bricks land on the heap, not in mid air.
+function bricksFor(h: House, i: number): Brick[] {
+  return Array.from({ length: BRICKS }, (_, b) => {
+    const r = rng(i * 97 + b)
+    const x = h.left + 8 + r() * (h.right - h.left - 16)
+    const y = h.ridge + 20 + r() * (BASE - h.ridge - 40)
+    const dx = 8 + r() * 40
+    return {
+      x,
+      y,
+      w: 6 + r() * 3,
+      dx,
+      up: 14 + r() * 30,
+      land: BASE - y - 4 - r() * 14,
+      rot: (r() - 0.5) * 300,
+    }
+  })
 }
 
 export function Demolition({ id = 'demo', className = '' }: { id?: string; className?: string }) {
   const r = rng(1964)
   const street = terrace(1965, { x: 20, base: BASE, count: 12, w: [72, 86], h: [78, 104] })
+  const lastRight = street.houses[street.houses.length - 1].right
+  const scope = `demo-${id}`
+  const css = choreography(scope, street.houses, lastRight)
+  const slice = <T,>(arr: T[], [a, b]: Range) => arr.slice(a, b)
+  const minus = (arr: string[], whole: Range, part: Range) => [...arr.slice(whole[0], part[0]), ...arr.slice(part[1], whole[1])]
+
   return (
     <svg
       viewBox={`0 42 ${W} ${H - 37}`}
-      className={`block h-auto w-full ${className}`}
+      className={`${scope} block h-auto w-full ${className}`}
       aria-hidden="true"
       focusable="false"
     >
+      <style>{css}</style>
       <InkDefs id={id} />
-      <clipPath id={`${id}-standing`}>
-        {/* Everything to the right of the blade still stands */}
-        <rect className="demo-clip" x={98} y={0} width={W + 400} height={H} />
-      </clipPath>
 
+      {/* Rubble heaps, one per house, raised as each house comes down */}
       <g filter={`url(#${id}-wash)`}>
-        <Rubble r={r} />
+        {street.houses.map((h, i) => {
+          const w = h.right - h.left
+          const hr = rng(i + 500)
+          const peak = h.left + w * (0.45 + hr() * 0.3)
+          const height = 16 + hr() * 12
+          return (
+            <g key={i} className={`m${i}`} style={{ transformBox: 'fill-box', transformOrigin: 'center bottom' }}>
+              <path
+                d={`M${h.left - 6} ${BASE}Q${h.left + w * 0.2} ${BASE - height * 0.6} ${peak} ${BASE - height}Q${h.right - w * 0.15} ${BASE - height * 0.7} ${h.right + 14} ${BASE}Z`}
+                fill="#A85842"
+                opacity={0.42}
+              />
+              <path
+                d={`M${h.left + 4} ${BASE}Q${peak - 6} ${BASE - height * 0.55} ${h.right + 6} ${BASE}Z`}
+                fill="#44423D"
+                opacity={0.18}
+              />
+              {Array.from({ length: 6 }, (_, b) => {
+                const bx = h.left + 6 + hr() * (w - 6)
+                const by = BASE - 3 - hr() * height * 0.6
+                return (
+                  <path
+                    key={b}
+                    d={outline(hr, [[bx, by], [bx + 7, by - 1], [bx + 7.5, by + 3], [bx + 0.5, by + 4]], true, 0.3)}
+                    fill="#A85842"
+                    stroke="#1A1916"
+                    strokeWidth={0.7}
+                  />
+                )
+              })}
+              {/* a timber end sticking out of the heap */}
+              <path d={stroke(hr, peak - 10, BASE - height * 0.5, peak + 14, BASE - height - 6, 0.4)} stroke="#1A1916" strokeWidth={1.2} fill="none" />
+            </g>
+          )
+        })}
       </g>
 
-      <g clipPath={`url(#${id}-standing)`} className="demo-street">
-        <g filter={`url(#${id}-wash)`}>
-          {street.washes.map((s, i) => (
-            <path key={i} d={s.d} fill={s.fill} opacity={s.opacity} />
+      {/* The houses, each on its own so each can fall */}
+      {street.houses.map((h, i) => (
+        <g key={i}>
+          <g className={`h${i}`} style={{ transformBox: 'fill-box', transformOrigin: 'right bottom' }}>
+            <g filter={`url(#${id}-wash)`}>
+              {slice(street.washes, h.wash)
+                .filter((_, j) => j + h.wash[0] < h.stackWash[0] || j + h.wash[0] >= h.stackWash[1])
+                .map((sh, j) => (
+                  <path key={j} d={sh.d} fill={sh.fill} opacity={sh.opacity} />
+                ))}
+            </g>
+            <g filter={`url(#${id}-ink)`} fill="none" stroke="#1A1916" strokeWidth={1.1} strokeLinecap="round">
+              {minus(street.ink, h.ink, h.stackInk).map((d, j) => (
+                <path key={j} d={d} />
+              ))}
+            </g>
+          </g>
+          <g className={`c${i}`} style={{ transformBox: 'fill-box', transformOrigin: 'left bottom' }}>
+            {slice(street.washes, h.stackWash).map((sh, j) => (
+              <path key={j} d={sh.d} fill={sh.fill} opacity={sh.opacity} />
+            ))}
+            <g filter={`url(#${id}-ink)`} fill="none" stroke="#1A1916" strokeWidth={1.1} strokeLinecap="round">
+              {slice(street.ink, h.stackInk).map((d, j) => (
+                <path key={j} d={d} />
+              ))}
+            </g>
+            {i % 3 === 1 && <Smoke x={h.right - 3} y={h.stackTop - 6} filter={`${id}-smoke`} delay={i * 0.8} />}
+          </g>
+          {/* flying bricks */}
+          {bricksFor(h, i).map((br, b) => (
+            <rect
+              key={b}
+              className={`b${i}-${b}`}
+              x={br.x}
+              y={br.y}
+              width={br.w}
+              height={3.5}
+              fill="#A85842"
+              stroke="#1A1916"
+              strokeWidth={0.6}
+              style={{ transformBox: 'fill-box', transformOrigin: 'center', opacity: 0 }}
+            />
           ))}
+          {/* the cloud of brick dust */}
+          <g className={`d${i}`} filter={`url(#${id}-smoke)`} style={{ transformBox: 'fill-box', transformOrigin: 'center bottom', opacity: 0 }}>
+            {Array.from({ length: 7 }, (_, c) => {
+              const cr = rng(i * 13 + c)
+              return (
+                <circle
+                  key={c}
+                  cx={h.left + cr() * (h.right - h.left)}
+                  cy={BASE - 10 - cr() * 50}
+                  r={12 + cr() * 16}
+                  fill={c % 3 === 0 ? '#A85842' : '#9A9384'}
+                  opacity={0.55}
+                />
+              )
+            })}
+          </g>
         </g>
-        <g filter={`url(#${id}-ink)`} fill="none" stroke="#1A1916" strokeWidth={1.1} strokeLinecap="round">
-          {street.ink.map((d, i) => (
-            <path key={i} d={d} />
-          ))}
-        </g>
-        {street.pots
-          .filter((_, i) => i % 4 === 1)
-          .map(([x, y], i) => (
-            <Smoke key={i} x={x} y={y} filter={`${id}-smoke`} delay={i * 0.9} />
-          ))}
-      </g>
+      ))}
 
-      <g className="demo-dozer">
-        <g filter={`url(#${id}-ink)`}>
-          <Bulldozer r={r} />
+      <g className="dz" style={{ transformBox: 'view-box', transformOrigin: '98px 200px' }}>
+        <g className="dz-rumble">
+          <g filter={`url(#${id}-ink)`}>
+            <Bulldozer r={r} />
+          </g>
         </g>
         <Smoke x={56} y={BASE - 60} filter={`${id}-smoke`} />
-        {/* Dust thrown up at the blade */}
-        <g filter={`url(#${id}-smoke)`}>
-          {[0, 1, 2, 3].map((i) => (
-            <circle key={i} cx={100} cy={BASE - 6} r={5} fill="#A85842" className="dust" style={{ animationDelay: `${i * 0.4}s` }} />
-          ))}
-        </g>
       </g>
 
       <g filter={`url(#${id}-ink)`}>

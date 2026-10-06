@@ -273,42 +273,12 @@
   100% { transform: rotate(5deg) skewX(3deg); }
 }
 
-/* The race: the bulldozer and the edge of the standing street move as one.
-   The clip rect sits at the blade, so houses vanish as it passes. */
-.demo-dozer,
-.demo-clip {
-  animation: dozer-advance 30s linear infinite;
+.dz-rumble {
+  animation: dz-rumble 0.32s steps(2) infinite;
 }
-@keyframes dozer-advance {
-  0% { transform: translateX(-110px); }
-  82% { transform: translateX(880px); }
-  100% { transform: translateX(880px); }
-}
-.demo-dozer {
-  animation-name: dozer-advance, dozer-fade;
-  animation-duration: 30s, 30s;
-}
-@keyframes dozer-fade {
-  0%, 88% { opacity: 1; }
-  95%, 100% { opacity: 0; }
-}
-.demo-street {
-  animation: street-redraw 30s linear infinite;
-}
-@keyframes street-redraw {
-  0% { opacity: 0; }
-  5% { opacity: 1; }
-  100% { opacity: 1; }
-}
-.dust {
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: dust-kick 1.6s ease-out infinite;
-}
-@keyframes dust-kick {
-  0% { opacity: 0.4; transform: translate(0, 0) scale(0.6); }
-  100% { opacity: 0; transform: translate(18px, -16px) scale(2.4); }
+@keyframes dz-rumble {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-0.8px); }
 }
 .painter-arm {
   transform-box: fill-box;
@@ -318,6 +288,53 @@
 @keyframes brush {
   0% { transform: rotate(-6deg); }
   100% { transform: rotate(8deg); }
+}
+
+.cat-tail {
+  animation: cat-tail 5s ease-in-out infinite;
+}
+@keyframes cat-tail {
+  0%, 70%, 100% { transform: rotate(0deg); }
+  76% { transform: rotate(-18deg); }
+  82% { transform: rotate(6deg); }
+  88% { transform: rotate(-10deg); }
+}
+.walker {
+  animation: walker 0.9s ease-in-out infinite alternate;
+}
+@keyframes walker {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-1.2px); }
+}
+.lamp-glow {
+  animation: window-glow 14s ease-in-out infinite;
+}
+
+/* Footer: pigeons cross the evening sky now and then, beating their wings,
+   and the pub sign swings on its bracket. */
+.flock {
+  animation: flock 26s linear infinite;
+}
+@keyframes flock {
+  0% { transform: translate(-260px, 44px); }
+  45% { transform: translate(1000px, 8px); }
+  70%, 100% { transform: translate(2100px, -20px); }
+}
+.wingbeat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wingbeat 0.36s ease-in-out infinite alternate;
+}
+@keyframes wingbeat {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(-0.6); }
+}
+.pub-sign {
+  animation: pub-sign 3.4s ease-in-out infinite alternate;
+}
+@keyframes pub-sign {
+  0% { transform: rotate(-7deg); }
+  100% { transform: rotate(9deg); }
 }
 
 .window-glow {
@@ -341,7 +358,7 @@
 }
 .draw .wash-in {
   opacity: 0;
-  transition: opacity 1.4s ease 1.6s;
+  transition: opacity 1.6s ease 2.4s;
 }
 .draw.is-drawn .wash-in {
   opacity: 1;
@@ -349,22 +366,22 @@
 
 @media (prefers-reduced-motion: reduce) {
   .smoke-puff,
-  .snowflake,
-  .dust {
+  .snowflake {
     display: none;
   }
   .washing,
   .painter-arm,
   .window-glow,
-  .demo-street,
-  .demo-dozer,
-  .demo-clip {
+  .dz-rumble,
+  .cat-tail,
+  .walker,
+  .lamp-glow,
+  .wingbeat,
+  .pub-sign {
     animation: none;
   }
-  /* The race at rest: the bulldozer halfway along the street. */
-  .demo-dozer,
-  .demo-clip {
-    transform: translateX(420px);
+  .flock {
+    display: none;
   }
   .draw .ink,
   .draw .wash-in {
