@@ -31,7 +31,7 @@ export function Plate({
       <div
         className={
           mount
-            ? 'flex justify-center bg-mount px-[6%] pb-[9%] pt-[6%]'
+            ? 'flex justify-center border border-rule bg-mount px-[6%] pb-[9%] pt-[6%]'
             : 'flex justify-center'
         }
       >

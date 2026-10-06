@@ -114,7 +114,7 @@ export default async function EntryPage({
         </div>
 
         <div className="lg:col-span-4">
-          <div className="lg:sticky lg:top-24">
+          <div className="border border-rule bg-paper-warm p-6 lg:sticky lg:top-24 lg:p-8">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               Charlie Rogers
             </p>
@@ -173,7 +173,7 @@ export default async function EntryPage({
       </div>
 
       {place && (
-        <section className="mt-20 border-t border-rule pt-6">
+        <section className="mt-16 border border-rule bg-paper-warm p-6 lg:p-8">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-14">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham lg:col-span-4">
               {place.name}
@@ -191,7 +191,7 @@ export default async function EntryPage({
       )}
 
       {e.photograph && (
-        <section className="mt-20 border-t border-rule pt-6">
+        <section className="mt-16 border-t border-rule pt-6">
           <div className="grid gap-6 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-4">
               <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
@@ -213,14 +213,14 @@ export default async function EntryPage({
         </section>
       )}
 
-      <nav aria-label="More from the catalogue" className="mt-20 grid grid-cols-2 border-t border-rule">
-        <Link href={`/catalogue/${prev.slug}`} className="group border-r border-rule py-6 pr-6">
+      <nav aria-label="More from the catalogue" className="mt-16 grid grid-cols-2 gap-3">
+        <Link href={`/catalogue/${prev.slug}`} className="group border border-rule bg-paper p-5 transition-colors duration-colour hover:border-ink-mute sm:p-6">
           <span className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute">Previous</span>
           <span className="mt-2 block font-serif text-h4 transition-colors duration-colour group-hover:text-bensham">
             {prev.title}
           </span>
         </Link>
-        <Link href={`/catalogue/${next.slug}`} className="group py-6 pl-6 text-right">
+        <Link href={`/catalogue/${next.slug}`} className="group border border-rule bg-paper p-5 text-right transition-colors duration-colour hover:border-ink-mute sm:p-6">
           <span className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute">Next</span>
           <span className="mt-2 block font-serif text-h4 transition-colors duration-colour group-hover:text-bensham">
             {next.title}

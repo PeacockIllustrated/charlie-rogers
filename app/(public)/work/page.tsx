@@ -76,7 +76,7 @@ export default function WorkIndex() {
       ))}
 
       <section id="chapters" className="mt-24">
-        <div className="grid gap-8 border-t border-rule pt-5 lg:grid-cols-12">
+        <div className="grid gap-8 border border-rule bg-paper-warm p-6 sm:p-8 lg:grid-cols-12 lg:p-10">
           <div className="lg:col-span-4">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               By chapter
@@ -87,15 +87,15 @@ export default function WorkIndex() {
               paintings first, then the untitled plates it reproduces.
             </p>
           </div>
-          <ol className="lg:col-span-8">
+          <ol className="border border-rule bg-paper lg:col-span-8">
             {themes.map((t) => {
               const named = entriesForTheme(t.slug).length
               const plates = themePaintings(t).length
               return (
-                <li key={t.slug} className="border-b border-rule first:border-t">
+                <li key={t.slug} className="border-b border-rule last:border-b-0">
                   <Link
                     href={`/work/${t.slug}`}
-                    className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 py-5 sm:grid-cols-[1fr_9rem_7rem]"
+                    className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 px-5 py-5 transition-colors duration-colour hover:bg-mount sm:grid-cols-[1fr_9rem_7rem]"
                   >
                     <span>
                       <span className="block font-serif text-h3 transition-colors duration-colour group-hover:text-bensham">

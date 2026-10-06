@@ -2,8 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/Button'
 import { Plate } from '@/components/Plate'
-import { RaceLine } from '@/components/RaceLine'
-import { entryBySlug, paintedYears, type Entry } from '@/lib/content/catalogue'
+import { RaceRow } from '@/components/RaceRow'
+import { entryBySlug, type Entry } from '@/lib/content/catalogue'
 import { places, placeBySlug } from '@/lib/content/places'
 
 // The landing page reads like the opening of the book: one painting, the line
@@ -53,7 +53,7 @@ const pos = (y: number) => ((y - AXIS_START) / (AXIS_END - AXIS_START)) * 100
 function SalonPiece({ entry, span }: { entry: Entry; span: string }) {
   return (
     <Link href={`/catalogue/${entry.slug}`} className={`group block ${span}`}>
-      <div className="bg-mount px-[5%] pb-[8%] pt-[5%] transition-colors duration-colour group-hover:bg-paper-warm">
+      <div className="border border-rule bg-mount px-[5%] pb-[8%] pt-[5%] transition-colors duration-colour group-hover:border-ink-mute">
         <Image
           src={entry.image.src}
           width={entry.image.width}
@@ -138,8 +138,8 @@ export default function Home() {
       </section>
 
       {/* The race */}
-      <section className="mx-auto max-w-content px-6 py-20 lg:py-28">
-        <div className="grid gap-10 lg:grid-cols-12">
+      <section className="border-y border-rule bg-paper-warm">
+        <div className="mx-auto grid max-w-content gap-10 px-6 py-20 lg:grid-cols-12 lg:py-28">
           <div className="lg:col-span-4">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               The race
@@ -158,37 +158,10 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <ol className="lg:col-span-8 lg:pl-6">
+          <ol className="space-y-3 lg:col-span-8 lg:pl-6">
             {race.map((place) => (
-              <li key={place.slug} className="border-t border-rule py-6 last:border-b">
-                <Link href={`/places/${place.slug}`} className="group grid grid-cols-[4.5rem_1fr] items-start gap-5 sm:grid-cols-[6rem_1fr]">
-                  <div className="bg-mount p-1.5">
-                    {place.image && (
-                      <Image
-                        src={place.image}
-                        width={240}
-                        height={180}
-                        alt=""
-                        sizes="96px"
-                        className="block aspect-[4/3] h-auto w-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                      <h3 className="font-serif text-h3 transition-colors duration-colour group-hover:text-bensham">
-                        {place.name}
-                      </h3>
-                      <span className="font-sans text-xs text-ink-mute">{place.district}</span>
-                    </div>
-                    <RaceLine
-                      className="mt-3"
-                      painted={paintedYears(place)}
-                      status={place.status}
-                      cleared={place.cleared}
-                    />
-                  </div>
-                </Link>
+              <li key={place.slug}>
+                <RaceRow place={place} />
               </li>
             ))}
           </ol>
@@ -196,7 +169,7 @@ export default function Home() {
       </section>
 
       {/* 1964 */}
-      <section className="bg-paper-warm">
+      <section>
         <div className="mx-auto grid max-w-content gap-10 px-6 py-20 lg:grid-cols-12 lg:gap-12 lg:py-28">
           <div className="lg:col-span-5">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
@@ -289,7 +262,7 @@ export default function Home() {
       </section>
 
       {/* The lineage */}
-      <section className="border-t border-rule">
+      <section className="border-t border-rule bg-paper-warm">
         <div className="mx-auto max-w-content px-6 py-20 lg:py-28">
           <div className="max-w-reading">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
@@ -304,9 +277,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-14 grid gap-10 md:grid-cols-3">
+          <div className="mt-14 grid gap-4 md:grid-cols-3">
             {lineage.map((l, i) => (
-              <div key={l.name} className="border-t-2 border-ink pt-5">
+              <div key={l.name} className={`border border-rule border-t-2 bg-paper p-6 ${i === 2 ? 'border-t-bensham' : 'border-t-ink'}`}>
                 <p className="font-sans text-xs text-ink-mute">{l.place}</p>
                 <h3 className={`mt-2 font-serif text-h2 ${i === 2 ? 'text-bensham' : ''}`}>{l.name}</h3>
                 <p className="mt-1 font-sans text-small text-ink-soft">
@@ -318,7 +291,7 @@ export default function Home() {
           </div>
 
           {/* Shared lifespan axis */}
-          <div className="mt-14" aria-hidden="true">
+          <div className="mt-6 border border-rule bg-paper p-6" aria-hidden="true">
             <div className="space-y-3">
               {lineage.map((l, i) => (
                 <div key={l.name} className="relative h-3">

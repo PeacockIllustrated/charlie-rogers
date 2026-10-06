@@ -107,7 +107,7 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
               className="group min-w-0 max-w-full cursor-pointer border-0 bg-transparent p-0 text-left"
               aria-label={`Enlarge untitled painting from page ${p.page} of the book`}
             >
-              <span className="block bg-mount p-2 transition-colors duration-colour group-hover:bg-paper-warm">
+              <span className="block border border-rule bg-paper p-2 transition-colors duration-colour group-hover:border-ink-mute">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={p.web}

@@ -69,7 +69,7 @@ export default async function PlacePage({
           </p>
           <h1 className="mt-4 font-serif text-display">{place.name}</h1>
         </div>
-        <div className="lg:col-span-5 lg:self-end">
+        <div className="border border-rule bg-paper-warm p-5 lg:col-span-5 lg:self-end">
           <StatusLabel status={place.status} />
           <RaceLine
             className="mt-4"

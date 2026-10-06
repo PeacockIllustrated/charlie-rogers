@@ -80,7 +80,7 @@ export default function BookPage() {
       <div className="mx-auto max-w-content px-6 pb-16">
         {/* The special edition */}
         {edition && (
-          <section className="grid gap-8 border-b border-rule py-14 lg:grid-cols-12">
+          <section className="mt-14 grid gap-8 border border-rule border-t-2 border-t-bensham bg-paper-warm p-6 sm:p-8 lg:grid-cols-12 lg:p-10">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham lg:col-span-4">
               The special edition
             </p>
@@ -108,7 +108,7 @@ export default function BookPage() {
               ))}
             </div>
           </div>
-          <aside className="lg:col-span-5">
+          <aside className="self-start border border-rule bg-paper-warm p-6 lg:col-span-5 lg:p-8">
             <Ledger rows={bookFacts.map(({ label, value }) => ({ label, value }))} />
           </aside>
         </div>

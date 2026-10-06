@@ -190,6 +190,18 @@ One qualification to the first rule, added September 2026 when the Timeline prog
 
 Both Timeline behaviours degrade to plain markup. The progress indicator is a CSS scroll-driven animation (`animation-timeline: view()`), so it needs no JavaScript at all in a browser that supports it, and `components/timeline/TrackFallback.tsx` drives the same transform from a passive, requestAnimationFrame-throttled scroll listener where support is missing. With neither, the spine simply stays the hairline it has always been.
 
+## Surfaces
+
+Three flat planes, separated by tone and a 1px `--rule` edge, never by shadow or radius:
+
+- **Page**: `--paper`. Headings, reading text and the hung paintings.
+- **Panel**: `--paper-warm`, full width or boxed. Holds a group: the race on the home page, the places list, the catalogue ledger, the chapter index, the untitled strand, the book's special edition.
+- **Card**: `--paper` with a rule edge, set on a panel or the page. One object each: a catalogue entry (`CatalogueCard`), a place in the race (`RaceRow`), a Lowry, Cornish or Rogers column. Hover darkens the edge to `--ink-mute`.
+
+A coloured 2px top edge marks a card's kind where it helps, such as the place tallies (red, ochre, sage) or the special edition (red). Paintings keep their mount, now with a rule edge so the mount reads as a board on the page.
+
+Introduced in October 2026 after Tom noted the first redesign left too much content sitting straight on the page.
+
 ## Signature devices
 
 ### The mount

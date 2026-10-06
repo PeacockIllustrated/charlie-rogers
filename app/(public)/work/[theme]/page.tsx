@@ -67,8 +67,8 @@ export default async function ThemePage({
         </section>
       )}
 
-      <section className="mt-20" aria-labelledby="reproduced">
-        <div className="grid gap-6 border-t border-rule pt-5 lg:grid-cols-12">
+      <section className="mt-20 border border-rule bg-paper-warm p-6 sm:p-8 lg:p-10" aria-labelledby="reproduced">
+        <div className="grid gap-6 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <h2 id="reproduced" className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               Reproduced in the book &middot; {plates.length}

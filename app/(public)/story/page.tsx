@@ -42,7 +42,7 @@ function Chapter({ section, number }: { section: StorySection; number: number })
             ))}
           </div>
           {section.quote && (
-            <figure className="mt-10 border-t border-bensham pt-5">
+            <figure className="mt-10 border border-rule border-t-2 border-t-bensham bg-paper-warm p-6">
               <blockquote className="font-serif text-lead italic text-bensham">
                 {section.quote.text}
               </blockquote>
