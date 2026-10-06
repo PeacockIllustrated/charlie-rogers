@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SectionHeading } from '@/components/SectionHeading'
 import { Button } from '@/components/Button'
 import { ProductCard } from '@/components/shop/ProductCard'
 import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
@@ -47,20 +46,27 @@ export default async function ShopPage() {
   }
 
   return (
-    <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading
-        as="h1"
-        eyebrow="Charlie Rogers"
-        title="Shop"
-        intro="The book about Charlie Rogers, and fine art prints of his paintings. There is no checkout yet, so everything here is by enquiry."
-      />
+    <div className="pt-12">
+      <header className="mx-auto grid max-w-content gap-8 px-6 lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+            Charlie Rogers
+          </p>
+          <h1 className="mt-4 font-serif text-display">Shop</h1>
+        </div>
+        <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
+          The book, the cards, and the paintings themselves. There is no checkout
+          yet, so everything here is by enquiry.
+        </p>
+      </header>
 
-      <div className="mt-12">
+      <div className="mt-12 border-y border-rule bg-paper-warm py-12 lg:py-16">
+        <div className="mx-auto max-w-content px-6">
         {products.length === 0 ? (
           // Empty state holds the same left-aligned reading measure as the
           // heading above it. A centred dashed panel reads as an admin
           // template, and dashed rules appear nowhere in DESIGN.md.
-          <div className="max-w-reading border-t border-rule pt-8">
+          <div className="max-w-reading border border-rule bg-paper p-6 sm:p-8">
             <h2 className="font-serif text-h3">The shop is opening soon</h2>
             <p className="mt-3 font-serif text-body text-ink-soft">
               The first listings are being photographed and written up. In the
@@ -75,19 +81,20 @@ export default async function ShopPage() {
             </div>
           </div>
         ) : (
-          <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
         )}
+        </div>
       </div>
 
       {/* Brian asked for the printer's specification to appear on the site.
           Shown once here rather than on every card, and again on each print's
           own page where it bears on a decision. */}
       {products.some((p) => p.product_type === 'print') && (
-        <div className="mt-16">
+        <div className="mx-auto max-w-content px-6 pt-16">
           <PrintSpecifications />
         </div>
       )}

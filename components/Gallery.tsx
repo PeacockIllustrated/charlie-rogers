@@ -3,26 +3,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Painting } from '@/lib/paintings'
 
-// Salon-wall gallery with an accessible lightbox.
+// The untitled plates reproduced in the book, with an accessible lightbox.
 //
-// Layout: each painting is shown at its true aspect ratio, sized from its native
-// resolution and never upscaled, then bottom-aligned like pictures hung on a wall.
-// This suits a mixed-resolution archive far better than a rigid grid, which would
-// stretch the small reproductions into blur.
+// These are small reproductions, scanned out of the book at around 108 ppi and
+// not yet titled, so they are shown as what they are: a study strand below the
+// catalogue, captioned by book page. Each sits at its true aspect ratio, no
+// larger than its native pixels, bottom-aligned like pictures hung on a wall.
 //
 // Lightbox: the painting detail viewer DESIGN.md sanctions. Keyboard navigable
 // (arrows, Escape), focus-managed, no pure black (a deep ink overlay), square
 // corners, no shadow.
 
-// Target display height on desktop. A gentle floor keeps the smallest plates from
-// becoming lost without any visible upscaling.
-const ROW_HEIGHT = 240
-const MIN_HEIGHT = 160
+// Target display height. A plate shorter than this is shown at its own size.
+const ROW_HEIGHT = 200
 
-function displaySize(p: Painting): { w: number; h: number } {
-  const h = Math.min(ROW_HEIGHT, Math.max(p.height, MIN_HEIGHT))
-  const w = Math.round(p.width * (h / p.height))
-  return { w, h }
+function displayWidth(p: Painting): number {
+  const h = Math.min(ROW_HEIGHT, p.height)
+  return Math.round(p.width * (h / p.height))
 }
 
 function Chevron({ dir }: { dir: 'left' | 'right' }) {
@@ -82,8 +79,8 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
 
   if (count === 0) {
     return (
-      <p className="font-serif text-ink-mute mt-6">
-        Paintings for this section are being catalogued.
+      <p className="mt-6 font-serif text-body text-ink-mute">
+        Every plate in this chapter of the book is now in the catalogue above.
       </p>
     )
   }
@@ -92,9 +89,9 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
 
   return (
     <>
-      <div className="mt-8 flex flex-wrap items-end gap-x-6 gap-y-10">
+      <div className="mt-8 flex flex-wrap items-end gap-x-5 gap-y-8">
         {paintings.map((p, i) => {
-          const { w } = displaySize(p)
+          const w = displayWidth(p)
           return (
             <button
               key={p.web}
@@ -108,19 +105,22 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
               }}
               style={{ width: w }}
               className="group min-w-0 max-w-full cursor-pointer border-0 bg-transparent p-0 text-left"
-              aria-label={`Enlarge painting from page ${p.page}`}
+              aria-label={`Enlarge untitled painting from page ${p.page} of the book`}
             >
-              <span className="block bg-paper-warm p-2 transition-colors group-hover:bg-rule">
+              <span className="block border border-rule bg-paper p-2 transition-colors duration-colour group-hover:border-ink-mute">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={p.thumb}
-                  alt={`Painting by Charlie Rogers, from page ${p.page} of Pursued by Bulldozers`}
+                  src={p.web}
+                  width={p.width}
+                  height={p.height}
+                  alt={`Untitled painting by Charlie Rogers, reproduced on page ${p.page} of Pursued by Bulldozers`}
                   loading="lazy"
+                  decoding="async"
                   className="block h-auto w-full"
                 />
               </span>
-              <span className="mt-2 block font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-                Page {p.page}
+              <span className="mt-2 block font-sans text-xs text-ink-mute">
+                Book, p. {p.page}
               </span>
             </button>
           )
@@ -131,7 +131,7 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`Painting from page ${current.page}`}
+          aria-label={`Untitled painting from page ${current.page}`}
           onClick={close}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ backgroundColor: 'rgba(26, 25, 22, 0.93)' }}
@@ -180,7 +180,7 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
             onClick={(e) => e.stopPropagation()}
             className="flex max-h-[88vh] max-w-[92vw] flex-col items-center"
           >
-            <span className="block bg-paper-warm p-2">
+            <span className="block bg-mount p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={current.web}
@@ -188,9 +188,9 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
                 className="block h-auto max-h-[78vh] w-auto max-w-[88vw]"
               />
             </span>
-            <figcaption className="mt-3 font-sans text-xs uppercase tracking-eyebrow text-paper opacity-80">
-              Pursued by Bulldozers, page {current.page} &middot; {index + 1} of{' '}
-              {count}
+            <figcaption className="mt-3 font-sans text-xs text-paper/80">
+              Untitled, reproduced in Pursued by Bulldozers, p. {current.page} &middot;{' '}
+              {index + 1} of {count}
             </figcaption>
           </figure>
         </div>

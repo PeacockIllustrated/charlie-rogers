@@ -77,7 +77,9 @@ export default async function ProductDetailPage({
           <ProductImageGallery images={product.images ?? []} title={product.title} />
         </div>
 
-        <div>
+        {/* The details sit on a warm panel beside the picture, like a label
+            card beside a hung work */}
+        <div className="self-start border border-rule bg-paper-warm p-6 sm:p-8">
           <Eyebrow>{PRODUCT_TYPE_LABELS[product.product_type]}</Eyebrow>
           <h1 className="mt-3 font-serif text-h1">{product.title}</h1>
 

@@ -17,23 +17,37 @@
   --ochre: #b8842c;
   --sage: #8b9b7a;
   --brick: #a85842;
+  --mount: #f4eee2;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Keeps anything focused or jumped to clear of the sticky header, which
+       WCAG 2.2 SC 2.4.11 requires. Found failing on /places. */
+    scroll-padding-top: 5.5rem;
   }
   body {
     background-color: var(--paper);
     color: var(--ink);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    /* Oldstyle figures in running text, as the book sets dates. Labels and
+       ledgers switch back to lining, tabular figures below. */
+    font-variant-numeric: oldstyle-nums proportional-nums;
   }
   h1,
   h2,
   h3,
   h4 {
     font-weight: 500;
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  blockquote {
+    text-wrap: pretty;
   }
   ::selection {
     background: var(--bensham);
@@ -43,6 +57,13 @@
   :focus-visible {
     outline: 2px solid var(--ochre);
     outline-offset: 2px;
+  }
+}
+
+/* Sans is for labels, figures and controls, so its numbers line up. */
+@layer components {
+  .font-sans {
+    font-variant-numeric: lining-nums tabular-nums;
   }
 }
 
@@ -206,5 +227,194 @@
 @media print {
   .tl-track {
     display: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Graphics in motion. Pen and wash drawings in components/graphics.
+   Every loop is slow and small: smoke, snow, washing, a bulldozer at
+   walking pace. Nothing moves for a reader who has asked for less
+   motion; the drawings are simply there, complete.
+   ------------------------------------------------------------------ */
+
+.smoke-puff {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: smoke-rise 6.3s linear infinite;
+}
+@keyframes smoke-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  15% { opacity: 0.32; }
+  100% { opacity: 0; transform: translate(14px, -38px) scale(2.6); }
+}
+
+.snowflake {
+  position: absolute;
+  top: -12px;
+  display: block;
+  background: #fff8ee;
+  /* A snowflake is a round mark of paint, not a softened corner. */
+  border-radius: 50%;
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes snow-fall {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(var(--drift, 0), var(--fall, 110vh), 0); }
+}
+
+.washing {
+  animation: washing-sway 4.2s ease-in-out infinite alternate;
+}
+@keyframes washing-sway {
+  0% { transform: rotate(-4deg) skewX(-2deg); }
+  100% { transform: rotate(5deg) skewX(3deg); }
+}
+
+.dz-rumble {
+  animation: dz-rumble 0.32s steps(2) infinite;
+}
+@keyframes dz-rumble {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-0.8px); }
+}
+.painter-arm {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: brush 1.8s ease-in-out infinite alternate;
+}
+@keyframes brush {
+  0% { transform: rotate(-6deg); }
+  100% { transform: rotate(8deg); }
+}
+
+.cat-tail {
+  animation: cat-tail 5s ease-in-out infinite;
+}
+@keyframes cat-tail {
+  0%, 70%, 100% { transform: rotate(0deg); }
+  76% { transform: rotate(-18deg); }
+  82% { transform: rotate(6deg); }
+  88% { transform: rotate(-10deg); }
+}
+.walker {
+  animation: walker 0.9s ease-in-out infinite alternate;
+}
+@keyframes walker {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-1.2px); }
+}
+.lamp-glow {
+  animation: window-glow 14s ease-in-out infinite;
+}
+
+/* Footer: pigeons cross the evening sky now and then, beating their wings,
+   and the pub sign swings on its bracket. */
+.flock {
+  animation: flock 26s linear infinite;
+}
+@keyframes flock {
+  0% { transform: translate(-260px, 44px); }
+  45% { transform: translate(1000px, 8px); }
+  70%, 100% { transform: translate(2100px, -20px); }
+}
+.wingbeat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wingbeat 0.36s ease-in-out infinite alternate;
+}
+@keyframes wingbeat {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(-0.6); }
+}
+.pub-sign {
+  animation: pub-sign 3.4s ease-in-out infinite alternate;
+}
+@keyframes pub-sign {
+  0% { transform: rotate(-7deg); }
+  100% { transform: rotate(9deg); }
+}
+
+/* Footer street at dusk: windows come on one by one as it scrolls into
+   view (DrawIn adds is-drawn), and the far row of roofs drifts slower than
+   the page where the browser supports scroll-driven animation. */
+.draw .dusk-window {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.draw.is-drawn .dusk-window {
+  opacity: 0.92;
+}
+@supports (animation-timeline: view()) {
+  .sky-far {
+    animation: sky-far linear both;
+    animation-timeline: view();
+  }
+  @keyframes sky-far {
+    0% { transform: translateY(18px); }
+    100% { transform: translateY(-6px); }
+  }
+}
+
+.window-glow {
+  opacity: 0.85;
+  animation: window-glow 9s ease-in-out infinite;
+}
+@keyframes window-glow {
+  0%, 40% { opacity: 0.85; }
+  50%, 80% { opacity: 0.15; }
+  90%, 100% { opacity: 0.85; }
+}
+
+/* Draw-in: lines carry pathLength="1", so a dash of 1 is the whole line. */
+.draw .ink {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2.6s cubic-bezier(.4, 0, .2, 1);
+}
+.draw.is-drawn .ink {
+  stroke-dashoffset: 0;
+}
+.draw .wash-in {
+  opacity: 0;
+  transition: opacity 1.6s ease 2.4s;
+}
+.draw.is-drawn .wash-in {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smoke-puff,
+  .snowflake {
+    display: none;
+  }
+  .washing,
+  .painter-arm,
+  .window-glow,
+  .dz-rumble,
+  .cat-tail,
+  .walker,
+  .lamp-glow,
+  .wingbeat,
+  .pub-sign {
+    animation: none;
+  }
+  .sky-far {
+    animation: none;
+  }
+  .draw .dusk-window {
+    transition: none;
+    opacity: 0.92;
+  }
+  .flock {
+    display: none;
+  }
+  .draw .ink,
+  .draw .wash-in {
+    transition: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 }
