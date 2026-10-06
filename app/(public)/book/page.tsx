@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 
-import { SectionHeading } from '@/components/SectionHeading'
+import Link from 'next/link'
 import { Eyebrow } from '@/components/Eyebrow'
-import { Button } from '@/components/Button'
+import { Ledger } from '@/components/Ledger'
+import { Roundel } from '@/components/Roundel'
 import { BookFlip } from '@/components/BookFlip'
+import { catalogueBySlug } from '@/lib/shop/catalogue'
 import { bookFacts, bookDescription, bookContents } from '@/lib/content/book'
 import { bookSamplePages } from '@/lib/content/bookSample'
 
@@ -11,89 +13,143 @@ export const metadata: Metadata = {
   title: 'The book',
   description:
     'Charlie Rogers, Pursued by Bulldozers, the first comprehensive account of the Gateshead painter who raced demolition crews to record Tyneside before it was flattened. Published by Littlecroft Publishing, 2025.',
+  alternates: { canonical: '/book' },
+}
+
+const bookJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: 'Charlie Rogers, Pursued by Bulldozers',
+  isbn: '978-1-7393198-4-7',
+  author: { '@type': 'Person', name: 'Brian Rankin' },
+  about: { '@type': 'Person', name: 'Charlie Rogers' },
+  publisher: { '@type': 'Organization', name: 'Littlecroft Publishing' },
+  datePublished: '2025',
+  numberOfPages: 123,
+  bookFormat: 'https://schema.org/Hardcover',
+  inLanguage: 'en-GB',
 }
 
 export default function BookPage() {
   const [lead, ...rest] = bookDescription
 
+  const edition = catalogueBySlug('pursued-by-bulldozers-special-edition')
+  const price = edition ? `£${(edition.price_pence / 100).toFixed(0)}` : null
+
   return (
-    <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading
-        as="h1"
-        eyebrow="Littlecroft Publishing, 2025"
-        title="Charlie Rogers, Pursued by Bulldozers"
-        intro={lead}
+    <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(bookJsonLd) }}
       />
 
-      {/* Flip-book sample, the centrepiece. */}
-      <section className="mt-14">
-        <Eyebrow>Look inside</Eyebrow>
-        <h2 className="font-serif text-h3 mt-3 max-w-reading">
-          A sample of the opening chapter
-        </h2>
-        <p className="font-serif text-body text-ink-soft mt-2 max-w-reading">
-          Turn the pages with the arrows, the dots, or by clicking the left and
-          right of the book.
-        </p>
-        <div className="mt-8 max-w-4xl">
-          <BookFlip pages={bookSamplePages} />
+      {/* Title page */}
+      <section className="bg-bensham text-paper">
+        <div className="mx-auto grid max-w-content items-center gap-12 px-6 py-16 lg:grid-cols-12 lg:py-24">
+          <div className="lg:col-span-7">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-paper/80">
+              Littlecroft Publishing, 2025
+            </p>
+            <h1 className="mt-6 font-serif text-display">
+              Charlie Rogers, <span className="italic">Pursued by Bulldozers</span>
+            </h1>
+            <p className="mt-8 max-w-reading font-serif text-lead text-paper/90">
+              The first full account of his life and work, compiled by Brian
+              Rankin. 123 pages, A4 hardback, printed in Gateshead.
+            </p>
+            {edition && (
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                <Link
+                  href={`/shop/${edition.slug}`}
+                  className="inline-block bg-paper px-5 py-3 font-sans text-small font-medium text-bensham-deep transition-colors duration-colour hover:bg-mount"
+                >
+                  The special edition, {price}
+                </Link>
+                <a href="#inside" className="font-sans text-small text-paper underline-offset-4 hover:underline">
+                  Look inside
+                </a>
+              </div>
+            )}
+          </div>
+          <div className="flex justify-center lg:col-span-5">
+            <Roundel size={280} tone="paper" title="The Charlie Rogers roundel" />
+          </div>
         </div>
       </section>
 
-      {/* About and buy. */}
-      <div className="mt-16 grid gap-12 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <Eyebrow>About the book</Eyebrow>
-          <div className="mt-4 max-w-reading font-serif text-body-lg text-ink-soft space-y-5">
-            {rest.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-        </div>
-
-        <aside>
-          <dl className="border-t border-rule">
-            {bookFacts.map(({ label, value }) => (
-              <div key={label} className="flex gap-4 py-3 border-b border-rule">
-                <dt className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute w-28 shrink-0 pt-0.5">
-                  {label}
-                </dt>
-                <dd className="font-serif text-body text-ink">{value}</dd>
-              </div>
-            ))}
-          </dl>
-
-          <div className="mt-8">
-            <Eyebrow rule={false}>Where to buy</Eyebrow>
-            <p className="font-serif text-body text-ink-soft mt-3">
-              The book is available through Come View My Art Gallery, Sheriffs
-              Highway, Low Fell, Gateshead. Price on request.
+      <div className="mx-auto max-w-content px-6 pb-16">
+        {/* The special edition */}
+        {edition && (
+          <section className="grid gap-8 border-b border-rule py-14 lg:grid-cols-12">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham lg:col-span-4">
+              The special edition
             </p>
-            <p className="font-sans text-small text-ink-mute mt-3">
-              Online ordering is coming soon.
-            </p>
-            <div className="mt-5">
-              <Button href="/places/bigg-market-newcastle" variant="secondary">
-                See where it began
-              </Button>
+            <div className="lg:col-span-8">
+              <p className="font-serif text-h2">
+                One hundred copies, each embossed with the Charlie Rogers roundel
+                and signed by Brian Rankin. Exclusive to this website.
+              </p>
+              <p className="mt-4 font-sans text-small text-ink-mute">
+                {price}. The standard edition is available from Come View My Art
+                Gallery, Sheriffs Highway, Low Fell, Gateshead.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* About */}
+        <div className="mt-14 grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Eyebrow>About the book</Eyebrow>
+            <div className="mt-6 max-w-reading space-y-5 font-serif text-body text-ink-soft">
+              <p className="text-lead text-ink">{lead}</p>
+              {rest.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
             </div>
           </div>
-        </aside>
-      </div>
+          <aside className="lg:col-span-5">
+            <Ledger rows={bookFacts.map(({ label, value }) => ({ label, value }))} />
+          </aside>
+        </div>
 
-      {/* Contents. */}
-      <div className="mt-16 border-t border-rule pt-10">
-        <Eyebrow>What is inside</Eyebrow>
-        <ol className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2">
-          {bookContents.map((item, i) => (
-            <li key={i} className="flex gap-3 items-baseline">
-              <span className="font-sans text-xs text-ink-mute tabular-nums w-5 shrink-0">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span className="font-serif text-body text-ink-soft">{item}</span>
-            </li>
-          ))}
-        </ol>
+        {/* Flip-book sample */}
+        <section id="inside" className="mt-20 border-t border-rule pt-6">
+          <div className="grid gap-6 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+                Look inside
+              </p>
+              <h2 className="mt-4 font-serif text-h2">A sample of the opening chapter</h2>
+              <p className="mt-4 font-serif text-body text-ink-soft">
+                Turn the pages with the arrows, the dots, or by clicking the left
+                and right of the book.
+              </p>
+            </div>
+            <div className="lg:col-span-8">
+              <BookFlip pages={bookSamplePages} />
+            </div>
+          </div>
+        </section>
+
+        {/* Contents */}
+        <section className="mt-20 border-t border-rule pt-6">
+          <div className="grid gap-6 lg:grid-cols-12">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham lg:col-span-4">
+              What is inside
+            </p>
+            <ol className="grid gap-x-8 sm:grid-cols-2 lg:col-span-8">
+              {bookContents.map((item, i) => (
+                <li key={i} className="flex items-baseline gap-4 border-b border-rule py-2.5">
+                  <span className="w-6 shrink-0 font-sans text-xs text-ink-mute">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="font-serif text-body text-ink-soft">{item}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
       </div>
     </div>
   )

@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Prose } from '@/components/Prose'
 import { BackLink } from '@/components/BackLink'
-import { BookCallout } from '@/components/BookCallout'
 import { people, personBySlug } from '@/lib/content/people'
 
 export function generateStaticParams() {
@@ -48,7 +47,6 @@ export default async function PersonPage({
         <Prose paragraphs={person.paragraphs} />
       </div>
 
-      <BookCallout />
     </div>
   )
 }

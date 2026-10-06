@@ -17,23 +17,37 @@
   --ochre: #b8842c;
   --sage: #8b9b7a;
   --brick: #a85842;
+  --mount: #f4eee2;
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Keeps anything focused or jumped to clear of the sticky header, which
+       WCAG 2.2 SC 2.4.11 requires. Found failing on /places. */
+    scroll-padding-top: 5.5rem;
   }
   body {
     background-color: var(--paper);
     color: var(--ink);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    /* Oldstyle figures in running text, as the book sets dates. Labels and
+       ledgers switch back to lining, tabular figures below. */
+    font-variant-numeric: oldstyle-nums proportional-nums;
   }
   h1,
   h2,
   h3,
   h4 {
     font-weight: 500;
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd,
+  blockquote {
+    text-wrap: pretty;
   }
   ::selection {
     background: var(--bensham);
@@ -43,6 +57,13 @@
   :focus-visible {
     outline: 2px solid var(--ochre);
     outline-offset: 2px;
+  }
+}
+
+/* Sans is for labels, figures and controls, so its numbers line up. */
+@layer components {
+  .font-sans {
+    font-variant-numeric: lining-nums tabular-nums;
   }
 }
 

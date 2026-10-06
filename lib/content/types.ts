@@ -49,6 +49,13 @@ export type Place = {
   image?: string
   // Absent for places off the Tyneside map, which are listed but not plotted.
   coords?: Coords
+  // The year Charlie painted it, when the painting itself is not in the
+  // catalogue. Dated catalogue entries for the place are added to this.
+  painted?: number
+  // The year the building came down, for the race line. Leave unset until it
+  // is confirmed against Gateshead's clearance records; an unset year draws a
+  // hollow tick, which says demolished without claiming when.
+  cleared?: number
 }
 
 // TimelineEvent now lives in lib/content/timeline.ts (it carries era, kind, and

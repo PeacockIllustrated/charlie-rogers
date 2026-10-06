@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Roundel } from '@/components/Roundel'
 import { formatPrice, shopImageUrl, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 
@@ -13,7 +14,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       {/* Fixed aspect box so titles sit on a common baseline across a row.
           The painting is contained, never cropped: these are artworks, and
           Charlie's signature sits in a corner on most of them. */}
-      <div className="relative flex aspect-[4/3] items-center justify-center bg-paper-warm p-3">
+      <div className="relative flex aspect-[4/3] items-center justify-center bg-mount p-3">
         {imgUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -26,9 +27,9 @@ export function ProductCard({ product }: { product: ShopProduct }) {
             )}
           />
         ) : (
-          <span className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-            Image to come
-          </span>
+          // No photograph yet: the book's roundel stands in, which is what the
+          // special edition carries on its cover.
+          <Roundel size={150} tone={product.product_type === 'book' ? 'bensham' : 'ink'} />
         )}
         {sold && (
           <span className="absolute right-4 top-4 bg-bensham px-2 py-1 font-sans text-xs uppercase tracking-eyebrow text-paper">
@@ -38,10 +39,10 @@ export function ProductCard({ product }: { product: ShopProduct }) {
       </div>
 
       <div className="mt-3">
-        <h3 className="font-serif text-h4 group-hover:text-bensham transition-colors">
+        <h3 className="font-serif text-h4 transition-colors duration-colour group-hover:text-bensham">
           {product.title}
         </h3>
-        <p className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
+        <p className="mt-1 font-sans text-xs text-ink-mute">
           {PRODUCT_TYPE_LABELS[product.product_type]}
         </p>
         <p className="mt-1 font-serif text-body text-ink">

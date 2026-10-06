@@ -1,4 +1,5 @@
 import { paintingsInRange, type Painting } from '@/lib/paintings'
+import { catalogued } from './catalogue'
 import type { Region } from './types'
 
 // Gallery themes follow the book's own chapter structure. Page ranges map each
@@ -101,6 +102,10 @@ export function themeBySlug(slug: string): Theme | undefined {
   return themes.find((t) => t.slug === slug)
 }
 
+// The untitled plates in this chapter of the book. Plates the catalogue has
+// named are left out; they appear as catalogue entries instead.
 export function themePaintings(theme: Theme): Painting[] {
-  return paintingsInRange(theme.pageStart, theme.pageEnd)
+  return paintingsInRange(theme.pageStart, theme.pageEnd).filter(
+    (p) => !catalogued.has(p.web),
+  )
 }

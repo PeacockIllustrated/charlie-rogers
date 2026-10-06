@@ -1,75 +1,80 @@
 import type { Metadata } from 'next'
-import { SectionHeading } from '@/components/SectionHeading'
-import { Eyebrow } from '@/components/Eyebrow'
-import { BookCallout } from '@/components/BookCallout'
+import Link from 'next/link'
+import { Plate } from '@/components/Plate'
+import { imageInfo } from '@/lib/content/catalogue'
 import { storySections, storyIntro, type StorySection } from '@/lib/content/story'
 
 export const metadata: Metadata = {
   title: 'The story',
   description:
     'How a football injury in 1964 set a Gateshead man on a 56-year mission to paint his home town before the bulldozers took it.',
+  alternates: { canonical: '/story' },
 }
 
-function Chapter({
-  section,
-  number,
-  flip,
-}: {
-  section: StorySection
-  number: number
-  flip: boolean
-}) {
+function Chapter({ section, number }: { section: StorySection; number: number }) {
+  const info = section.image ? imageInfo(section.image) : undefined
+  const entry = info?.entry
   return (
-    <section className="border-t border-rule pt-10">
-      <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 lg:items-start">
-        {/* Text column */}
-        <div className={flip ? 'lg:order-2' : ''}>
-          <div className="flex items-baseline gap-4">
-            <span className="font-serif text-h2 text-rule tabular-nums">
+    <section className="border-t border-rule pt-6" aria-labelledby={`ch-${section.slug}`}>
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+        {/* The period hangs in the rail, as the book sets its chapter heads */}
+        <div className="lg:col-span-3">
+          <div className="lg:sticky lg:top-24">
+            <p className="font-sans text-xs text-ink-mute">
               {String(number).padStart(2, '0')}
-            </span>
-            <div>
-              <Eyebrow rule={false}>{section.period}</Eyebrow>
-              <h2 className="font-serif text-h2 mt-1">{section.title}</h2>
-            </div>
+            </p>
+            <p
+              className="mt-2 font-serif text-h1 text-bensham"
+              style={{ fontVariantNumeric: 'lining-nums' }}
+            >
+              {section.period}
+            </p>
           </div>
+        </div>
 
-          <div className="mt-5 font-serif text-body-lg text-ink-soft space-y-5">
+        <div className="lg:col-span-5">
+          <h2 id={`ch-${section.slug}`} className="font-serif text-h2">
+            {section.title}
+          </h2>
+          <div className="mt-6 space-y-5 font-serif text-body text-ink-soft">
             {section.paragraphs.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>
-
           {section.quote && (
-            <figure className="mt-8 border-l-2 border-bensham pl-5">
-              <blockquote className="font-serif italic text-h4 text-bensham">
+            <figure className="mt-10 border-t border-bensham pt-5">
+              <blockquote className="font-serif text-lead italic text-bensham">
                 {section.quote.text}
               </blockquote>
-              <figcaption className="font-sans text-small text-ink-mute mt-3">
+              <figcaption className="mt-3 font-sans text-xs text-ink-mute">
                 {section.quote.source}
               </figcaption>
             </figure>
           )}
         </div>
 
-        {/* Image column */}
         {section.image && (
-          <figure className={flip ? 'lg:order-1' : ''}>
-            <div className="bg-paper-warm p-4 lg:sticky lg:top-24">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-24">
+              <Plate
                 src={section.image}
+                width={info?.width ?? 800}
+                height={info?.height ?? 600}
                 alt={section.imageAlt ?? section.title}
-                loading="lazy"
-                className="block w-full h-auto"
+                sizes="(min-width: 1024px) 30vw, 100vw"
+                caption={
+                  entry ? (
+                    <Link href={`/catalogue/${entry.slug}`} className="font-serif text-body italic text-ink-soft hover:text-bensham">
+                      {entry.title}
+                      {entry.year ? `, ${entry.year}` : ''}
+                    </Link>
+                  ) : (
+                    section.imageCaption
+                  )
+                }
               />
-              {section.imageCaption && (
-                <figcaption className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute mt-3">
-                  {section.imageCaption}
-                </figcaption>
-              )}
             </div>
-          </figure>
+          </div>
         )}
       </div>
     </section>
@@ -78,27 +83,23 @@ function Chapter({
 
 export default function StoryPage() {
   return (
-    <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading
-        as="h1"
-        eyebrow="Charlie Rogers"
-        title="The story"
-        intro={storyIntro}
-      />
+    <div className="mx-auto max-w-content px-6 pb-16 pt-12">
+      <header className="grid gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+            1930 to 2020
+          </p>
+          <h1 className="mt-4 font-serif text-display">The story</h1>
+        </div>
+        <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
+          {storyIntro}
+        </p>
+      </header>
 
-      <div className="mt-16 space-y-16">
+      <div className="mt-20 space-y-24">
         {storySections.map((section, i) => (
-          <Chapter
-            key={section.slug}
-            section={section}
-            number={i + 1}
-            flip={i % 2 === 1}
-          />
+          <Chapter key={section.slug} section={section} number={i + 1} />
         ))}
-      </div>
-
-      <div className="mt-16">
-        <BookCallout text="This is the short account. The full life, with more than a hundred paintings, is told in Charlie Rogers, Pursued by Bulldozers." />
       </div>
     </div>
   )

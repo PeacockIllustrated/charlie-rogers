@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SectionHeading } from '@/components/SectionHeading'
 import { Eyebrow } from '@/components/Eyebrow'
-import { BookCallout } from '@/components/BookCallout'
 import { people } from '@/lib/content/people'
 import type { Person } from '@/lib/content/types'
 
@@ -74,7 +73,6 @@ export default function PeopleIndex() {
         ))}
       </div>
 
-      <BookCallout />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { SectionHeading } from '@/components/SectionHeading'
 import { Button } from '@/components/Button'
 import { ProductCard } from '@/components/shop/ProductCard'
 import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
@@ -48,12 +47,18 @@ export default async function ShopPage() {
 
   return (
     <div className="mx-auto max-w-content px-6 py-12">
-      <SectionHeading
-        as="h1"
-        eyebrow="Charlie Rogers"
-        title="Shop"
-        intro="The book about Charlie Rogers, and fine art prints of his paintings. There is no checkout yet, so everything here is by enquiry."
-      />
+      <header className="grid gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-7">
+          <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+            Charlie Rogers
+          </p>
+          <h1 className="mt-4 font-serif text-display">Shop</h1>
+        </div>
+        <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
+          The book, the cards, and the paintings themselves. There is no checkout
+          yet, so everything here is by enquiry.
+        </p>
+      </header>
 
       <div className="mt-12">
         {products.length === 0 ? (
