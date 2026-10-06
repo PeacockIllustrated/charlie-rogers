@@ -26,15 +26,15 @@ const COPY = {
   },
 } as const
 
-export default function CheckoutPage() {
-  const provider = getPaymentProvider()
+export default async function CheckoutPage() {
+  const [provider, open] = await Promise.all([getPaymentProvider(), isCheckoutOpen()])
 
   return (
     <div className="mx-auto max-w-content px-6 py-12">
       <BackLink href="/shop/basket">Basket</BackLink>
       <h1 className="mt-6 font-serif text-h1">Checkout</h1>
       <div className="mt-10">
-        {provider && isCheckoutOpen() ? (
+        {provider && open ? (
           <CheckoutForm paymentNote={COPY[provider.id].note} submitLabel={COPY[provider.id].submit} />
         ) : (
           <div className="max-w-reading border border-rule bg-paper-warm p-6 sm:p-8">

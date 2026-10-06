@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
+// The copy depends on whether the checkout is open, which an admin can
+// change at any time.
+export const dynamic = 'force-dynamic'
+
 export default async function ShopPage() {
   let products: ShopProduct[] = []
 
@@ -56,7 +60,7 @@ export default async function ShopPage() {
           <h1 className="mt-4 font-serif text-display">Shop</h1>
         </div>
         <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
-          {isCheckoutOpen()
+          {(await isCheckoutOpen())
             ? 'The book, the cards, and the paintings themselves. The special edition and the cards can be ordered here; the paintings are by enquiry until prints can be made from the originals.'
             : 'The book, the cards, and the paintings themselves. There is no checkout yet, so everything here is by enquiry.'}
         </p>

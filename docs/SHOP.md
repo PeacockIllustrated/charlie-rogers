@@ -117,15 +117,25 @@ in the database, so the two must be widened together when scans arrive.
 
 ### Switching it on
 
-`SHOP_CHECKOUT` chooses the mode. Unset or `closed` is the default and takes
-no orders. `manual` takes and reserves orders with no online payment: the shop
-emails the customer to arrange payment and postage, then marks the order paid
-in the admin. Either way the checkout also needs `SUPABASE_SERVICE_ROLE_KEY`,
-and the `20261006150000_charlie-shop-orders.sql` migration applied.
+From **/admin/settings**, which saves to the single-row `charlie_shop_settings`
+table and takes effect at once:
 
-Optional: set `RESEND_API_KEY`, `SHOP_EMAIL_FROM` and `SHOP_ORDER_NOTIFY_EMAIL`
-and the shop is emailed each new manual order. Without them, orders only
-appear in the admin.
+- **Checkout.** `Closed` (the default) takes no orders. `Open, payment by
+  arrangement` takes and reserves orders with no online payment: the shop
+  emails the customer to arrange payment and postage, then marks the order
+  paid in the admin.
+- **UK postage per order.** Blank means to be confirmed, and totals read
+  "before postage". Brian has not stated a figure.
+- **Send new orders to.** The address emailed for each new order.
+
+The page also shows, as yes or no, the two things only the hosting
+environment can set: `SUPABASE_SERVICE_ROLE_KEY` (needed to save any order)
+and `RESEND_API_KEY` with `SHOP_EMAIL_FROM` (needed to send the order email).
+Secrets never go in the settings table.
+
+Before the migration is applied, or on a preview without the service key,
+`SHOP_CHECKOUT` and `SHOP_ORDER_NOTIFY_EMAIL` in the environment are read
+instead. Once the table exists, it wins.
 
 ### Adding Stripe
 
@@ -137,7 +147,8 @@ Nothing outside these files needs to change:
    `charlie_order_items`, `client_reference_id` set to the order id,
    `success_url` set to `confirmationPath(order)`), stores the session id in
    `payment_reference`, and returns the session URL. Return `'stripe'` from
-   `getCheckoutMode()` when `SHOP_CHECKOUT=stripe`.
+   `getCheckoutMode()` when the stored mode is `stripe`, and add the option to
+   the Settings page.
 3. Add `app/api/stripe/webhook/route.ts`. On `checkout.session.completed`, set
    the order `paid` and `paid_at` (service role). On
    `checkout.session.expired`, set it `cancelled`, which returns the stock.
@@ -146,9 +157,8 @@ Nothing outside these files needs to change:
 
 ### Still to decide
 
-- **UK postage.** Not stated by Brian. `UK_POSTAGE_PENCE` in
-  `lib/shop/commerce.ts` is null, so totals read "before postage". Stripe
-  needs a figure.
+- **UK postage.** Not stated by Brian. Set it at /admin/settings once agreed;
+  Stripe will need a figure.
 - **Card pack stock.** No print run stated; set to 100 as a placeholder.
 - **Customer receipt email.** Only the shop is emailed today.
 

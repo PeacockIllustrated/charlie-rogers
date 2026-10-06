@@ -12,13 +12,6 @@ import type { ShopProduct } from './types'
 // of 100 copies reaching the order form.
 export const MAX_LINE_QUANTITY = 10
 
-// Postage within the UK, per order, in pence. Null until Brian Rankin states
-// it: his 16 September 2026 email sets the price of the special edition and
-// says nothing about postage. While it is null the basket says postage is to
-// be confirmed rather than showing a total that is not one. Set it here, once,
-// when it is agreed.
-export const UK_POSTAGE_PENCE: number | null = null
-
 // What sits in the browser. Only the slug and the quantity: titles and prices
 // are always looked up afresh, so a stale basket cannot carry an old price.
 export interface BasketLine {
@@ -98,7 +91,9 @@ export interface Quote {
   problems: BasketProblem[]
   itemCount: number
   subtotalPence: number
-  // Null when postage has not been set. See UK_POSTAGE_PENCE.
+  // Null when postage has not been set at /admin/settings. Brian Rankin has
+  // not stated it, so the basket says it is to be confirmed rather than
+  // showing a total that is not one.
   postagePence: number | null
   // Subtotal plus postage, or the subtotal alone when postage is unknown.
   totalPence: number
@@ -118,7 +113,7 @@ const REASON_COPY: Record<Exclude<Purchasability, { ok: true }>['reason'], strin
 export function quoteBasket(
   basket: BasketLine[],
   products: ShopProduct[],
-  postagePence: number | null = UK_POSTAGE_PENCE,
+  postagePence: number | null = null,
 ): Quote {
   const bySlug = new Map(products.map((p) => [p.slug, p]))
   const lines: QuotedLine[] = []

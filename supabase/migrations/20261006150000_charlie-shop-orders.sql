@@ -287,3 +287,42 @@ CREATE TRIGGER charlie_orders_no_reopen
 UPDATE charlie_products SET stock_count = 100
 WHERE slug IN ('pursued-by-bulldozers-special-edition', 'greeting-card-collection')
   AND stock_count = 1;
+
+-- ============================================================
+-- SHOP SETTINGS
+-- ============================================================
+--
+-- The checkout switch, UK postage and the order notification address, edited
+-- from /admin/settings so they change without a redeploy. One row only: the
+-- primary key is a boolean that must be true.
+--
+-- No public policy. The notification address is private, so the site reads
+-- this through the service role on the server; admins on the roster read and
+-- update it through their own session. Secrets (the Resend key, and later the
+-- Stripe keys) stay in the hosting environment and never come here.
+
+CREATE TABLE charlie_shop_settings (
+  id                    boolean PRIMARY KEY DEFAULT true CHECK (id),
+  -- 'stripe' is accepted so the column need not change when it is built; the
+  -- app treats it as closed until a Stripe provider exists.
+  checkout_mode         text NOT NULL DEFAULT 'closed'
+    CHECK (checkout_mode IN ('closed', 'manual', 'stripe')),
+  -- Null means postage is to be confirmed.
+  uk_postage_pence      int CHECK (uk_postage_pence >= 0 AND uk_postage_pence <= 10000),
+  order_notify_email    text CHECK (order_notify_email IS NULL OR order_notify_email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$'),
+  updated_at            timestamptz NOT NULL DEFAULT now(),
+  updated_by            uuid
+);
+
+CREATE TRIGGER charlie_shop_settings_updated
+  BEFORE UPDATE ON charlie_shop_settings
+  FOR EACH ROW EXECUTE FUNCTION charlie_set_updated_at();
+
+INSERT INTO charlie_shop_settings (id) VALUES (true) ON CONFLICT DO NOTHING;
+
+ALTER TABLE charlie_shop_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY charlie_shop_settings_select_admin ON charlie_shop_settings FOR SELECT
+  TO authenticated USING (charlie_is_admin());
+CREATE POLICY charlie_shop_settings_update_admin ON charlie_shop_settings FOR UPDATE
+  TO authenticated USING (charlie_is_admin()) WITH CHECK (charlie_is_admin());

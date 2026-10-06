@@ -11,13 +11,13 @@ export const metadata: Metadata = {
 // Whether the checkout is open is read from the environment per request.
 export const dynamic = 'force-dynamic'
 
-export default function BasketPage() {
+export default async function BasketPage() {
   return (
     <div className="mx-auto max-w-content px-6 py-12">
       <BackLink href="/shop">The shop</BackLink>
       <h1 className="mt-6 font-serif text-h1">Basket</h1>
       <div className="mt-10">
-        <BasketView checkoutOpen={isCheckoutOpen()} />
+        <BasketView checkoutOpen={await isCheckoutOpen()} />
       </div>
     </div>
   )

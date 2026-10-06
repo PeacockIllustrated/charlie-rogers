@@ -5,6 +5,6 @@ import { canStoreOrders } from './orders'
 // orders have somewhere to be saved. Pages use this to decide whether to offer
 // the checkout at all, so a customer is never walked through a form that
 // cannot be submitted.
-export function isCheckoutOpen(): boolean {
-  return getCheckoutMode() !== 'closed' && canStoreOrders()
+export async function isCheckoutOpen(): Promise<boolean> {
+  return canStoreOrders() && (await getCheckoutMode()) !== 'closed'
 }

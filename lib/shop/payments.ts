@@ -4,16 +4,19 @@
 // then hands the saved order to a PaymentProvider, which says where to send the
 // customer next. Everything before that hand-off is provider agnostic.
 //
-// SHOP_CHECKOUT picks the provider:
-//   unset or 'closed'  The basket works; the checkout explains that ordering is
-//                      not open yet and takes nothing. The default, so a deploy
-//                      never starts taking orders by accident.
+// The checkout mode, set at /admin/settings (or SHOP_CHECKOUT as a fallback,
+// see lib/shop/settings.ts), picks the provider:
+//   'closed'           The checkout explains that ordering is not open yet and
+//                      takes nothing. The default, so a deploy never starts
+//                      taking orders by accident.
 //   'manual'           Orders are taken and reserved, and no payment is
 //                      collected online. Someone emails the customer to
 //                      arrange payment, then marks the order paid in the admin.
 //                      Useful for a soft launch, and for reviewing the flow.
 //   'stripe'           Not built yet. See "Adding Stripe" in docs/SHOP.md. Until
 //                      it is, this value is treated as closed, with a log line.
+
+import { getShopSettings } from './settings'
 
 export type CheckoutMode = 'closed' | 'manual'
 
@@ -43,17 +46,17 @@ const manualProvider: PaymentProvider = {
   },
 }
 
-export function getCheckoutMode(): CheckoutMode {
-  const mode = process.env.SHOP_CHECKOUT?.trim().toLowerCase()
-  if (mode === 'manual') return 'manual'
-  if (mode === 'stripe') {
-    console.error('[shop] SHOP_CHECKOUT=stripe but no Stripe provider is built yet; checkout is closed.')
+export async function getCheckoutMode(): Promise<CheckoutMode> {
+  const { checkoutMode } = await getShopSettings()
+  if (checkoutMode === 'manual') return 'manual'
+  if (checkoutMode === 'stripe') {
+    console.error('[shop] checkout mode is stripe but no Stripe provider is built yet; checkout is closed.')
   }
   return 'closed'
 }
 
-export function getPaymentProvider(): PaymentProvider | null {
-  switch (getCheckoutMode()) {
+export async function getPaymentProvider(): Promise<PaymentProvider | null> {
+  switch (await getCheckoutMode()) {
     case 'manual':
       return manualProvider
     case 'closed':

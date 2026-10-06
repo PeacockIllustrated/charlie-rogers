@@ -7,13 +7,17 @@ import { fetchProductsBySlugs } from '@/lib/shop/products'
 import { canStoreOrders, placeOrder } from '@/lib/shop/orders'
 import { getPaymentProvider } from '@/lib/shop/payments'
 import { notifyShopOfOrder } from '@/lib/shop/notify'
+import { getShopSettings } from '@/lib/shop/settings'
 
 // Price whatever the browser holds. Called by the basket and the checkout so
 // what the customer sees always comes from the server, never from storage.
 export async function quoteBasketAction(raw: unknown): Promise<Quote> {
   const basket = sanitiseBasket(raw)
-  const products = await fetchProductsBySlugs(basket.map((l) => l.slug))
-  return quoteBasket(basket, products)
+  const [products, settings] = await Promise.all([
+    fetchProductsBySlugs(basket.map((l) => l.slug)),
+    getShopSettings(),
+  ])
+  return quoteBasket(basket, products, settings.ukPostagePence)
 }
 
 export interface CheckoutState {
@@ -39,7 +43,8 @@ export async function placeOrderAction(
     values[f] = typeof v === 'string' ? v : ''
   }
 
-  const provider = getPaymentProvider()
+  const settings = await getShopSettings()
+  const provider = await getPaymentProvider()
   if (!provider) {
     return { values, message: 'Online ordering is not open yet. Nothing has been taken.' }
   }
@@ -61,7 +66,7 @@ export async function placeOrderAction(
   }
   const submitted = sanitiseBasket(rawBasket)
   const products = await fetchProductsBySlugs(submitted.map((l) => l.slug))
-  const quote = quoteBasket(submitted, products)
+  const quote = quoteBasket(submitted, products, settings.ukPostagePence)
 
   if (quote.lines.length === 0) {
     return { values, message: 'Your basket is empty.', revisedBasket: [] }
@@ -101,7 +106,7 @@ export async function placeOrderAction(
 
   // Only the manual provider is told about here. A card payment provider
   // notifies from its webhook, once the money has actually arrived.
-  if (provider.id === 'manual') await notifyShopOfOrder(result.order, checked.details, quote)
+  if (provider.id === 'manual') await notifyShopOfOrder(settings.orderNotifyEmail, result.order, checked.details, quote)
 
   const { redirectTo } = await provider.startPayment(result.order)
   // Outside any try block: redirect() works by throwing.

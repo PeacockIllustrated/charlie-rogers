@@ -6,14 +6,18 @@ import { formatPence } from './utils'
 // Tell the shop a new order has come in, by email through Resend. Without it
 // a manual order would sit in the admin with nobody knowing to look.
 //
-// Best effort and optional: unset RESEND_API_KEY, SHOP_EMAIL_FROM or
-// SHOP_ORDER_NOTIFY_EMAIL and this does nothing. A failed send is logged and
+// Best effort and optional: without RESEND_API_KEY and SHOP_EMAIL_FROM in the
+// environment, or a notification address at /admin/settings, this does nothing. A failed send is logged and
 // never fails the order, which is already saved by the time this runs. Plain
 // fetch rather than the Resend SDK, so there is no dependency for one call.
-export async function notifyShopOfOrder(order: PlacedOrder, details: CheckoutDetails, quote: Quote): Promise<void> {
+export async function notifyShopOfOrder(
+  to: string | null,
+  order: PlacedOrder,
+  details: CheckoutDetails,
+  quote: Quote,
+): Promise<void> {
   const key = process.env.RESEND_API_KEY
   const from = process.env.SHOP_EMAIL_FROM
-  const to = process.env.SHOP_ORDER_NOTIFY_EMAIL
   if (!key || !from || !to) return
 
   const a = details.address

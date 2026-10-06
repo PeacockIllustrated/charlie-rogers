@@ -68,7 +68,7 @@ export default async function ProductDetailPage({
   // Offer the basket only when an order can actually be placed. Until then the
   // book and the cards fall back to enquiry like everything else, so nobody
   // fills a basket they cannot check out.
-  const canAdd = saleable.ok && isCheckoutOpen()
+  const canAdd = saleable.ok && (await isCheckoutOpen())
   // Read literally: Next inlines NEXT_PUBLIC_ variables by matching source text.
   const enquiryEmail = process.env.NEXT_PUBLIC_ENQUIRY_EMAIL
 
