@@ -229,3 +229,147 @@
     display: none;
   }
 }
+
+/* ------------------------------------------------------------------
+   Graphics in motion. Pen and wash drawings in components/graphics.
+   Every loop is slow and small: smoke, snow, washing, a bulldozer at
+   walking pace. Nothing moves for a reader who has asked for less
+   motion; the drawings are simply there, complete.
+   ------------------------------------------------------------------ */
+
+.smoke-puff {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: smoke-rise 6.3s linear infinite;
+}
+@keyframes smoke-rise {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  15% { opacity: 0.32; }
+  100% { opacity: 0; transform: translate(14px, -38px) scale(2.6); }
+}
+
+.snowflake {
+  position: absolute;
+  top: -12px;
+  display: block;
+  background: #fff8ee;
+  /* A snowflake is a round mark of paint, not a softened corner. */
+  border-radius: 50%;
+  animation-name: snow-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes snow-fall {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(var(--drift, 0), var(--fall, 110vh), 0); }
+}
+
+.washing {
+  animation: washing-sway 4.2s ease-in-out infinite alternate;
+}
+@keyframes washing-sway {
+  0% { transform: rotate(-4deg) skewX(-2deg); }
+  100% { transform: rotate(5deg) skewX(3deg); }
+}
+
+/* The race: the bulldozer and the edge of the standing street move as one.
+   The clip rect sits at the blade, so houses vanish as it passes. */
+.demo-dozer,
+.demo-clip {
+  animation: dozer-advance 30s linear infinite;
+}
+@keyframes dozer-advance {
+  0% { transform: translateX(-110px); }
+  82% { transform: translateX(880px); }
+  100% { transform: translateX(880px); }
+}
+.demo-dozer {
+  animation-name: dozer-advance, dozer-fade;
+  animation-duration: 30s, 30s;
+}
+@keyframes dozer-fade {
+  0%, 88% { opacity: 1; }
+  95%, 100% { opacity: 0; }
+}
+.demo-street {
+  animation: street-redraw 30s linear infinite;
+}
+@keyframes street-redraw {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  100% { opacity: 1; }
+}
+.dust {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dust-kick 1.6s ease-out infinite;
+}
+@keyframes dust-kick {
+  0% { opacity: 0.4; transform: translate(0, 0) scale(0.6); }
+  100% { opacity: 0; transform: translate(18px, -16px) scale(2.4); }
+}
+.painter-arm {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: brush 1.8s ease-in-out infinite alternate;
+}
+@keyframes brush {
+  0% { transform: rotate(-6deg); }
+  100% { transform: rotate(8deg); }
+}
+
+.window-glow {
+  opacity: 0.85;
+  animation: window-glow 9s ease-in-out infinite;
+}
+@keyframes window-glow {
+  0%, 40% { opacity: 0.85; }
+  50%, 80% { opacity: 0.15; }
+  90%, 100% { opacity: 0.85; }
+}
+
+/* Draw-in: lines carry pathLength="1", so a dash of 1 is the whole line. */
+.draw .ink {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 2.6s cubic-bezier(.4, 0, .2, 1);
+}
+.draw.is-drawn .ink {
+  stroke-dashoffset: 0;
+}
+.draw .wash-in {
+  opacity: 0;
+  transition: opacity 1.4s ease 1.6s;
+}
+.draw.is-drawn .wash-in {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smoke-puff,
+  .snowflake,
+  .dust {
+    display: none;
+  }
+  .washing,
+  .painter-arm,
+  .window-glow,
+  .demo-street,
+  .demo-dozer,
+  .demo-clip {
+    animation: none;
+  }
+  /* The race at rest: the bulldozer halfway along the street. */
+  .demo-dozer,
+  .demo-clip {
+    transform: translateX(420px);
+  }
+  .draw .ink,
+  .draw .wash-in {
+    transition: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}

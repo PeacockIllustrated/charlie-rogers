@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { RaceRow } from '@/components/RaceRow'
+import { Demolition } from '@/components/graphics/Demolition'
 import { places } from '@/lib/content/places'
 import { PlacesMap } from '@/components/places/PlacesMap'
 import type { Region, Status } from '@/lib/content/types'
@@ -112,6 +113,7 @@ export default function PlacesIndex() {
       {/* The places themselves, as cards on a panel */}
       <div className="border-t border-rule bg-paper-warm py-16 lg:py-20">
         <div className="mx-auto max-w-content space-y-16 px-6">
+          <Demolition id="places-race" />
           {regionOrder.map((region) => {
             const regionPlaces = byRegion(region)
             if (regionPlaces.length === 0) return null

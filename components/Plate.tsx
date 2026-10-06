@@ -15,6 +15,7 @@ export function Plate({
   sizes = '(min-width: 1024px) 60vw, 100vw',
   mount = true,
   className = '',
+  overlay,
 }: {
   src: string
   width: number
@@ -25,6 +26,8 @@ export function Plate({
   sizes?: string
   mount?: boolean
   className?: string
+  // Drawn over the image itself, such as snow over a snow scene.
+  overlay?: ReactNode
 }) {
   return (
     <figure className={className}>
@@ -35,16 +38,18 @@ export function Plate({
             : 'flex justify-center'
         }
       >
-        <Image
-          src={src}
-          width={width}
-          height={height}
-          alt={alt}
-          sizes={sizes}
-          priority={priority}
-          className="block h-auto w-full"
-          style={{ maxWidth: width }}
-        />
+        <div className="relative w-full" style={{ maxWidth: width }}>
+          <Image
+            src={src}
+            width={width}
+            height={height}
+            alt={alt}
+            sizes={sizes}
+            priority={priority}
+            className="block h-auto w-full"
+          />
+          {overlay}
+        </div>
       </div>
       {caption && (
         <figcaption className="mt-3 font-sans text-xs text-ink-mute">

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Roundel } from './Roundel'
+import { Skyline } from './graphics/Skyline'
 import { catalogueBySlug } from '@/lib/shop/catalogue'
 
 const footerLinks = [
@@ -17,7 +18,8 @@ const footerLinks = [
 export function Footer() {
   const edition = catalogueBySlug('pursued-by-bulldozers-special-edition')
   return (
-    <footer className="mt-24">
+    <footer className="mt-16">
+      <Skyline />
       <section className="bg-bensham-deep text-paper">
         <div className="mx-auto grid max-w-content items-center gap-10 px-6 py-16 md:grid-cols-12 lg:py-20">
           <div className="md:col-span-3">

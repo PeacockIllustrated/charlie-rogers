@@ -2,6 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/Button'
 import { Plate } from '@/components/Plate'
+import { BackLane } from '@/components/graphics/BackLane'
+import { Demolition } from '@/components/graphics/Demolition'
+import { DrawIn } from '@/components/graphics/DrawIn'
+import { Snowfall } from '@/components/graphics/Snowfall'
 import { RaceRow } from '@/components/RaceRow'
 import { entryBySlug, type Entry } from '@/lib/content/catalogue'
 import { places, placeBySlug } from '@/lib/content/places'
@@ -111,6 +115,7 @@ export default function Home() {
               alt={hero.alt}
               priority
               sizes="(min-width: 1024px) 58vw, 100vw"
+              overlay={<Snowfall count={44} fall="720px" />}
               caption={
                 <Link href={`/catalogue/${hero.slug}`} className="hover:text-bensham">
                   <span className="font-serif text-body italic text-ink-soft">{hero.title}</span>
@@ -139,7 +144,10 @@ export default function Home() {
 
       {/* The race */}
       <section className="border-y border-rule bg-paper-warm">
-        <div className="mx-auto grid max-w-content gap-10 px-6 py-20 lg:grid-cols-12 lg:py-28">
+        <div className="mx-auto max-w-content px-6 pt-16 lg:pt-20">
+          <Demolition id="home-race" className="opacity-95" />
+        </div>
+        <div className="mx-auto grid max-w-content gap-10 px-6 pb-20 pt-12 lg:grid-cols-12 lg:pb-28">
           <div className="lg:col-span-4">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               The race
@@ -202,6 +210,23 @@ export default function Home() {
                 How it began
               </Button>
             </div>
+            {/* The view from his aunt's front window, framed as the window */}
+            <figure className="mt-12 max-w-md">
+              <div className="relative border-[10px] border-paper-warm bg-mount outline outline-1 outline-rule">
+                <DrawIn>
+                  <BackLane id="home-lane" />
+                </DrawIn>
+                <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t-4 border-paper-warm" />
+                  <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-4 border-paper-warm" />
+                </div>
+              </div>
+              <figcaption className="mt-3 font-sans text-xs text-ink-mute">
+                The back lane from 262 Bensham Road, drawn for this site after
+                the book&rsquo;s account. Charlie&rsquo;s own painting of it has
+                not been found.
+              </figcaption>
+            </figure>
           </div>
           <div className="lg:col-span-7 lg:pt-16">
             <Plate

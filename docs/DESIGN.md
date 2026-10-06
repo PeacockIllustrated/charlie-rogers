@@ -228,6 +228,17 @@ The mark, from the blind-embossed roundel on the special edition: "CHARLIE ROGER
 
 Each named painting has a page at /catalogue/[slug] with a plate, a ledger (`components/Ledger.tsx`), its place's race line, a paired photograph where the book prints one, and a share image drawn from the painting itself. Entries live in `lib/content/catalogue.ts`, and each records where its title came from. Untitled book plates appear in their chapter under "Reproduced in the book", captioned by page, at native size.
 
+## Graphics in motion
+
+Pen and wash drawings made for the site in Charlie's manner, never passed off as his: wandering ink lines that overshoot at corners (`lib/sketch.ts`, seeded so server and browser agree), colour washed in afterwards and never quite inside the lines, and a turbulence filter for the bleed. Each one sits where it tells part of the story, and each moves slowly:
+
+- **Snow over Bensham Road** on the home page, over the painting itself, because it is a snow scene.
+- **The race** (`Demolition`) on the home and places pages: a bulldozer works along a terrace and the houses come down behind its blade, while a man in a flat cap paints the last of the row at his easel. The cycle takes 30 seconds, then the street is drawn again.
+- **The view from the window** (`BackLane`) in the 1964 section: the back lane from 262 Bensham Road, framed as a sash window. Its lines draw themselves in when it scrolls into view, then washing sways on the line. The caption says it was drawn for the site and that Charlie's painting has not been found.
+- **The street** (`Skyline`) above every footer: the terrace in silhouette in Bensham deep red, chimneys smoking, a few windows lit and dimming.
+
+With `prefers-reduced-motion` the smoke, snow and dust are removed, and every drawing shows complete and at rest, with the bulldozer halfway along the street.
+
 ## Don'ts
 
 - No carousels.
