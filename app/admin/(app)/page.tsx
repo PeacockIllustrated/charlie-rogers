@@ -2,10 +2,11 @@ import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { productWarnings } from '@/lib/shop/product-input'
 import { PRODUCT_STATUS_LABELS, type ShopProduct } from '@/lib/shop/types'
+import { formatPence } from '@/lib/shop/utils'
 
 type Row = Pick<
   ShopProduct,
-  'id' | 'title' | 'status' | 'price_pence' | 'stock_count' | 'description' | 'updated_at'
+  'id' | 'title' | 'status' | 'product_type' | 'price_pence' | 'stock_count' | 'description' | 'updated_at'
 > & { images: { id: string }[] }
 
 export default async function AdminDashboard() {
@@ -13,9 +14,21 @@ export default async function AdminDashboard() {
   const { data, error } = await supabase
     .from('charlie_products')
     .select(
-      'id, title, status, price_pence, stock_count, description, updated_at, images:charlie_product_images(id)',
+      'id, title, status, product_type, price_pence, stock_count, description, updated_at, images:charlie_product_images(id)',
     )
     .order('updated_at', { ascending: false })
+
+  // Orders and settings arrive with the orders migration. Until it is applied
+  // both queries fail, and the dashboard says so rather than showing zeros.
+  const [ordersRes, settingsRes] = await Promise.all([
+    supabase.from('charlie_orders').select('status, total_pence').in('status', ['pending', 'paid']),
+    supabase.from('charlie_shop_settings').select('checkout_mode, uk_postage_pence').eq('id', true).maybeSingle(),
+  ])
+  const openOrders = (ordersRes.data as Array<{ status: string; total_pence: number }> | null) ?? []
+  const awaitingPayment = openOrders.filter((o) => o.status === 'pending')
+  const toPost = openOrders.filter((o) => o.status === 'paid')
+  const settings = settingsRes.data as { checkout_mode: string; uk_postage_pence: number | null } | null
+  const ordersReady = !ordersRes.error && !settingsRes.error && settings !== null
 
   const products = (data as Row[] | null) ?? []
 
@@ -36,6 +49,7 @@ export default async function AdminDashboard() {
       product: p,
       warnings: productWarnings({
         status: p.status,
+        product_type: p.product_type,
         price_pence: p.price_pence,
         stock_count: p.stock_count,
         imageCount: p.images?.length ?? 0,
@@ -52,7 +66,7 @@ export default async function AdminDashboard() {
         <div>
           <h1 className="font-serif text-h1">Dashboard</h1>
           <p className="mt-1 font-sans text-small text-ink-mute">
-            Manage the shop listings for the Charlie Rogers site.
+            Orders, listings and settings for the Charlie Rogers shop.
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -78,6 +92,39 @@ export default async function AdminDashboard() {
           Could not load products: {error.message}
         </div>
       )}
+
+      {/* Orders first: they are the thing with a customer waiting on them. */}
+      <section className="border border-rule bg-paper">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-rule px-5 py-4">
+          <h2 className="font-serif text-h3">Orders</h2>
+          {ordersReady && (
+            <Link href="/admin/settings" className="font-sans text-small text-ink-soft hover:text-bensham">
+              Checkout is {settings?.checkout_mode === 'manual' ? 'open, payment by arrangement' : 'closed'}
+              {settings?.checkout_mode === 'manual' && settings.uk_postage_pence === null && ', postage not set'}
+            </Link>
+          )}
+        </div>
+        {ordersReady ? (
+          <div className="grid gap-px bg-rule sm:grid-cols-2">
+            <Link href="/admin/orders?status=pending" className="bg-paper p-5 transition-colors hover:bg-paper-warm">
+              <div className="font-serif text-h2">{awaitingPayment.length}</div>
+              <div className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
+                Awaiting payment
+                {awaitingPayment.length > 0 && `, ${formatPence(awaitingPayment.reduce((n, o) => n + o.total_pence, 0))}`}
+              </div>
+            </Link>
+            <Link href="/admin/orders?status=paid" className="bg-paper p-5 transition-colors hover:bg-paper-warm">
+              <div className="font-serif text-h2">{toPost.length}</div>
+              <div className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">To post</div>
+            </Link>
+          </div>
+        ) : (
+          <p className="px-5 py-6 font-sans text-small text-ink-mute">
+            Orders are not set up in the database yet. Apply the migration
+            20261006150000_charlie-shop-orders.sql to turn them on.
+          </p>
+        )}
+      </section>
 
       <div className="grid gap-px bg-rule sm:grid-cols-4 border border-rule">
         {stats.map((s) => (

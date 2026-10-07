@@ -106,7 +106,7 @@ export function ImageUploader({
           }
         }}
         className={cn(
-          'border-2 border-dashed p-6 text-center transition-colors',
+          'border p-6 text-center transition-colors',
           dragOver ? 'border-ochre bg-ochre/5' : 'border-rule bg-paper-warm/50',
           remaining === 0 && 'opacity-60',
         )}

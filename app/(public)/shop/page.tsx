@@ -5,6 +5,7 @@ import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { CATALOGUE } from '@/lib/shop/catalogue'
 import type { ShopProduct } from '@/lib/shop/types'
+import { isCheckoutOpen } from '@/lib/shop/checkout-open'
 
 export const metadata: Metadata = {
   title: 'Shop',
@@ -12,6 +13,10 @@ export const metadata: Metadata = {
     'The book about Charlie Rogers, and, in time, fine art prints of his paintings.',
   robots: { index: false, follow: false },
 }
+
+// The copy depends on whether the checkout is open, which an admin can
+// change at any time.
+export const dynamic = 'force-dynamic'
 
 export default async function ShopPage() {
   let products: ShopProduct[] = []
@@ -55,8 +60,9 @@ export default async function ShopPage() {
           <h1 className="mt-4 font-serif text-display">Shop</h1>
         </div>
         <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
-          The book, the cards, and the paintings themselves. There is no checkout
-          yet, so everything here is by enquiry.
+          {(await isCheckoutOpen())
+            ? 'The book, the cards, and the paintings themselves. The special edition and the cards can be ordered here; the paintings are by enquiry until prints can be made from the originals.'
+            : 'The book, the cards, and the paintings themselves. There is no checkout yet, so everything here is by enquiry.'}
         </p>
       </header>
 

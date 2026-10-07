@@ -9,6 +9,9 @@ import { formatPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { catalogueBySlug } from '@/lib/shop/catalogue'
+import { purchasability, maxQuantity } from '@/lib/shop/commerce'
+import { AddToBasket } from '@/components/shop/AddToBasket'
+import { isCheckoutOpen } from '@/lib/shop/checkout-open'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
@@ -58,6 +61,14 @@ export default async function ProductDetailPage({
   if (!product) notFound()
 
   const isSold = product.status === 'sold'
+  const saleable = purchasability(product)
+  // Out of stock is "sold out" only for things that are sold online; a print
+  // at stock 0 is by enquiry, not sold out.
+  const soldOut = !saleable.ok && saleable.reason === 'sold-out'
+  // Offer the basket only when an order can actually be placed. Until then the
+  // book and the cards fall back to enquiry like everything else, so nobody
+  // fills a basket they cannot check out.
+  const canAdd = saleable.ok && (await isCheckoutOpen())
   // Read literally: Next inlines NEXT_PUBLIC_ variables by matching source text.
   const enquiryEmail = process.env.NEXT_PUBLIC_ENQUIRY_EMAIL
 
@@ -86,7 +97,7 @@ export default async function ProductDetailPage({
           <p
             className={cn(
               'mt-4 font-serif text-h3 text-bensham',
-              isSold && 'line-through opacity-60',
+              (isSold || soldOut) && 'line-through opacity-60',
             )}
           >
             {formatPrice(product.price_pence)}
@@ -111,36 +122,46 @@ export default async function ProductDetailPage({
             </dl>
           )}
 
-          {/* There is no checkout yet, so this is an enquiry, and it has to
-              lead somewhere real. It used to send every enquiry to /book, the
-              book's own product page, which is the wrong destination for a
-              painting and a dead end for the book. "Sold" was a link to "#":
-              focusable, announced as a link, and going nowhere.
+          {/* The book and the card pack go in the basket. Everything else,
+              the paintings above all, is by enquiry: the files we hold are not
+              print quality (see lib/shop/commerce.ts), so nothing here may be
+              bought online until high resolution scans arrive.
 
-              The address comes from the environment because none of the people
-              involved has been asked which one to publish. Unset, the page says
-              plainly that enquiries are not open rather than offering a button
-              that does nothing. */}
+              The enquiry address comes from the environment because none of
+              the people involved has been asked which one to publish. Unset,
+              the page says plainly that enquiries are not open rather than
+              offering a button that does nothing. */}
           <div className="mt-8">
-            {isSold ? (
-              <p className="inline-block border border-rule px-4 py-2 font-sans text-small uppercase tracking-eyebrow text-ink-mute">
-                Sold
-              </p>
-            ) : enquiryEmail ? (
-              <Button
-                href={`mailto:${enquiryEmail}?subject=${encodeURIComponent(`Enquiry: ${product.title}`)}`}
-                variant="primary"
-              >
-                Enquire about this
-              </Button>
-            ) : null}
-            <p className="mt-3 font-sans text-small text-ink-mute">
-              {isSold
-                ? 'This piece has been sold. It stays listed as part of the record.'
-                : enquiryEmail
-                  ? 'There is no online checkout yet, so this goes by email.'
-                  : 'There is no online checkout yet, and no enquiry address has been set.'}
-            </p>
+            {canAdd ? (
+              <AddToBasket slug={product.slug} title={product.title} maxQuantity={maxQuantity(product)} />
+            ) : isSold || soldOut ? (
+              <>
+                <p className="inline-block border border-rule px-4 py-2 font-sans text-small uppercase tracking-eyebrow text-ink-mute">
+                  {isSold ? 'Sold' : 'Sold out'}
+                </p>
+                <p className="mt-3 font-sans text-small text-ink-mute">
+                  {isSold
+                    ? 'This piece has been sold. It stays listed as part of the record.'
+                    : 'Every copy has been ordered. It stays listed as part of the record.'}
+                </p>
+              </>
+            ) : (
+              <>
+                {enquiryEmail && (
+                  <Button
+                    href={`mailto:${enquiryEmail}?subject=${encodeURIComponent(`Enquiry: ${product.title}`)}`}
+                    variant="primary"
+                  >
+                    Enquire about this
+                  </Button>
+                )}
+                <p className="mt-3 font-sans text-small text-ink-mute">
+                  {enquiryEmail
+                    ? 'This is not sold online yet, so enquiries go by email.'
+                    : 'This is not sold online yet, and no enquiry address has been set.'}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
