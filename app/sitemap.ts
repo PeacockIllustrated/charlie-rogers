@@ -5,8 +5,9 @@ import { places } from '@/lib/content/places'
 import { people } from '@/lib/content/people'
 import { themes } from '@/lib/content/themes'
 
-// The public archive only. The shop is left out while it is noindex and
-// unlinked (see docs/SHOP.md); add it here in the same change that opens it.
+// The public archive only. The shop is left out while its pages are noindex
+// and robots.ts disallows /shop; add it here in the change that opens the
+// checkout (see docs/GO-LIVE.md).
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = ['', '/story', '/work', '/places', '/people', '/timeline', '/exhibitions', '/book']
 
