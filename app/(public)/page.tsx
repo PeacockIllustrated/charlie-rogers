@@ -1,170 +1,344 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { Eyebrow } from '@/components/Eyebrow'
 import { Button } from '@/components/Button'
-import { PaintingCard } from '@/components/PaintingCard'
-import { BookCallout } from '@/components/BookCallout'
+import { Plate } from '@/components/Plate'
+import { BackLane } from '@/components/graphics/BackLane'
+import { Demolition } from '@/components/graphics/Demolition'
+import { DrawIn } from '@/components/graphics/DrawIn'
+import { Snowfall } from '@/components/graphics/Snowfall'
+import { RaceRow } from '@/components/RaceRow'
+import { entryBySlug, type Entry } from '@/lib/content/catalogue'
+import { places, placeBySlug } from '@/lib/content/places'
 
-// Editorial landing. Leads with the art and the bulldozers thesis, then the 1964
-// origin story, then routes into the book's sections. Teaser depth: enough to
-// draw a reader in, the full account is in the book.
+// The landing page reads like the opening of the book: one painting, the line
+// that names the book, then the race itself. Every claim on this page comes
+// from lib/content, so the numbers cannot drift from the pages they summarise.
 
-// The same three paintings the page 27 contact sheet labels by location, but
-// taken from where the book prints them large rather than from that sheet.
-// Page 27 keys the paintings to the map on page 26, so its reproductions are
-// thumbnails: about 176x143. Note these come from paintings/web/, which holds
-// native resolution. paintings/thumbs/ is a uniform 400px upscale of the same
-// files, so it reports a size it does not actually carry.
-const featured = [
-  {
-    src: '/paintings/web/page_039_img_000.jpg',
-    title: 'Saltwell Park',
-    location: 'Saltwell',
-    status: 'extant' as const,
-  },
-  {
-    src: '/paintings/web/page_031_img_003.jpg',
-    title: 'Cotfield Street',
-    location: 'Bensham',
-    status: 'demolished' as const,
-  },
-  {
-    src: '/paintings/web/page_038_img_001.jpg',
-    title: 'Shipley Art Gallery',
-    location: 'Gateshead',
-    status: 'extant' as const,
-  },
+function must<T>(v: T | undefined | null, what: string): T {
+  if (v === undefined || v === null) throw new Error(`Home page: missing ${what}`)
+  return v
+}
+
+const hero = must(entryBySlug('bensham-road-gateshead-1970'), 'hero entry')
+const origin = must(entryBySlug('cotfield-street-bensham-gateshead'), 'origin entry')
+
+// The salon: the photographed originals and the largest card artwork, hung as
+// a wall rather than a grid. Spans are set per picture to suit its shape.
+const salon: { slug: string; span: string }[] = [
+  { slug: 'the-joke-shop-gateshead-on-tyne-1966', span: 'lg:col-span-7' },
+  { slug: 'pop-1967', span: 'lg:col-span-5 lg:mt-24' },
+  { slug: 'the-men-on-the-seats-1973', span: 'lg:col-span-5' },
+  { slug: 'bigg-market-newcastle-on-tyne-1975', span: 'lg:col-span-7 lg:-mt-16' },
+  { slug: 'the-monument-with-snow-newcastle-on-tyne-1996', span: 'lg:col-span-6' },
+  { slug: 'four-doors-at-school-street-gateshead-1977', span: 'lg:col-span-6 lg:mt-12' },
 ]
 
-const sections = [
-  {
-    href: '/story',
-    title: 'The story',
-    blurb:
-      'From a footballer sidelined by a knee injury to four Royal Academy summer shows. Fifty-six years at the easel he never owned.',
-  },
-  {
-    href: '/work',
-    title: 'The work',
-    blurb:
-      'Around a thousand paintings, organised the way the book is: Gateshead, Newcastle, Paris, family, characters and more.',
-  },
-  {
-    href: '/places',
-    title: 'Places',
-    blurb:
-      'The streets he painted, marked extant or demolished. Half of the buildings here are gone.',
-  },
-  {
-    href: '/people',
-    title: 'People',
-    blurb:
-      'Ann, Pop, Charlie Junior, Norman Cornish and the collectors who kept the work together.',
-  },
+// The race, told through the places. Gone first, then altered, then the one
+// that survived, for contrast.
+const raceOrder = [
+  'cotfield-street',
+  'st-cuthberts-church-bensham',
+  'railway-quarter-gateshead-east',
+  'coatsworth-road',
+  'saltwell-park',
 ]
+
+// Post-war Northern chroniclers, as Brian Rankin places them. Dates are birth
+// and death years; the bars share one axis so the overlap is visible.
+const lineage = [
+  { name: 'L. S. Lowry', born: 1887, died: 1976, place: 'Salford', subject: 'the mills and crowds of industrial Lancashire' },
+  { name: 'Norman Cornish', born: 1919, died: 2014, place: 'Spennymoor', subject: 'the pit village and its people' },
+  { name: 'Charlie Rogers', born: 1930, died: 2020, place: 'Gateshead', subject: 'the back lanes of Tyneside, before the bulldozers' },
+]
+const AXIS_START = 1880
+const AXIS_END = 2025
+const pos = (y: number) => ((y - AXIS_START) / (AXIS_END - AXIS_START)) * 100
+
+function SalonPiece({ entry, span }: { entry: Entry; span: string }) {
+  return (
+    <Link href={`/catalogue/${entry.slug}`} className={`group block ${span}`}>
+      <div className="border border-rule bg-mount px-[5%] pb-[8%] pt-[5%] transition-colors duration-colour group-hover:border-ink-mute">
+        <Image
+          src={entry.image.src}
+          width={entry.image.width}
+          height={entry.image.height}
+          alt={entry.alt}
+          sizes="(min-width: 1024px) 55vw, 100vw"
+          className="mx-auto block h-auto w-full"
+          style={{ maxWidth: entry.image.width }}
+        />
+      </div>
+      <div className="mt-3 flex items-baseline justify-between gap-4">
+        <h3 className="font-serif text-h4 transition-colors duration-colour group-hover:text-bensham">
+          {entry.title}
+        </h3>
+        <span className="shrink-0 font-sans text-xs text-ink-mute">{entry.year}</span>
+      </div>
+    </Link>
+  )
+}
 
 export default function Home() {
+  const gone = places.filter((p) => p.status === 'demolished').length
+  const altered = places.filter((p) => p.status === 'altered').length
+  const race = raceOrder.map((s) => must(placeBySlug(s), `place ${s}`))
+
   return (
     <div>
-      <section className="mx-auto max-w-content px-6 py-16 lg:py-20">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="max-w-reading">
-            <Eyebrow>Charlie Rogers &middot; Gateshead, 1930 to 2020</Eyebrow>
-            <h1 className="font-serif text-display-2 mt-4">
-              Pursued by bulldozers
-            </h1>
-            <p className="font-serif text-body-lg text-ink-soft mt-6">
-              For fifty-six years Charlie Rogers painted the back lanes, pubs,
-              churches and corner shops of Tyneside, often days or weeks before
-              the demolition crews arrived. Around a thousand works survive. This
-              is the archive of what he saw, and of what is gone.
+      {/* The opening plate */}
+      <section className="mx-auto max-w-content px-6 pb-16 pt-10 lg:pb-24 lg:pt-16">
+        <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-5 lg:pb-14">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+              Charlie Rogers &middot; Gateshead &middot; 1930 to 2020
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/work">Browse the work</Button>
+            <h1 className="mt-6 font-serif text-display text-ink">
+              Pursued by <span className="italic text-bensham">bulldozers</span>
+            </h1>
+            <p className="mt-8 max-w-[30rem] font-serif text-lead text-ink-soft">
+              For fifty-six years a self-taught painter from Gateshead raced the
+              demolition crews, recording the back lanes, pubs, churches and
+              corner shops of Tyneside in the days before they came down.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <Button href="/work">See the work</Button>
               <Button href="/story" variant="secondary">
                 Read his story
               </Button>
             </div>
           </div>
-          <figure className="bg-paper-warm p-4 lg:p-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/paintings/web/page_035_img_000.jpg"
-              alt="A Tyneside back street by Charlie Rogers, terraced houses under a smoking sky with a lone figure and a dog"
-              className="block w-full h-auto"
+          <div className="lg:col-span-7">
+            <Plate
+              src={hero.image.src}
+              width={hero.image.width}
+              height={hero.image.height}
+              alt={hero.alt}
+              priority
+              sizes="(min-width: 1024px) 58vw, 100vw"
+              overlay={<Snowfall count={44} fall="720px" />}
+              caption={
+                <Link href={`/catalogue/${hero.slug}`} className="hover:text-bensham">
+                  <span className="font-serif text-body italic text-ink-soft">{hero.title}</span>
+                  <span className="ml-2">{hero.year}</span>
+                </Link>
+              }
             />
-            <figcaption className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute mt-3">
-              A Tyneside street, watercolour
-            </figcaption>
-          </figure>
+          </div>
         </div>
       </section>
 
-      <section className="border-y border-rule bg-paper-warm">
-        <div className="mx-auto max-w-content px-6 py-14">
-          <blockquote className="font-serif italic text-h2 text-bensham max-w-3xl">
-            &ldquo;As fast as Tyneside&rsquo;s characteristic buildings fall,
-            Charlie Rogers seems to be there to catch them.&rdquo;
+      {/* His own words, the book's title line */}
+      <section className="border-y border-rule">
+        <div className="mx-auto max-w-content px-6 py-16 lg:py-24">
+          <blockquote className="mx-auto max-w-4xl text-center">
+            <p className="font-serif text-h1 italic text-ink">
+              &ldquo;I feel I have spent much of my career being pursued by
+              bulldozers.&rdquo;
+            </p>
+            <footer className="mt-6 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
+              Charlie Rogers
+            </footer>
           </blockquote>
-          <p className="font-sans text-small text-ink-mute mt-4">
-            Tom Pickard, 1973
-          </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-content px-6 py-16">
-        <Eyebrow>The lucky break</Eyebrow>
-        <div className="mt-4 max-w-reading font-serif text-body-lg text-ink-soft space-y-5">
-          <p>
-            In 1964, aged thirty-four, Charlie took a heavy knock to a damaged
-            knee in a cup tie and was signed off for a week. Limping to his
-            aunt&rsquo;s house on Bensham Road, he sat with a cup of tea and
-            looked out at the back lane opposite. Over five or six mornings he
-            painted it. The street was demolished soon after.
-          </p>
-          <p>
-            He spent the rest of his life racing the bulldozers, and credited it
-            all to the half-back who crippled him.
-          </p>
+      {/* The race */}
+      <section className="border-y border-rule bg-paper-warm">
+        <div className="mx-auto max-w-content px-6 pt-16 lg:pt-20">
+          <Demolition id="home-race" className="opacity-95" />
         </div>
-        <div className="mt-6">
-          <Button href="/story" variant="tertiary">
-            How it began
+        <div className="mx-auto grid max-w-content gap-10 px-6 pb-20 pt-12 lg:grid-cols-12 lg:pb-28">
+          <div className="lg:col-span-4">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+              The race
+            </p>
+            <h2 className="mt-4 font-serif text-h1">He painted them. Then they were gone.</h2>
+            <p className="mt-6 font-serif text-body text-ink-soft">
+              Each line runs across his painting life, 1964 to 2020. A square
+              marks a painting. Red is a building lost, ochre one altered past
+              recognition, green one still standing. Of the {places.length}{' '}
+              places on this site, {gone} are gone and {altered} more are
+              altered.
+            </p>
+            <div className="mt-8">
+              <Button href="/places" variant="tertiary">
+                All the places
+              </Button>
+            </div>
+          </div>
+          <ol className="space-y-3 lg:col-span-8 lg:pl-6">
+            {race.map((place) => (
+              <li key={place.slug}>
+                <RaceRow place={place} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* 1964 */}
+      <section>
+        <div className="mx-auto grid max-w-content gap-10 px-6 py-20 lg:grid-cols-12 lg:gap-12 lg:py-28">
+          <div className="lg:col-span-5">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+              The lucky break
+            </p>
+            <p
+              className="mt-2 font-serif leading-none tracking-[-0.03em] text-bensham"
+              style={{ fontSize: 'clamp(6rem, 16vw, 13rem)', fontVariantNumeric: 'lining-nums' }}
+              aria-hidden="true"
+            >
+              1964
+            </p>
+            <h2 className="sr-only">1964, the lucky break</h2>
+            <div className="mt-6 max-w-reading space-y-5 font-serif text-body text-ink-soft">
+              <p>
+                At thirty-four, Charlie took a heavy knock to a damaged knee in a
+                cup tie and was signed off for a week. Limping to his aunt&rsquo;s
+                house on Bensham Road, he sat with a cup of tea and looked out at
+                the back lane of Cotfield Street. Over five or six mornings he
+                painted it, in pen and wash.
+              </p>
+              <p>
+                The street was demolished soon after. He spent the rest of his
+                life racing the bulldozers, and credited it all to the
+                anonymous half-back who crippled him.
+              </p>
+            </div>
+            <div className="mt-8">
+              <Button href="/story" variant="tertiary">
+                How it began
+              </Button>
+            </div>
+            {/* The view from his aunt's front window, framed as the window */}
+            <figure className="mt-12 max-w-md">
+              <div className="relative border-[10px] border-paper-warm bg-mount outline outline-1 outline-rule">
+                <DrawIn>
+                  <BackLane id="home-lane" />
+                </DrawIn>
+                <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t-4 border-paper-warm" />
+                  <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 border-l-4 border-paper-warm" />
+                </div>
+              </div>
+              <figcaption className="mt-3 font-sans text-xs text-ink-mute">
+                The back lane from 262 Bensham Road, drawn for this site after
+                the book&rsquo;s account. Charlie&rsquo;s own painting of it has
+                not been found.
+              </figcaption>
+            </figure>
+          </div>
+          <div className="lg:col-span-7 lg:pt-16">
+            <Plate
+              src={origin.image.src}
+              width={origin.image.width}
+              height={origin.image.height}
+              alt={origin.alt}
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              caption={
+                <>
+                  <Link href={`/catalogue/${origin.slug}`} className="font-serif text-body italic text-ink-soft hover:text-bensham">
+                    {origin.title}
+                  </Link>
+                  <span className="mt-1 block">
+                    A later painting of the same street. The first one, Back
+                    Cotfield Street, has not been found.
+                  </span>
+                </>
+              }
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* A critic's line, on the book's own red */}
+      <section className="bg-bensham-deep text-paper">
+        <div className="mx-auto max-w-content px-6 py-20 lg:py-28">
+          <blockquote className="max-w-4xl">
+            <p className="font-serif text-h1 italic">
+              &ldquo;The subjects of his paintings are the things and places you
+              never notice until they are gone.&rdquo;
+            </p>
+            <footer className="mt-6 font-sans text-xs uppercase tracking-eyebrow text-paper/75">
+              Derek Kirkup
+            </footer>
+          </blockquote>
+        </div>
+      </section>
+
+      {/* The salon */}
+      <section className="mx-auto max-w-content px-6 py-20 lg:py-28">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+              From the catalogue
+            </p>
+            <h2 className="mt-4 font-serif text-h1">Tyneside, as he saw it</h2>
+          </div>
+          <Button href="/work" variant="secondary">
+            The whole catalogue
           </Button>
         </div>
-      </section>
-
-      <section className="mx-auto max-w-content px-6 pb-16">
-        <Eyebrow>From the archive</Eyebrow>
-        <div className="mt-6 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((p) => (
-            <PaintingCard key={p.src} {...p} />
+        <div className="mt-12 grid gap-x-10 gap-y-14 lg:grid-cols-12">
+          {salon.map(({ slug, span }) => (
+            <SalonPiece key={slug} entry={must(entryBySlug(slug), slug)} span={span} />
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-content px-6 pb-8">
-        <Eyebrow>Explore the archive</Eyebrow>
-        <div className="mt-6 grid gap-px bg-rule sm:grid-cols-2">
-          {sections.map((s) => (
-            <Link
-              key={s.href}
-              href={s.href}
-              className="group bg-paper p-8 hover:bg-paper-warm transition-colors"
-            >
-              <h2 className="font-serif text-h3 group-hover:text-bensham transition-colors">
-                {s.title}
-              </h2>
-              <p className="font-serif text-body text-ink-soft mt-2 max-w-reading">
-                {s.blurb}
-              </p>
-            </Link>
-          ))}
+      {/* The lineage */}
+      <section className="border-t border-rule bg-paper-warm">
+        <div className="mx-auto max-w-content px-6 py-20 lg:py-28">
+          <div className="max-w-reading">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
+              The third name
+            </p>
+            <h2 className="mt-4 font-serif text-h1">Lowry, Cornish, Rogers</h2>
+            <p className="mt-6 font-serif text-body text-ink-soft">
+              Brian Rankin&rsquo;s book places Charlie beside them, as the third
+              of the post-war chroniclers of working life in the North of
+              England. Cornish came to his first exhibition in
+              1965, and they were friends for life.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-4 md:grid-cols-3">
+            {lineage.map((l, i) => (
+              <div key={l.name} className={`border border-rule border-t-2 bg-paper p-6 ${i === 2 ? 'border-t-bensham' : 'border-t-ink'}`}>
+                <p className="font-sans text-xs text-ink-mute">{l.place}</p>
+                <h3 className={`mt-2 font-serif text-h2 ${i === 2 ? 'text-bensham' : ''}`}>{l.name}</h3>
+                <p className="mt-1 font-sans text-small text-ink-soft">
+                  {l.born} to {l.died}
+                </p>
+                <p className="mt-4 font-serif text-body text-ink-soft">{l.subject}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Shared lifespan axis */}
+          <div className="mt-6 border border-rule bg-paper p-6" aria-hidden="true">
+            <div className="space-y-3">
+              {lineage.map((l, i) => (
+                <div key={l.name} className="relative h-3">
+                  <div className="absolute inset-x-0 top-1/2 border-t border-rule" />
+                  <div
+                    className={`absolute top-0 h-3 ${i === 2 ? 'bg-bensham' : 'bg-ink-soft'}`}
+                    style={{ left: `${pos(l.born)}%`, width: `${pos(l.died) - pos(l.born)}%` }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="relative mt-3 h-4 font-sans text-xs text-ink-mute">
+              {[1900, 1925, 1950, 1975, 2000].map((y) => (
+                <span key={y} className="absolute -translate-x-1/2" style={{ left: `${pos(y)}%` }}>
+                  {y}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-content px-6 pb-24">
-        <BookCallout text="Charlie Rogers, Pursued by Bulldozers, compiled by Brian Rankin, gathers more than a hundred paintings alongside the full story of his life and work." />
-      </div>
     </div>
   )
 }

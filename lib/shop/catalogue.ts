@@ -114,6 +114,8 @@ export const CATALOGUE: CatalogueProduct[] = [
     price_pence: 2500,
     is_featured: true,
     edition: 'Limited to 100 copies',
+    // Brian's edition size. Mirrored by the orders migration for the live table.
+    stock_count: 100,
     // Brian's 16 September 2026 email carries three things: the special
     // edition terms, the price, and the book's own description. All three are
     // his words. His heading "SPECIAL EDITION - EXCLUSIVE TO THIS WEBSITE" is
@@ -333,6 +335,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     slug: 'greeting-card-collection',
     product_type: 'other',
     price_pence: 1000,
+    // Placeholder. Brian has not stated a print run for the card pack; 100
+    // matches the orders migration until he does.
+    stock_count: 100,
     // "the cards will be A6 size", 18 September 2026. Published here, unlike
     // the A3 figure from the same sentence, because the cards are a finished
     // printed product and nothing he has sent contradicts it.

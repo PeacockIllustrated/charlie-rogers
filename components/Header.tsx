@@ -3,9 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Roundel } from './Roundel'
+import { BasketLink } from './shop/BasketLink'
 
-// Sticky, paper background, 1px bottom rule. Wordmark in EB Garamond italic.
-// Desktop: inline Inter small-caps nav. Mobile: a hamburger reveals a full-screen
+// Sticky, paper background, 1px bottom rule. The roundel and a wordmark in
+// EB Garamond italic. Desktop: inline Jost small-caps nav. Mobile: a hamburger reveals a full-screen
 // paper overlay with stacked serif links, per docs/DESIGN.md.
 const nav = [
   { href: '/story', label: 'The story' },
@@ -46,48 +48,53 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-paper border-b border-rule">
-      <div className="mx-auto max-w-content px-6 h-16 flex items-center justify-between gap-x-6">
-        <Link href="/" className="font-serif italic text-2xl leading-none">
-          Charlie Rogers
+      <div className="mx-auto flex h-[4.5rem] max-w-content items-center justify-between gap-x-6 px-6">
+        <Link href="/" className="group flex items-center gap-3" aria-label="Charlie Rogers, home">
+          <Roundel size={36} className="transition-transform duration-sheet ease-out group-hover:rotate-[24deg]" />
+          <span className="font-serif text-[1.4375rem] italic leading-none">Charlie Rogers</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav
-          aria-label="Main"
-          className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5"
-        >
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              aria-current={isActive(pathname, n.href) ? 'page' : undefined}
-              className={`font-sans uppercase text-[13px] tracking-eyebrow py-2 hover:text-ink ${
-                isActive(pathname, n.href) ? 'text-bensham' : 'text-ink-soft'
-              }`}
-            >
-              {n.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="flex items-center gap-x-5">
+          {/* Desktop nav */}
+          <nav
+            aria-label="Main"
+            className="hidden md:flex flex-wrap justify-end gap-x-4 gap-y-1 lg:gap-x-5"
+          >
+            {nav.map((n) => (
+              <Link
+                key={n.href}
+                href={n.href}
+                aria-current={isActive(pathname, n.href) ? 'page' : undefined}
+                className={`relative py-2 font-sans text-xs uppercase tracking-eyebrow transition-colors duration-colour hover:text-ink ${
+                  isActive(pathname, n.href) ? 'text-bensham' : 'text-ink-soft'
+                }`}
+              >
+                {n.label}
+              </Link>
+            ))}
+          </nav>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={open}
-          className="md:hidden -mr-2.5 p-2.5 text-ink"
-        >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
-          </svg>
-        </button>
+          <BasketLink />
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={open}
+            className="md:hidden -mr-2.5 p-2.5 text-ink"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile full-screen overlay */}
       {open && (
         <div className="fixed inset-0 z-50 bg-paper md:hidden flex flex-col">
-          <div className="px-6 h-16 flex items-center justify-between border-b border-rule shrink-0">
+          <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-b border-rule px-6">
             <span className="font-serif italic text-2xl leading-none">
               Charlie Rogers
             </span>

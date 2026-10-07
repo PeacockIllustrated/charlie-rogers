@@ -8,7 +8,7 @@
 export function PrintSpecifications() {
   return (
     <section
-      className="max-w-reading border-t border-rule pt-8"
+      className="max-w-reading border border-rule bg-paper-warm p-6 sm:p-8"
       aria-labelledby="print-specifications"
     >
       {/* The eyebrow is the heading itself, rather than a span with a hidden

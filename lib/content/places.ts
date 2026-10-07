@@ -43,7 +43,7 @@ export const places: Place[] = [
     // large white hoarding and the figure walking a dog is not reproduced
     // anywhere else among the 316 extracts, so there is no larger version of
     // this painting to move to.
-    image: '/paintings/thumbs/page_027_img_001.jpg',
+    image: '/paintings/web/page_027_img_001.jpg',
     paragraphs: [
       "Charlie was born at 239 Westbourne Avenue on 16 January 1930. The terrace house on the Bensham ridge appears in his work as both a subject and a point of origin, a fixed coordinate for everything that followed.",
       'The street still stands. The house is unremarkable from the outside, which is exactly the point. Charlie spent his career finding what was remarkable in the unremarkable before it disappeared.',
@@ -67,7 +67,7 @@ export const places: Place[] = [
     // anywhere else among the 316 extracts. page_034_img_001 is a different
     // painting: another Gateshead street, with a green dome and a hoarding
     // lettered "stamps wanted".
-    image: '/paintings/thumbs/page_027_img_002.jpg',
+    image: '/paintings/web/page_027_img_002.jpg',
     paragraphs: [
       "Coatsworth Road was a commercial spine running through Bensham, lined with the kind of independent shops, pubs, and corner businesses that Charlie painted across his entire career. He returned to it repeatedly, recording shopfronts, signage, and the ordinary foot traffic of a working street.",
       'The road survives but individual buildings have changed hands, been converted, or been replaced. The street Charlie knew is present in fragments, the rest visible only in his paintings.',
@@ -152,6 +152,9 @@ export const places: Place[] = [
     district: 'Bensham, Gateshead',
     region: 'gateshead',
     status: 'demolished',
+    // "Back Cotfield Street", his first painting. Demolished "shortly after";
+    // the clearance year is not yet confirmed.
+    painted: 1964,
     coords: {
       lat: 54.9527,
       lng: -1.6112,
@@ -291,4 +294,13 @@ export const regionLabels: Record<Place['region'], string> = {
   gateshead: 'Gateshead',
   newcastle: 'Newcastle',
   beyond: 'Beyond Tyneside',
+}
+
+// "Bensham, Gateshead" already names the region, so the region is only added
+// when the district does not carry it.
+export function locationLine(place: Place): string {
+  const region = regionLabels[place.region]
+  if (!place.district) return region
+  if (place.district.includes(region) || place.region === 'beyond') return place.district
+  return `${place.district}, ${region}`
 }

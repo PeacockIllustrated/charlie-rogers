@@ -7,13 +7,15 @@ import { cn } from '@/lib/shop/utils'
 const SECTIONS = [
   { href: '/admin', label: 'Dashboard', exact: true },
   { href: '/admin/products', label: 'Products' },
+  { href: '/admin/orders', label: 'Orders' },
+  { href: '/admin/settings', label: 'Settings' },
 ]
 
 export function AdminSidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname()
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-rule bg-paper">
+    <aside className="flex w-full shrink-0 flex-col border-b border-rule bg-paper md:w-56 md:border-b-0 md:border-r">
       <div className="px-5 py-5 border-b border-rule">
         <Link href="/admin" className="font-serif italic text-xl leading-none">
           Charlie Rogers
@@ -22,7 +24,7 @@ export function AdminSidebar({ userEmail }: { userEmail: string }) {
           Shop admin
         </p>
       </div>
-      <nav className="flex-1 p-3 space-y-1" aria-label="Admin">
+      <nav className="flex flex-wrap gap-1 p-3 md:flex-1 md:flex-col md:flex-nowrap md:space-y-1" aria-label="Admin">
         {SECTIONS.map((s) => {
           const active = s.exact
             ? pathname === s.href
@@ -43,7 +45,7 @@ export function AdminSidebar({ userEmail }: { userEmail: string }) {
           )
         })}
       </nav>
-      <div className="border-t border-rule p-4">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-rule p-4 md:block">
         <p className="truncate font-sans text-xs text-ink-mute">{userEmail}</p>
         <form action="/api/admin/signout" method="post" className="mt-2">
           <button

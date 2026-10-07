@@ -1,5 +1,24 @@
 # Go-live readiness, 29 September 2026
 
+## Update, 7 October 2026
+
+Since this check was written, main has moved on:
+
+- The redesign (#5) added a page per painting at `/catalogue/<slug>`. The
+  sitemap now lists them.
+- The shop is checkout-ready (#6). The basket, checkout, orders and the admin
+  Orders and Settings screens are on main, and the orders migration has been
+  applied to the live database. The checkout stays closed until it is opened
+  at `/admin/settings`; payment is by arrangement until Stripe is added. See
+  `SHOP.md`.
+- `/book` already shows £25 and `metadataBase` is already set on main, so
+  those two fixes from this pass were dropped in the merge.
+
+Blocker 1 below is therefore down to opening the checkout once UK postage and
+the order email are set. Blockers 2 to 4 still stand: the shop is still
+unlinked and noindex, the two migrations under blocker 3 should be checked on
+the live database, and the special edition photograph still needs uploading.
+
 Checked against the docs in this folder, the live deployment on
 www.charlierogers.art, and every message from Brian Rankin in Outlook. Nothing
 new has arrived from Brian since 18 September; the full reconciliation of his
@@ -75,9 +94,7 @@ Carried over from `BACKLOG.md`, cut to the ones that block launch day:
 
 ## Fixed in this pass
 
-- `/book` said "Price on request". Brian's 12 June email prices the book at
-  £25. It now says so.
-- No `robots.txt`, no `sitemap.xml` and no `metadataBase`. Added. The sitemap
+- No `robots.txt` or `sitemap.xml`. Added. The sitemap
   covers the public archive only, and robots keeps crawlers off `/shop`,
   `/styleguide`, `/admin` and `/api`.
 - The missing-images migration above.

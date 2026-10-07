@@ -24,9 +24,9 @@ const kindOrder: TimelineEventKind[] = ['life', 'work', 'family', 'exhibition']
 
 function Marker({ event }: { event: TimelineEvent }) {
   // Solid square node sitting on the spine. Pivotal moments are larger and red.
-  const size = event.pivotal ? 'h-3.5 w-3.5 -left-[7px]' : 'h-2.5 w-2.5 -left-[5px]'
+  const size = event.pivotal ? 'h-3.5 w-3.5 -left-[7px] top-[1.6rem]' : 'h-2.5 w-2.5 -left-[5px] top-[1.75rem]'
   const colour = event.pivotal ? 'bg-bensham' : kindDotClass[event.kind]
-  return <span className={`absolute top-1.5 ${size} ${colour}`} aria-hidden="true" />
+  return <span className={`absolute ${size} ${colour}`} aria-hidden="true" />
 }
 
 function Event({ event }: { event: TimelineEvent }) {
@@ -37,14 +37,21 @@ function Event({ event }: { event: TimelineEvent }) {
       as="li"
       className="grid grid-cols-[3.5rem_1fr] gap-x-4 sm:grid-cols-[4.5rem_1fr] sm:gap-x-6"
     >
-      <div className="pt-0.5 text-right">
+      <div className="pt-6 text-right">
         <span className="font-sans text-small tabular-nums text-ink-mute">
           {event.year}
         </span>
       </div>
 
-      <div className="relative border-l border-rule pb-12 pl-6 sm:pl-8">
+      <div className="relative border-l border-rule pb-6 pl-6 sm:pl-8">
         <Marker event={event} />
+        {/* Each moment is a card hung off the spine; pivotal ones carry the
+            red edge the site uses for the race. */}
+        <div
+          className={`max-w-[44rem] border border-rule bg-paper p-5 sm:p-6 ${
+            event.pivotal ? 'border-t-2 border-t-bensham' : ''
+          }`}
+        >
 
         <h3
           className={`font-serif ${
@@ -62,7 +69,7 @@ function Event({ event }: { event: TimelineEvent }) {
 
         {event.image && (
           <figure className="mt-5 max-w-md">
-            <div className="bg-paper-warm p-3">
+            <div className="border border-rule bg-mount p-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={event.image}
@@ -89,6 +96,7 @@ function Event({ event }: { event: TimelineEvent }) {
             </figcaption>
           </figure>
         )}
+        </div>
       </div>
     </Reveal>
   )
@@ -140,12 +148,18 @@ export default function TimelinePage() {
         </div>
       </nav>
 
-      <div className="mx-auto max-w-content px-6">
-        {timelineEras.map((era) => {
+      <div>
+        {timelineEras.map((era, i) => {
           const events = eventsByEra(era.slug)
           if (events.length === 0) return null
+          // Eras alternate between the page and a full-width warm panel.
           return (
-            <section key={era.slug} id={era.slug} className="scroll-mt-32 pt-14">
+            <section
+              key={era.slug}
+              id={era.slug}
+              className={`scroll-mt-32 ${i % 2 ? 'border-y border-rule bg-paper-warm' : ''}`}
+            >
+              <div className="mx-auto max-w-content px-6 pb-8 pt-14">
               <Reveal as="header" className="max-w-reading">
                 <Eyebrow>{era.range}</Eyebrow>
                 <h2 className="mt-3 font-serif text-h2">{era.label}</h2>
@@ -166,11 +180,12 @@ export default function TimelinePage() {
                   ))}
                 </ol>
               </div>
+              </div>
             </section>
           )
         })}
 
-        <div className="pt-16 pb-4">
+        <div className="mx-auto max-w-content px-6 pb-4 pt-4">
           <BookCallout text="The full chronology, year by year, is in the book." />
         </div>
 

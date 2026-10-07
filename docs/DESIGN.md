@@ -61,38 +61,39 @@ export const serif = EB_Garamond({
 
 ### Sans (UI, navigation, metadata)
 
-**Inter**, also via `next/font/google`. Stand-in for Futura in UI surfaces. Used for:
+**Jost**, via `next/font/google`, weights 400 and 500. An open source Futura revival, so the running heads now carry the same geometric letterforms as the book's own Futura. It replaced Inter in October 2026. Used for:
 
 - Navigation
 - Buttons, form controls
 - Metadata and labels (dates, dimensions, statuses)
-- Section eyebrows (small caps, letter-spaced, like the book's running heads)
+- Running heads: 12px, uppercase, letter-spacing 0.16em, Bensham red
 - Tabular content
 
-Note that the book uses Futura for its small-caps running heads ("CHARLIE ROGERS - PURSUED BY BULLDOZERS"). Recreate this with Inter at small size, uppercase, with letter-spacing of around 0.15em. This pattern is the most recognisable carry-over from the book.
+Figures: prose uses oldstyle proportional figures, set on `body`. Anything in the sans uses lining tabular figures (`.font-sans` in globals.css), so dates line up in ledgers and on the race line. Large display years (1964, the decade heads on /work) set lining figures inline.
+
+Headings use `text-wrap: balance`; paragraphs use `text-wrap: pretty`.
 
 ## Type scale
 
-Modular scale based on 1.25 (major third). Sizes given in rem with their pixel equivalents.
+Seven hand-set steps, with tracking per band. Legacy names map onto the steps so older markup lands on one (see tailwind.config.ts).
 
 ```
-display-1   3.815rem  61px   serif, 500   page hero, very sparing
-display-2   3.052rem  49px   serif, 500   section opener heroes
-h1          2.441rem  39px   serif, 500   page titles
-h2          1.953rem  31px   serif, 500   major sections
-h3          1.563rem  25px   serif, 500   subsections
-h4          1.25rem   20px   serif, 600   minor headings
-body-lg     1.125rem  18px   serif, 400   long-form articles
-body        1rem      16px   serif, 400   default body
-small       0.875rem  14px   sans, 400    UI, captions
-xs          0.75rem   12px   sans, 500    metadata, eyebrows
+display  88px  clamp(3.25rem, 7.4vw, 5.5rem)   lh 0.98  -0.02em  page titles, home hero
+h1       49px  clamp(2.375rem, 4.6vw, 3.0625rem) lh 1.08  -0.01em  section openers, pull quotes
+h2       31px  1.9375rem                       lh 1.2   -0.005em
+lead     23px  1.4375rem                       lh 1.42           introductions (also h3)
+body     19px  1.1875rem                       lh 1.6            reading text (also h4, body-lg)
+ui       14px  0.875rem (small)                lh 1.45  0.01em   buttons, notes
+label    12px  0.75rem (xs)                    lh 1.4   0.16em when uppercase
 ```
 
-Line heights: 1.15 for display, 1.25 for h1 to h3, 1.55 for body, 1.4 for UI.
+Motion has three durations: `colour` 120ms for hover colour, `fade` 220ms, `sheet` 360ms for anything that moves. Easing `out` is cubic-bezier(.2,.7,.2,1).
 
 ## Layout
 
-- Max content width: 72rem (1152px) for editorial pages. Wider for gallery grids.
+- Max content width: 76rem (1216px).
+- Page opening: running head and display title in seven columns of twelve, the introduction hung in the remaining five and aligned to the title's foot (`SectionHeading as="h1"`).
+- The rail: section labels hang in the left three columns, content in the right nine, as the book hangs chapter heads in its margin.
 - Article body column: 38rem (608px). Optimum reading width.
 - Generous vertical rhythm. Section spacing is 6rem to 8rem on desktop, 3rem to 4rem on mobile.
 - 12-column grid where useful, but most content surfaces are simpler (single column with optional sidebar metadata).
@@ -110,7 +111,7 @@ Recreate the book's running head style for the site's section indicator. A thin 
 CHARLIE ROGERS · GATESHEAD
 ```
 
-Inter, uppercase, 12px, letter-spacing 0.15em, Bensham red, 1px rule above in `--rule` colour.
+Jost, uppercase, 12px, letter-spacing 0.16em, Bensham red, 1px rule above in `--rule` colour.
 
 ### Painting card
 
@@ -155,7 +156,7 @@ Tertiary: text only, underline on hover, ink-soft colour.
 
 ### Navigation
 
-Header: sticky, paper background, 1px bottom rule. Wordmark on the left in EB Garamond italic 24px, nav items on the right in Inter small caps 13px. No mega menus.
+Header: sticky, paper background, 1px bottom rule. The roundel and a wordmark in EB Garamond italic 23px on the left, nav items on the right in Jost, uppercase, 12px. No mega menus.
 
 Mobile: hamburger reveals a full-screen overlay in paper, nav items stacked, serif 28px.
 
@@ -188,6 +189,55 @@ Two rules apply to every animation on the site, without exception.
 One qualification to the first rule, added September 2026 when the Timeline progress indicator was built. Switching a functional indicator off under reduced motion would take away information the reader was relying on, which is not the same favour as taking away decoration. So an indicator keeps working under reduce, but it stops sliding: the Timeline spine advances in discrete steps instead, one jump per entry in the era, measured at exactly a quarter of the spine per entry in a four-entry era. Nothing glides, and the reader still knows where they are. This qualification covers indicators only. Anything decorative is still switched off outright, and the safety net in `app/globals.css` that kills animation and transition durations across the Timeline page continues to do so for everything except the indicator.
 
 Both Timeline behaviours degrade to plain markup. The progress indicator is a CSS scroll-driven animation (`animation-timeline: view()`), so it needs no JavaScript at all in a browser that supports it, and `components/timeline/TrackFallback.tsx` drives the same transform from a passive, requestAnimationFrame-throttled scroll listener where support is missing. With neither, the spine simply stays the hairline it has always been.
+
+## Surfaces
+
+Three flat planes, separated by tone and a 1px `--rule` edge, never by shadow or radius:
+
+- **Page**: `--paper`. Headings, reading text and the hung paintings.
+- **Panel**: `--paper-warm`, full width or boxed. Holds a group: the race on the home page, the places list, the catalogue ledger, the chapter index, the untitled strand, the book's special edition.
+- **Card**: `--paper` with a rule edge, set on a panel or the page. One object each: a catalogue entry (`CatalogueCard`), a place in the race (`RaceRow`), a Lowry, Cornish or Rogers column. Hover darkens the edge to `--ink-mute`.
+
+A coloured 2px top edge marks a card's kind where it helps, such as the place tallies (red, ochre, sage) or the special edition (red). Paintings keep their mount, now with a rule edge so the mount reads as a board on the page.
+
+Every page now follows this: chapters on the story page and eras on the timeline alternate between page and full-width panel; exhibitions, people, the shop and the product pages put their lists on panels and their items on cards; the closing book callout is a panel with a red top edge. Introduced in October 2026 after Tom noted the first redesign left too much content sitting straight on the page.
+
+## Signature devices
+
+### The mount
+
+Every painting sits on `--mount` (#F4EEE2), a board colour used for paintings and nothing else. The mount is bottom-weighted (6% sides and top, 9% bottom), as a framer cuts it. `components/Plate.tsx`.
+
+Images are never drawn wider than their native pixels. A 245px book plate stays a small plate on a generous mount rather than being stretched into blur. next/image serves AVIF or WebP at the sizes each layout asks for, never above the source.
+
+### The race line
+
+The site's own device, built from the book's thesis. One axis from 1964 to 2020, the span of Charlie's painting life. A square ink mark for each dated painting of a place; what follows the last mark says what became of it:
+
+- demolished: a Bensham red line to the year it came down, ending in a tick. With the year unconfirmed the line is dashed and runs off the end with no tick, saying gone without claiming when.
+- altered: an ochre dashed line to the present.
+- standing: a sage line to the present.
+
+The drawing is decorative; its caption carries the same facts in words. `components/RaceLine.tsx`. Demolition years go in `Place.cleared` only once confirmed against clearance records.
+
+### The roundel
+
+The mark, from the blind-embossed roundel on the special edition: "CHARLIE ROGERS · 1930 TO 2020 · GATESHEAD" round a ring, CR in italic Garamond at the centre. The circle is the one deliberate curve on the site. It is the shape of the emboss, drawn in SVG, not a softened corner, so the square corners rule stands. Used in the header, the book pages, the footer, product cards with no photograph yet, and the icons. `components/Roundel.tsx`.
+
+### The catalogue
+
+Each named painting has a page at /catalogue/[slug] with a plate, a ledger (`components/Ledger.tsx`), its place's race line, a paired photograph where the book prints one, and a share image drawn from the painting itself. Entries live in `lib/content/catalogue.ts`, and each records where its title came from. Untitled book plates appear in their chapter under "Reproduced in the book", captioned by page, at native size.
+
+## Graphics in motion
+
+Pen and wash drawings made for the site in Charlie's manner, never passed off as his: wandering ink lines that overshoot at corners (`lib/sketch.ts`, seeded so server and browser agree), colour washed in afterwards and never quite inside the lines, and a turbulence filter for the bleed. Each one sits where it tells part of the story, and each moves slowly:
+
+- **Snow over Bensham Road** on the home page, over the painting itself, because it is a snow scene.
+- **The race** (`Demolition`) on the home and places pages: a bulldozer works along a terrace, shoving each house in turn: the house shakes, its chimney topples, the front folds down into a cloud of brick dust, bricks arc out and land on a rubble heap, and the dozer moves on to the next. Meanwhile a man in a flat cap paints the last of the row at his easel. The cycle takes 30 seconds, then the street is drawn again.
+- **The view from the window** (`BackLane`) in the 1964 section: the back lane from 262 Bensham Road, framed as a sash window. Its lines draw themselves in when it scrolls into view, in the order a sketch is built (yard walls, the house backs and stacks behind, gates and setts, then people). Washing sways on the line, the cat on the wall flicks its tail, the gas lamp glows, the man and his dog walk away up the lane. The caption says it was drawn for the site and that Charlie's painting has not been found.
+- **The street** (`Skyline`) at the top of every footer: a Tyneside street at dusk, cut freehand in Bensham deep red over a paler far row of roofs that drifts slower than the page. As it scrolls into view the windows light one by one, and a lamplighter walks the pavement lighting each gas lamp as he reaches it. There is also a chapel spire, a swinging pub sign, aerials, pigeons and smoke. The footer below is one deep red block: the book, then the wordmark and the archive links.
+
+With `prefers-reduced-motion` the smoke, snow and dust are removed, and every drawing shows complete and at rest, with the bulldozer halfway along the street.
 
 ## Don'ts
 
