@@ -15,9 +15,13 @@ Since this check was written, main has moved on:
   those two fixes from this pass were dropped in the merge.
 
 Blocker 1 below is therefore down to opening the checkout once UK postage and
-the order email are set. Blockers 2 to 4 still stand: the shop is still
-unlinked and noindex, the two migrations under blocker 3 should be checked on
-the live database, and the special edition photograph still needs uploading.
+the order email are set. Blocker 2 is half done: `/book` and the footer now
+link to the special edition, but every `/shop` page is still `noindex` and
+`app/robots.ts` still disallows `/shop`, so search engines will not find it.
+Lift both, and add the product to `app/sitemap.ts`, in the change that opens
+the checkout. Blockers 3 and 4 still stand: the two migrations under blocker 3
+should be checked on the live database, and the special edition photograph
+still needs uploading.
 
 Checked against the docs in this folder, the live deployment on
 www.charlierogers.art, and every message from Brian Rankin in Outlook. Nothing
