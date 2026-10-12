@@ -62,8 +62,8 @@ export const bookSamplePages: SamplePage[] = [
   {
     kind: 'plate',
     image: '/paintings/web/page_023_img_000.jpg',
-    alt: 'A Tyneside back street in pen and wash by Charlie Rogers',
-    caption: 'A Gateshead back street, pen and wash',
+    alt: 'Cotfield Street, Bensham, in watercolour by Charlie Rogers',
+    caption: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour',
   },
   {
     kind: 'text',

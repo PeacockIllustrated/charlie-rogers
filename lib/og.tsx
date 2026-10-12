@@ -137,11 +137,11 @@ export async function shareImage({
   )
 }
 
-// The browser and home-screen icon: the roundel reduced to its ring and
-// initials, paper on Bensham red.
+// The browser and home-screen icon: the official emblem, white on Bensham red.
 export async function iconImage(px: number) {
-  const italic = await font('EBGaramond-Italic.ttf')
-  const ring = Math.max(1, Math.round(px / 40))
+  const logo = await readFile(join(process.cwd(), 'public/brand/emblem-dark.svg'))
+  const src = `data:image/svg+xml;base64,${logo.toString('base64')}`
+  const inner = Math.round(px * 0.94)
   return new ImageResponse(
     (
       <div
@@ -154,29 +154,10 @@ export async function iconImage(px: number) {
           background: BENSHAM,
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            width: px * 0.84,
-            height: px * 0.84,
-            borderRadius: '50%',
-            border: `${ring}px solid ${PAPER}`,
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: 'EB Garamond Italic',
-            fontSize: px * 0.42,
-            color: PAPER,
-            paddingBottom: px * 0.04,
-          }}
-        >
-          CR
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} width={inner} height={inner} alt="" />
       </div>
     ),
-    {
-      width: px,
-      height: px,
-      fonts: [{ name: 'EB Garamond Italic', data: italic, weight: 400, style: 'italic' }],
-    },
+    { width: px, height: px },
   )
 }

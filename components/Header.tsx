@@ -50,7 +50,7 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-paper border-b border-rule">
       <div className="mx-auto flex h-[4.5rem] max-w-content items-center justify-between gap-x-6 px-6">
         <Link href="/" className="group flex items-center gap-3" aria-label="Charlie Rogers, home">
-          <Roundel size={36} className="transition-transform duration-sheet ease-out group-hover:rotate-[24deg]" />
+          <Roundel size={44} />
           <span className="font-serif text-[1.4375rem] italic leading-none">Charlie Rogers</span>
         </Link>
 

@@ -27,7 +27,7 @@ export function Footer() {
       <div className="border-t border-[#4A1010] bg-[#4A1010]">
         <div className="mx-auto grid max-w-content items-center gap-10 px-6 py-14 md:grid-cols-12 lg:py-20">
           <div className="md:col-span-3">
-            <Roundel size={168} tone="paper" title="The Charlie Rogers roundel, embossed on every copy of the special edition" />
+            <Roundel size={168} tone="paper" title="The Charlie Rogers logo" />
           </div>
           <div className="md:col-span-5">
             <p className="font-sans text-xs uppercase tracking-eyebrow text-paper/75">

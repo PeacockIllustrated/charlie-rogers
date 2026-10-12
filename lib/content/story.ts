@@ -37,8 +37,8 @@ export const storySections: StorySection[] = [
     title: 'The lucky break',
     period: '1964',
     image: '/paintings/web/page_023_img_000.jpg',
-    imageAlt: 'A Tyneside back street in pen and wash by Charlie Rogers',
-    imageCaption: 'The back lanes, in pen and wash',
+    imageAlt: 'Cotfield Street, Bensham, in watercolour by Charlie Rogers',
+    imageCaption: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour',
     paragraphs: [
       'In 1964, aged 34, Charlie took a heavy blow to an already damaged left knee during a cup tie for Kibblesworth Colliery Welfare. His doctor signed him off for a week. Limping down Bensham Road to visit his aunt, Violet Gwendoline Woodhead, at number 262, Charlie sat in her front room with a cup of tea and looked out at the back lane opposite.',
       'Over five or six mornings he painted it, using a pen and wash technique he was teaching himself as he went. He titled the result Back Cotfield Street. The street was demolished shortly afterwards. Charlie later described the knee injury as his defining stroke of fortune, and in a letter written more than four decades after the event he closed with a note of gratitude to the opponent who had fouled him.',
@@ -57,7 +57,7 @@ export const storySections: StorySection[] = [
     // a newspaper hoarding, a lone figure and a dog, smoke over the rooftops.
     imageAlt:
       'A Gateshead street under a smoking sky, a newspaper hoarding on the gable end, a lone figure and a dog',
-    imageCaption: 'A Gateshead street, ahead of the bulldozers',
+    imageCaption: 'Coatsworth Road, Gateshead',
     paragraphs: [
       'The first painting led to more. Charlie walked Bensham looking for subjects: corner shops, cobbled lanes, ancient green gas-lamps, the odd up-and-down streets that he said nobody else seemed to be painting. He attended drawing classes at Gateshead Technical College and later at Newcastle\'s College of Art and Design, where his teacher recognised his instinctive eye and passed his name on to gallery owner Harry Lord.',
       'By 1974, made redundant from his groundsman post, Charlie was a full-time professional artist. His rule was simple: paint what you know. His territory was Gateshead, the Quayside, the streets across the river, and the people going about their business in all of it. As the 1960s and 70s swept away vast areas of Victorian and Edwardian housing, Charlie moved ahead of the wrecking crews. He said, later, that he felt he had spent much of his career being pursued by bulldozers.',

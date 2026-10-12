@@ -57,8 +57,8 @@ export default function PlacesIndex() {
             <h1 className="mt-4 font-serif text-display">Places</h1>
           </div>
           <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
-            Charlie raced the demolition crews. These are the streets, churches
-            and buildings he painted, and what became of each.
+            Here are some of the streets, churches and buildings he painted,
+            and what became of each.
           </p>
         </header>
 
@@ -66,10 +66,10 @@ export default function PlacesIndex() {
           {lossOrder.map(({ status, label }) => (
             <div
               key={status}
-              className={`flex flex-col-reverse border border-rule border-t-2 bg-paper-warm p-4 sm:p-6 ${topBorder[status]}`}
+              className={`flex min-w-0 flex-col-reverse border border-rule border-t-2 bg-paper-warm p-3 sm:p-6 ${topBorder[status]}`}
             >
-              <dt className="mt-3 flex items-center gap-2 font-sans text-xs uppercase tracking-eyebrow text-ink-soft">
-                <span className={`inline-block h-2 w-2 ${dotClass[status]}`} aria-hidden="true" />
+              <dt className="mt-3 flex min-w-0 items-center gap-2 break-words font-sans text-[0.625rem] uppercase tracking-[0.08em] text-ink-soft sm:text-xs sm:tracking-eyebrow">
+                <span className={`inline-block h-2 w-2 shrink-0 ${dotClass[status]}`} aria-hidden="true" />
                 {label}
               </dt>
               <dd

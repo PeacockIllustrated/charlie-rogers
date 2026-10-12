@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { Painting } from '@/lib/paintings'
 
 // The untitled plates reproduced in the book, with an accessible lightbox.
@@ -15,6 +15,9 @@ import type { Painting } from '@/lib/paintings'
 // corners, no shadow.
 
 // Target display height. A plate shorter than this is shown at its own size.
+// On phones the plates instead fill a two-column grid: at their native widths
+// they sat in a single ragged column against the left edge, which read as
+// small pictures and empty space.
 const ROW_HEIGHT = 200
 
 function displayWidth(p: Painting): number {
@@ -89,7 +92,7 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
 
   return (
     <>
-      <div className="mt-8 flex flex-wrap items-end gap-x-5 gap-y-8">
+      <div className="mt-8 grid grid-cols-2 items-end gap-x-4 gap-y-8 sm:flex sm:flex-wrap sm:gap-x-5">
         {paintings.map((p, i) => {
           const w = displayWidth(p)
           return (
@@ -103,8 +106,8 @@ export function Gallery({ paintings }: { paintings: Painting[] }) {
                 lastFocused.current = i
                 setIndex(i)
               }}
-              style={{ width: w }}
-              className="group min-w-0 max-w-full cursor-pointer border-0 bg-transparent p-0 text-left"
+              style={{ '--plate-w': `${w}px` } as CSSProperties}
+              className="group w-full min-w-0 max-w-full cursor-pointer sm:w-[var(--plate-w)] border-0 bg-transparent p-0 text-left"
               aria-label={`Enlarge untitled painting from page ${p.page} of the book`}
             >
               <span className="block border border-rule bg-paper p-2 transition-colors duration-colour group-hover:border-ink-mute">

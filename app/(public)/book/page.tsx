@@ -72,7 +72,7 @@ export default function BookPage() {
             )}
           </div>
           <div className="flex justify-center lg:col-span-5">
-            <Roundel size={280} tone="paper" title="The Charlie Rogers roundel" />
+            <Roundel size={280} tone="paper" title="The Charlie Rogers logo" />
           </div>
         </div>
       </section>
