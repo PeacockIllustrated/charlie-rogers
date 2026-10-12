@@ -17,6 +17,7 @@ const nav = [
   { href: '/timeline', label: 'Timeline' },
   { href: '/exhibitions', label: 'Exhibitions' },
   { href: '/book', label: 'The book' },
+  { href: '/shop', label: 'Shop' },
 ]
 
 function isActive(pathname: string, href: string): boolean {

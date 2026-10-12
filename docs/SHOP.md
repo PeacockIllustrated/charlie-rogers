@@ -7,9 +7,9 @@ The book and the greeting card pack can be put in a basket and ordered;
 everything else is by enquiry. Payment is a plug-in point: orders are taken
 without online payment until Stripe is added. See "Checkout and payment".
 
-`/shop` is deliberately not linked from the site header or footer. It is a test
-surface, reachable only by visiting the URL directly. It is also set to
-`noindex`.
+`/shop` is linked from the site header and footer (added 12 October 2026 at
+Tom's request). It is still set to `noindex` and disallowed in `robots.ts`, so
+search engines leave it alone until that is lifted.
 
 ## Architecture
 
@@ -183,7 +183,3 @@ The painting pages in the catalogue link straight to it (`#enquire`).
 - Without `SUPABASE_SERVICE_ROLE_KEY` enquiries cannot be saved, so the page
   falls back to a mailto to `NEXT_PUBLIC_ENQUIRY_EMAIL`, or says enquiries are
   not open if that is unset too.
-
-## Not yet built
-
-- A link from the public navigation (intentionally omitted while it is a test).
