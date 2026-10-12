@@ -15,10 +15,14 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl
   const isAdminRoute = pathname.startsWith('/admin')
   const isLoginRoute = pathname === '/admin/login'
+  // Asking for a reset link needs no session. Setting the new password needs
+  // the one the emailed link creates, so it is gated like any admin page but
+  // must not bounce a signed-in user away the way the login page does.
+  const isForgotRoute = pathname === '/admin/forgot-password'
 
   // No Supabase configured: let login render, redirect other admin routes to it.
   if (!url || !anon) {
-    if (isAdminRoute && !isLoginRoute) {
+    if (isAdminRoute && !isLoginRoute && !isForgotRoute) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/admin/login'
       return NextResponse.redirect(redirectUrl)
@@ -47,7 +51,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (isAdminRoute && !isLoginRoute && !user) {
+  if (isAdminRoute && !isLoginRoute && !isForgotRoute && !user) {
     const redirectUrl = request.nextUrl.clone()
     redirectUrl.pathname = '/admin/login'
     redirectUrl.searchParams.set('next', pathname)

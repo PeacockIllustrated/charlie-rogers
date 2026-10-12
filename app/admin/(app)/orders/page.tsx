@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ORDER_COLUMNS, ORDER_STATUS_LABELS, type Order, type OrderStatus } from '@/lib/shop/orders'
 import { formatPence, cn } from '@/lib/shop/utils'
-import { setOrderStatus } from './actions'
+import { penceToPounds } from '@/lib/shop/product-input'
+import { setOrderPostage, setOrderStatus } from './actions'
 import { StatusButton } from './StatusButton'
 
 const FILTERS: Array<{ value: OrderStatus | 'all'; label: string }> = [
@@ -35,9 +36,9 @@ const ACTION_LABELS: Partial<Record<OrderStatus, string>> = {
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>
+  searchParams: Promise<{ status?: string; error?: string }>
 }) {
-  const { status } = await searchParams
+  const { status, error: actionError } = await searchParams
   const filter = FILTERS.find((f) => f.value === status)?.value ?? 'all'
 
   const supabase = await createSupabaseServerClient()
@@ -69,6 +70,12 @@ export default async function AdminOrdersPage({
           </Link>
         ))}
       </div>
+
+      {actionError && (
+        <div role="alert" className="border border-bensham/30 bg-bensham/5 px-4 py-3 font-sans text-small text-bensham">
+          {actionError}
+        </div>
+      )}
 
       {error && (
         <div role="alert" className="border border-bensham/30 bg-bensham/5 px-4 py-3 font-sans text-small text-bensham">
@@ -126,6 +133,29 @@ export default async function AdminOrdersPage({
                   </div>
                 </div>
 
+                {(o.status === 'pending' || o.status === 'paid') && (
+                  <form action={setOrderPostage} className="mt-4 flex flex-wrap items-end gap-2">
+                    <input type="hidden" name="id" value={o.id} />
+                    <input type="hidden" name="filter" value={filter} />
+                    <div>
+                      <label htmlFor={`postage-${o.id}`} className="input-label">
+                        Postage, £
+                      </label>
+                      <input
+                        id={`postage-${o.id}`}
+                        name="postage"
+                        inputMode="decimal"
+                        defaultValue={o.postage_pence === null ? '' : penceToPounds(o.postage_pence)}
+                        placeholder="To add"
+                        className="input w-28"
+                      />
+                    </div>
+                    <button type="submit" className="btn-admin-outline">
+                      Save postage
+                    </button>
+                  </form>
+                )}
+
                 {o.notes && <p className="mt-4 border-l-2 border-rule pl-3 font-serif text-body text-ink-soft whitespace-pre-wrap">{o.notes}</p>}
 
                 {NEXT[o.status].length > 0 && (
@@ -134,6 +164,7 @@ export default async function AdminOrdersPage({
                       <form key={next} action={setOrderStatus}>
                         <input type="hidden" name="id" value={o.id} />
                         <input type="hidden" name="status" value={next} />
+                        <input type="hidden" name="filter" value={filter} />
                         <StatusButton
                           label={ACTION_LABELS[next] ?? next}
                           orderNumber={o.order_number}

@@ -80,6 +80,21 @@ WHERE email = 'you@example.com'
 ON CONFLICT (user_id) DO NOTHING;
 ```
 
+### Forgotten passwords
+
+The sign in page links to `/admin/forgot-password`, which emails a one-time
+link through Supabase Auth. The link lands on `/api/admin/auth/callback`, which
+signs the admin in and sends them to `/admin/reset-password` to choose a new
+password. For the link to be accepted, add the live site's callback to the
+Supabase project under Authentication, URL Configuration, Redirect URLs:
+
+```
+https://<the live domain>/api/admin/auth/callback
+```
+
+Supabase's built-in mailer is rate limited to a few emails an hour. That is
+enough for a handful of admins; set up custom SMTP in Supabase if it is not.
+
 ## Checkout and payment
 
 ### What can be bought
