@@ -12,6 +12,9 @@ import { catalogueBySlug } from '@/lib/shop/catalogue'
 import { purchasability, maxQuantity } from '@/lib/shop/commerce'
 import { AddToBasket } from '@/components/shop/AddToBasket'
 import { isCheckoutOpen } from '@/lib/shop/checkout-open'
+import { canStoreOrders } from '@/lib/shop/orders'
+import { enquiryPrompt } from '@/lib/shop/enquiry-input'
+import { EnquiryForm } from '@/components/shop/EnquiryForm'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
@@ -85,7 +88,7 @@ export default async function ProductDetailPage({
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
-          <ProductImageGallery images={product.images ?? []} title={product.title} />
+          <ProductImageGallery images={product.images ?? []} title={product.title} productType={product.product_type} />
         </div>
 
         {/* The details sit on a warm panel beside the picture, like a label
@@ -127,10 +130,12 @@ export default async function ProductDetailPage({
               print quality (see lib/shop/commerce.ts), so nothing here may be
               bought online until high resolution scans arrive.
 
-              The enquiry address comes from the environment because none of
-              the people involved has been asked which one to publish. Unset,
-              the page says plainly that enquiries are not open rather than
-              offering a button that does nothing. */}
+              Enquiries go to the admins: saved for /admin/enquiries and
+              emailed to the address in Settings. Without the service role
+              key they cannot be saved, so the page falls back to a mailto
+              when NEXT_PUBLIC_ENQUIRY_EMAIL is set, and otherwise says
+              plainly that enquiries are not open rather than offering a
+              button that does nothing. */}
           <div className="mt-8">
             {canAdd ? (
               <AddToBasket slug={product.slug} title={product.title} maxQuantity={maxQuantity(product)} />
@@ -145,6 +150,12 @@ export default async function ProductDetailPage({
                     : 'Every copy has been ordered. It stays listed as part of the record.'}
                 </p>
               </>
+            ) : canStoreOrders() ? (
+              <EnquiryForm
+                slug={product.slug}
+                title={product.title}
+                prompt={enquiryPrompt(product.product_type)}
+              />
             ) : (
               <>
                 {enquiryEmail && (
@@ -158,7 +169,7 @@ export default async function ProductDetailPage({
                 <p className="mt-3 font-sans text-small text-ink-mute">
                   {enquiryEmail
                     ? 'This is not sold online yet, so enquiries go by email.'
-                    : 'This is not sold online yet, and no enquiry address has been set.'}
+                    : 'This is not sold online yet, and enquiries are not open on this version of the site.'}
                 </p>
               </>
             )}

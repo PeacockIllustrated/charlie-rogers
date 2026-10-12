@@ -162,6 +162,28 @@ Nothing outside these files needs to change:
 - **Card pack stock.** No print run stated; set to 100 as a placeholder.
 - **Customer receipt email.** Only the shop is emailed today.
 
+## Enquiries
+
+Anything that cannot go in the basket (the paintings always; the book and the
+cards while the checkout is closed) shows an enquiry form on its product page.
+The painting pages in the catalogue link straight to it (`#enquire`).
+
+- The form posts to `sendEnquiryAction` (`app/(public)/shop/enquire.ts`), which
+  validates with `lib/shop/enquiry-input.ts` (tested), looks the product up
+  again by slug, and saves the enquiry to `charlie_enquiries` through the
+  service role. A hidden honeypot field and a limit of five enquiries per
+  email address an hour keep scripts out.
+- The admins are emailed at the "Send new orders and enquiries to" address in
+  Settings, with reply-to set to the customer, when `RESEND_API_KEY` and
+  `SHOP_EMAIL_FROM` are set. Optional: every enquiry is listed regardless.
+- `/admin/enquiries` lists them, new first, with buttons to mark replied,
+  close and reopen. The dashboard shows how many are waiting.
+- The table needs `20261012090000_charlie-shop-enquiries.sql`. It has no
+  public policy; only admins on the roster can read or update it.
+- Without `SUPABASE_SERVICE_ROLE_KEY` enquiries cannot be saved, so the page
+  falls back to a mailto to `NEXT_PUBLIC_ENQUIRY_EMAIL`, or says enquiries are
+  not open if that is unset too.
+
 ## Not yet built
 
 - A link from the public navigation (intentionally omitted while it is a test).

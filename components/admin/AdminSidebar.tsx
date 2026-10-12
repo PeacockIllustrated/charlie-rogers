@@ -8,6 +8,7 @@ const SECTIONS = [
   { href: '/admin', label: 'Dashboard', exact: true },
   { href: '/admin/products', label: 'Products' },
   { href: '/admin/orders', label: 'Orders' },
+  { href: '/admin/enquiries', label: 'Enquiries' },
   { href: '/admin/settings', label: 'Settings' },
 ]
 
