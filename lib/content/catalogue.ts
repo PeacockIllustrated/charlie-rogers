@@ -209,8 +209,9 @@ export const catalogue: Entry[] = [
   {
     slug: 'cotfield-street-bensham-gateshead',
     title: 'Cotfield Street, Bensham, Gateshead-on-Tyne',
+    medium: 'Watercolour',
     image: card('cotfield-street-bensham-gateshead', 635, 445),
-    alt: 'Cotfield Street in pen and wash: Taits corner shop at left, terraced houses running uphill, a man walking a dog.',
+    alt: 'Cotfield Street in watercolour: Taits corner shop at left, terraced houses running uphill, a man walking a dog.',
     origin: 'card',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',

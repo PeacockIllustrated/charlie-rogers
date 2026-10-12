@@ -121,9 +121,9 @@ export default async function PlacePage({
                 The street itself
               </p>
               <p className="mt-4 font-serif text-body text-ink-soft">
-                The book prints photographs of the streets Charlie painted beside
-                the paintings themselves, so the two records can be read
-                together.
+                The book <span className="italic">Pursued by Bulldozers</span>{' '}
+                shows photographs of the streets Charlie painted alongside the
+                paintings themselves, so the two records can be read together.
               </p>
             </div>
             <div className="lg:col-span-7">

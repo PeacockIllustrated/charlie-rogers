@@ -33,12 +33,12 @@ const salon: { slug: string; span: string }[] = [
   { slug: 'four-doors-at-school-street-gateshead-1977', span: 'lg:col-span-6 lg:mt-12' },
 ]
 
-// The race, told through the places. Gone first, then altered, then the one
+// The race, told through the places. Gone first, then altered, then the ones
 // that survived, for contrast.
 const raceOrder = [
   'cotfield-street',
-  'st-cuthberts-church-bensham',
   'railway-quarter-gateshead-east',
+  'st-cuthberts-church-bensham',
   'coatsworth-road',
   'saltwell-park',
 ]
@@ -92,8 +92,9 @@ export default function Home() {
             <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">
               Charlie Rogers &middot; Gateshead &middot; 1930 to 2020
             </p>
-            <h1 className="mt-6 font-serif text-display text-ink">
-              Pursued by <span className="italic text-bensham">bulldozers</span>
+            <h1 className="mt-6 font-serif text-h1 text-ink lg:text-[3.25rem] lg:leading-[1.05]">
+              The official website for the artist{' '}
+              <span className="italic text-bensham">Charles Henry Rogers</span>
             </h1>
             <p className="mt-8 max-w-[30rem] font-serif text-lead text-ink-soft">
               For fifty-six years a self-taught painter from Gateshead raced the
@@ -162,7 +163,7 @@ export default function Home() {
             </p>
             <div className="mt-8">
               <Button href="/places" variant="tertiary">
-                All the places
+                Favourite painting locations
               </Button>
             </div>
           </div>
@@ -261,6 +262,9 @@ export default function Home() {
             </p>
             <footer className="mt-6 font-sans text-xs uppercase tracking-eyebrow text-paper/75">
               Derek Kirkup
+              <span className="mt-2 block normal-case tracking-normal text-small">
+                Director, Percy Gallery, 1973
+              </span>
             </footer>
           </blockquote>
         </div>
@@ -294,11 +298,21 @@ export default function Home() {
               The third name
             </p>
             <h2 className="mt-4 font-serif text-h1">Lowry, Cornish, Rogers</h2>
-            <p className="mt-6 font-serif text-body text-ink-soft">
-              Brian Rankin&rsquo;s book places Charlie beside them, as the third
-              of the post-war chroniclers of working life in the North of
-              England. Cornish came to his first exhibition in
-              1965, and they were friends for life.
+            <blockquote className="mt-8 border-l-2 border-bensham pl-6">
+              <p className="font-serif text-h3 italic text-ink">
+                &ldquo;Charlie&rsquo;s work is regarded as being on a par with
+                that of other Northern artists of national significance such as
+                L.&nbsp;S. Lowry and Norman Cornish.&rdquo;
+              </p>
+              <footer className="mt-3 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
+                Historic England
+              </footer>
+            </blockquote>
+            <p className="mt-8 font-serif text-body text-ink-soft">
+              Brian Rankin&rsquo;s book <span className="italic">Pursued by
+              Bulldozers</span> places Charlie Rogers alongside L.&nbsp;S. Lowry
+              and Norman Cornish as the third of the post-war chroniclers of
+              working life in the North of England.
             </p>
           </div>
 

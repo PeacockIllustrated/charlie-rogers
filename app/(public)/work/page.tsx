@@ -25,7 +25,6 @@ function byDecade(entries: Entry[]): { label: string; entries: Entry[] }[] {
 }
 
 export default function WorkIndex() {
-  const untitled = themes.reduce((n, t) => n + themePaintings(t).length, 0)
   const decades = byDecade(catalogue)
 
   return (
@@ -38,9 +37,7 @@ export default function WorkIndex() {
           <h1 className="mt-4 font-serif text-display">The work</h1>
         </div>
         <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
-          Charlie made around a thousand paintings and drawings in fifty-six
-          years. {catalogue.length} are catalogued here by title, with {untitled}{' '}
-          more untitled plates from the book shown in their chapters.
+          Charlie created thousands of paintings and sketches.
         </p>
       </header>
 

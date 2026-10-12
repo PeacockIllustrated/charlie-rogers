@@ -116,7 +116,7 @@ export const timeline: TimelineEvent[] = [
     pivotal: true,
     image: '/paintings/web/page_023_img_000.jpg',
     imageAlt:
-      'A Tyneside back street by Charlie Rogers, of the kind he began painting in 1964',
+      'Cotfield Street, Bensham, in watercolour by Charlie Rogers',
     imageCaption: 'The back streets, where it began',
     quote: {
       text: 'I feel I have spent much of my career being pursued by bulldozers.',

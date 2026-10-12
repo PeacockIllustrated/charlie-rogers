@@ -54,7 +54,8 @@ export const places: Place[] = [
     name: 'Coatsworth Road',
     district: 'Bensham, Gateshead',
     region: 'gateshead',
-    status: 'altered',
+    // Brian Rankin, October 2026: Coatsworth Road has not been demolished.
+    status: 'extant',
     coords: {
       lat: 54.9537,
       lng: -1.6098,
@@ -70,7 +71,7 @@ export const places: Place[] = [
     image: '/paintings/web/page_027_img_002.jpg',
     paragraphs: [
       "Coatsworth Road was a commercial spine running through Bensham, lined with the kind of independent shops, pubs, and corner businesses that Charlie painted across his entire career. He returned to it repeatedly, recording shopfronts, signage, and the ordinary foot traffic of a working street.",
-      'The road survives but individual buildings have changed hands, been converted, or been replaced. The street Charlie knew is present in fragments, the rest visible only in his paintings.',
+      'The road was not demolished. It is still a working shopping street, though many of the shops he painted have changed hands since.',
     ],
   },
   {
@@ -118,7 +119,7 @@ export const places: Place[] = [
     image: '/paintings/web/page_036_img_000.jpg',
     paragraphs: [
       "The Cenotaph at Shipcote appears in Charlie's work as civic architecture given weight: a fixed monument in a town where so much else proved temporary. He painted it with the same close attention he gave the back lanes, taking seriously what official Gateshead had erected and what the community gathered around.",
-      'The memorial stands today at the junction near the Old Town Hall site and remains in use for Remembrance services.',
+      'The memorial stands today near the Shipley Art Gallery and remains in use for Remembrance services.',
     ],
   },
   {
@@ -126,13 +127,15 @@ export const places: Place[] = [
     name: "St Cuthbert's Church, Bensham",
     district: 'Bensham, Gateshead',
     region: 'gateshead',
-    status: 'demolished',
+    // Brian Rankin, October 2026: the church was not demolished and is now an
+    // art cafe.
+    status: 'extant',
     coords: {
       lat: 54.9578,
       lng: -1.6046,
       precision: 'street',
       basis:
-        'Pinned on Bensham Road. The church was demolished, and its exact footprint is one of the things this map cannot yet state.',
+        'Pinned on Bensham Road. The church still stands; this pin marks the road rather than the building and has not been checked against it.',
     },
     // St Cuthbert's from the bank, reproduced at 247x182 rather than 176x143 on
     // the page 27 contact sheet. Same painting: the house hung with red creeper
@@ -142,8 +145,8 @@ export const places: Place[] = [
     // different, closer painting of the same church.
     image: '/paintings/web/page_032_img_002.jpg',
     paragraphs: [
-      "St Cuthbert's on Bensham Road was one of the Victorian churches Charlie painted before demolition took it. It stood within the Bensham neighbourhood he knew better than anywhere, a few streets from Westbourne Avenue and close to the back lanes where his painting life began.",
-      'The church is gone. Charlie\'s painting is among the few records of how it looked from the street. This is the pattern that defines his career: the subject persists in paint long after the builders have finished.',
+      "St Cuthbert's on Bensham Road is one of the Victorian churches Charlie painted more than once. It stands within the Bensham neighbourhood he knew better than anywhere, a few streets from Westbourne Avenue and close to the back lanes where his painting life began.",
+      'The church was not demolished. It survives as an art cafe, a fitting afterlife for a building that a Gateshead painter recorded while its future was in doubt.',
     ],
   },
   {
