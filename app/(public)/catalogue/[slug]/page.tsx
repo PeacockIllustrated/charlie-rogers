@@ -161,7 +161,7 @@ export default async function EntryPage({
             {product && (
               <div className="mt-8">
                 <Link
-                  href={`/shop/${product.slug}`}
+                  href={`/shop/${product.slug}#enquire`}
                   className="inline-block border border-ink-soft px-4 py-2.5 font-sans text-small font-medium text-ink transition-colors duration-colour hover:bg-ink-soft hover:text-paper"
                 >
                   Enquire about this painting

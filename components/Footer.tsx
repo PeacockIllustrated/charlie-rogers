@@ -11,6 +11,7 @@ const footerLinks = [
   { href: '/timeline', label: 'Timeline' },
   { href: '/exhibitions', label: 'Exhibitions' },
   { href: '/book', label: 'The book' },
+  { href: '/shop', label: 'Shop' },
 ]
 
 // Every page closes on the book, once, here, rather than with a callout

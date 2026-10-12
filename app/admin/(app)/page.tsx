@@ -20,10 +20,13 @@ export default async function AdminDashboard() {
 
   // Orders and settings arrive with the orders migration. Until it is applied
   // both queries fail, and the dashboard says so rather than showing zeros.
-  const [ordersRes, settingsRes] = await Promise.all([
+  const [ordersRes, settingsRes, enquiriesRes] = await Promise.all([
     supabase.from('charlie_orders').select('status, total_pence').in('status', ['pending', 'paid']),
     supabase.from('charlie_shop_settings').select('checkout_mode, uk_postage_pence').eq('id', true).maybeSingle(),
+    supabase.from('charlie_enquiries').select('id', { count: 'exact', head: true }).eq('status', 'new'),
   ])
+  // Null until the enquiries migration is applied, so the tile can say so.
+  const newEnquiries = enquiriesRes.error ? null : (enquiriesRes.count ?? 0)
   const openOrders = (ordersRes.data as Array<{ status: string; total_pence: number }> | null) ?? []
   const awaitingPayment = openOrders.filter((o) => o.status === 'pending')
   const toPost = openOrders.filter((o) => o.status === 'paid')
@@ -96,7 +99,7 @@ export default async function AdminDashboard() {
       {/* Orders first: they are the thing with a customer waiting on them. */}
       <section className="border border-rule bg-paper">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-rule px-5 py-4">
-          <h2 className="font-serif text-h3">Orders</h2>
+          <h2 className="font-serif text-h3">Orders and enquiries</h2>
           {ordersReady && (
             <Link href="/admin/settings" className="font-sans text-small text-ink-soft hover:text-bensham">
               Checkout is {settings?.checkout_mode === 'manual' ? 'open, payment by arrangement' : 'closed'}
@@ -105,7 +108,7 @@ export default async function AdminDashboard() {
           )}
         </div>
         {ordersReady ? (
-          <div className="grid gap-px bg-rule sm:grid-cols-2">
+          <div className="grid gap-px bg-rule sm:grid-cols-3">
             <Link href="/admin/orders?status=pending" className="bg-paper p-5 transition-colors hover:bg-paper-warm">
               <div className="font-serif text-h2">{awaitingPayment.length}</div>
               <div className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
@@ -116,6 +119,10 @@ export default async function AdminDashboard() {
             <Link href="/admin/orders?status=paid" className="bg-paper p-5 transition-colors hover:bg-paper-warm">
               <div className="font-serif text-h2">{toPost.length}</div>
               <div className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">To post</div>
+            </Link>
+            <Link href="/admin/enquiries" className="bg-paper p-5 transition-colors hover:bg-paper-warm">
+              <div className="font-serif text-h2">{newEnquiries ?? 'Not set up'}</div>
+              <div className="mt-1 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">Enquiries to answer</div>
             </Link>
           </div>
         ) : (

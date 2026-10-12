@@ -2,25 +2,48 @@
 
 import { useState } from 'react'
 import { cn, shopImageUrl } from '@/lib/shop/utils'
-import type { ShopProductImage } from '@/lib/shop/types'
+import type { ProductType, ShopProductImage } from '@/lib/shop/types'
+import { Roundel } from '@/components/Roundel'
 
 // Primary image plus a thumbnail rail. On a warm mount, consistent with the
 // rest of the site's painting treatment.
 export function ProductImageGallery({
   images,
   title,
+  productType,
 }: {
   images: ShopProductImage[]
   title: string
+  productType?: ProductType
 }) {
   const sorted = [...images].sort((a, b) => a.display_order - b.display_order)
   const [activeIndex, setActiveIndex] = useState(0)
   const active = sorted[activeIndex] ?? sorted[0]
 
   if (!active) {
+    // No photograph of the book yet. Rather than an empty box, set it as the
+    // book is set: the embossed emblem on the wine red of its headers, with
+    // the title in Bembo. Captioned, so nobody takes it for a photograph.
+    if (productType === 'book') {
+      return (
+        <figure>
+          <div className="flex aspect-[4/5] flex-col items-center justify-center gap-10 bg-bensham px-8 text-center text-paper">
+            <Roundel size={200} tone="paper" title="The Charlie Rogers emblem, as embossed on the special edition" />
+            <div>
+              <p className="font-sans text-xs uppercase tracking-eyebrow text-paper/80">Charlie Rogers</p>
+              <p className="mt-3 font-serif text-h2 italic">Pursued by Bulldozers</p>
+              <p className="mt-3 font-sans text-xs uppercase tracking-eyebrow text-paper/80">Brian Rankin</p>
+            </div>
+          </div>
+          <figcaption className="mt-3 font-sans text-xs text-ink-mute">
+            A photograph of the signed special edition is to come.
+          </figcaption>
+        </figure>
+      )
+    }
     return (
-      <div className="flex aspect-[4/5] items-center justify-center bg-paper-warm font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-        No image
+      <div className="flex aspect-[4/5] items-center justify-center bg-paper-warm">
+        <Roundel size={160} tone="ink" />
       </div>
     )
   }

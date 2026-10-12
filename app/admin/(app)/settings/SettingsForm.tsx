@@ -81,10 +81,10 @@ export function SettingsForm({
 
       <div className="max-w-md">
         <label htmlFor="notifyEmail" className="input-label">
-          Send new orders to
+          Send new orders and enquiries to
         </label>
         <input id="notifyEmail" name="notifyEmail" type="email" defaultValue={initial.notifyEmail} className="input" />
-        <p className="mt-1 font-sans text-xs text-ink-mute">One address. Leave it blank to rely on the Orders page alone.</p>
+        <p className="mt-1 font-sans text-xs text-ink-mute">One address. Leave it blank to rely on the Orders and Enquiries pages alone.</p>
         {e.notifyEmail && <p className="mt-1 font-sans text-small text-bensham">{e.notifyEmail}</p>}
       </div>
 
