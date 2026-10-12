@@ -61,6 +61,17 @@ const fourDoorsPhoto = extract('page_044_img_001')
 export const catalogue: Entry[] = [
   // Photographed from the originals
   {
+    slug: 'back-cotfield-street-gateshead',
+    title: 'Back Cotfield Street, Gateshead',
+    medium: 'Pen and wash',
+    image: original('back-cotfield-street-gateshead', 1067, 1736),
+    alt: 'The cobbled back lane of Cotfield Street seen from above: yard walls and outhouses, chimney stacks, a telegraph pole, and a poster on the gable end at right.',
+    origin: 'original',
+    theme: 'charlies-gateshead',
+    place: 'cotfield-street',
+    note: 'The back lane Charlie painted from his aunt’s window at 262 Bensham Road, and his first painting accepted for the Royal Academy Summer Exhibition. Photographed in its frame and supplied by Brian Rankin in October 2026.',
+  },
+  {
     slug: 'the-joke-shop-gateshead-on-tyne-1966',
     title: 'The Joke Shop, Gateshead-on-Tyne',
     year: 1966,

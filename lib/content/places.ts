@@ -170,7 +170,7 @@ export const places: Place[] = [
     // its green window and the disc sign on the angle, the dark house closing
     // the street with lit windows and a red door, the yellow passage wall at
     // right, the two smoking chimneys, the same signature bottom left.
-    image: '/paintings/web/page_031_img_003.jpg',
+    image: '/artwork/web/back-cotfield-street-gateshead.jpg',
     paragraphs: [
       'Cotfield Street is where it started. Laid up with a knee injury in 1964, Charlie sat in his Aunt Violet Gwendoline Woodhead\'s front room at 262 Bensham Road and looked out at the back lane opposite. Over five or six mornings he painted what he saw, in pen and wash. The result was titled "Back Cotfield Street". The street was demolished shortly after.',
       'Forty-two years later he wrote that he owed it all to the anonymous half-back who temporarily crippled him. Cotfield Street is the origin point for a body of work that eventually reached the Royal Academy four times.',

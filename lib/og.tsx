@@ -137,11 +137,11 @@ export async function shareImage({
   )
 }
 
-// The browser and home-screen icon: the official logo, paper on Bensham red.
+// The browser and home-screen icon: the official emblem, white on Bensham red.
 export async function iconImage(px: number) {
-  const logo = await readFile(join(process.cwd(), 'assets/brand/logo-paper.png'))
-  const src = `data:image/png;base64,${logo.toString('base64')}`
-  const inner = Math.round(px * 0.9)
+  const logo = await readFile(join(process.cwd(), 'public/brand/emblem-dark.svg'))
+  const src = `data:image/svg+xml;base64,${logo.toString('base64')}`
+  const inner = Math.round(px * 0.94)
   return new ImageResponse(
     (
       <div

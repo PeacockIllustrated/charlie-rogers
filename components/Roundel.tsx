@@ -1,9 +1,8 @@
-// The official Charlie Rogers logo: the distressed stamp with his name, his
-// years and the sketched dog, supplied by Brian Rankin in October 2026. The
-// artwork is a transparent PNG used as a mask, so the logo takes the text
-// colour of whatever it sits on, as the drawn roundel it replaces did. The
-// circle is the stamp's own shape, not a softened corner, so the square
-// corners rule stands.
+// The official Charlie Rogers emblem, supplied as SVG in October 2026: his
+// name, his years and the sketched dog. Two versions are drawn: the light one
+// (red on paper) for paper backgrounds and the dark one (white on red) for the
+// red blocks. The circle is the emblem's own shape, not a softened corner, so
+// the square corners rule stands.
 export function Roundel({
   size = 160,
   className = '',
@@ -12,19 +11,21 @@ export function Roundel({
 }: {
   size?: number
   className?: string
+  // 'paper' sits on a red background; 'bensham' and 'ink' sit on paper.
   tone?: 'bensham' | 'paper' | 'ink'
   title?: string
 }) {
-  const colour =
-    tone === 'paper' ? 'bg-paper' : tone === 'ink' ? 'bg-ink' : 'bg-bensham'
-  const mask = 'url(/brand/charlie-rogers-logo.png) center / contain no-repeat'
+  const src = tone === 'paper' ? '/brand/emblem-dark.svg' : '/brand/emblem-light.svg'
   return (
-    <span
-      className={`inline-block shrink-0 ${colour} ${className}`}
-      style={{ width: size, height: size, mask, WebkitMask: mask }}
-      role={title ? 'img' : undefined}
+    // A static SVG at a fixed size gains nothing from next/image.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      width={size}
+      height={size}
+      alt={title ?? ''}
       aria-hidden={title ? undefined : true}
-      aria-label={title}
+      className={`inline-block shrink-0 ${className}`}
     />
   )
 }
