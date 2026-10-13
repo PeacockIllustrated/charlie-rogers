@@ -1,4 +1,5 @@
 import type { ShopProduct } from './types'
+import { PRINT_EDITION_TEXT, PRINT_FROM_PENCE, PRINT_SIZE } from './prints'
 
 // The local catalogue, used when Supabase is not configured so the shop can be
 // reviewed before any database exists. Once Supabase is pointed at, the live
@@ -30,8 +31,17 @@ import type { ShopProduct } from './types'
 //    own 9 June email gives Pot Pie Bob's a mounted print of 30 x 25cm. Tom
 //    needs to put that to him before a size goes on a commerce page.
 //
-// No price is invented. Brian priced only the book and the greeting cards, so
-// every painting carries price_pence 0, which renders as price on application.
+// Superseded on 12 October 2026: Brian sent the Charlie Rogers Collection
+// info sheet, the prints chosen for sale, with scans made and printing by
+// Paul Wright at the Biscuit Factory. Every print on it is 40.6 x 50.8cm, a
+// standard print at £45 or a limited edition of 50, mounted with a
+// certificate, at £120, delivered free (lib/shop/prints.ts). So the A3 figure
+// in note 3 and printLongEdgeCm no longer decide anything: the printer works
+// from the scans, not from the files here. They are kept as the record.
+//
+// A print row holds the lower price, shown as "From £45.00". Town Moor is not
+// on the info sheet, so it keeps price_pence 0, price on application, until
+// Brian says whether it stays.
 
 export interface CatalogueProduct extends ShopProduct {
   // Brian's sales line, captured but not rendered. See note 1 above.
@@ -147,6 +157,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Bigg Market, Newcastle-on-Tyne',
     slug: 'bigg-market-newcastle-on-tyne-1975',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1975',
     medium: 'Watercolour',
     printLongEdgeCm: 30,
@@ -166,6 +179,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'The Joke Shop, Gateshead-on-Tyne',
     slug: 'the-joke-shop-gateshead-on-tyne-1966',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1966',
     medium: 'Watercolour and pen',
     printLongEdgeCm: 17,
@@ -190,6 +206,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'The Men on the Seats',
     slug: 'the-men-on-the-seats-1973',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1973',
     // Brian left the medium field off this one. "Oil" is taken from his own
     // description, "This scene created in oil", not from anywhere else.
@@ -211,6 +230,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Third Street, Back Lane, Bensham, Gateshead',
     slug: 'third-street-back-lane-bensham-gateshead-1980',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1980',
     medium: 'Oil on paper',
     printLongEdgeCm: 5,
@@ -233,6 +255,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Four Doors at School Street, Gateshead',
     slug: 'four-doors-at-school-street-gateshead-1977',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1977',
     medium: 'Oil on board',
     printLongEdgeCm: 16,
@@ -252,6 +277,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Bensham Road, Gateshead',
     slug: 'bensham-road-gateshead-1970',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1970',
     // See note 2 at the top of this file. Brian's print email of 8 June 2026
     // says "Oil on paper"; his own greeting card caption of 17 September 2026
@@ -275,12 +303,14 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Pot Pie Bob’s, Wellington Street, Gateshead',
     slug: 'pot-pie-bobs-wellington-street-gateshead-1977',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1977',
     medium: 'Watercolour',
-    // The only painting for which Brian gave real measurements, 9 June 2026.
-    // It is also the one his later "prints will be A3 size" statement
-    // contradicts, so both are kept and neither is reconciled here.
-    dimensions: 'Original painting 22 x 21cm, mounted print 30 x 25cm',
+    // Brian gave this one alone real measurements on 9 June 2026: "Original
+    // painting 22 x 21cm, mounted print 30 x 25cm". The print size is now the
+    // collection's 40.6 x 50.8cm, set above, so the old line is not shown.
     printLongEdgeCm: 16,
     statedPrintSize: 'A3',
     // The second paragraph is Brian's sentence verbatim. It previously read
@@ -308,6 +338,9 @@ export const CATALOGUE: CatalogueProduct[] = [
     title: 'Pop',
     slug: 'pop-1967',
     product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
     year_text: '1967',
     medium: 'Watercolour',
     statedPrintSize: 'A3',
@@ -327,6 +360,27 @@ export const CATALOGUE: CatalogueProduct[] = [
       'pop-1967',
       'pop-1967.jpg',
       'Watercolour of the Rogers family living room with a bottle of Brown Ale, 1967',
+    ),
+  }),
+
+  // On the info sheet of 12 October 2026 but not in the shop before it. The
+  // copy is the book's own fact: the painting hung at the Royal Academy in
+  // 1972 (lib/content/exhibitions.ts). The picture is the card proof, the only
+  // file held; the printer works from the scan.
+  product({
+    title: 'Street Meeting with Snow, Gateshead',
+    slug: 'street-meeting-with-snow-gateshead-1972',
+    product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
+    year_text: '1972',
+    medium: 'Watercolour',
+    description:
+      'Accepted for the Royal Academy Summer Exhibition in 1972, the second of Charlie’s four paintings to hang there.',
+    images: images(
+      'street-meeting-with-snow-gateshead-1972',
+      [{ file: 'street-meeting-with-snow-gateshead-1972.jpg', alt: 'Street meeting with snow, Gateshead, 1972, watercolour' }],
     ),
   }),
 
@@ -373,6 +427,69 @@ export const CATALOGUE: CatalogueProduct[] = [
         alt: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour',
       },
     ]),
+  }),
+  // Single cards, £2.95 each including the envelope: Brian Rankin, 12 October
+  // 2026. One listing per design rather than one listing with a choice, so an
+  // order says which card was bought. Stock is the same placeholder 100 as
+  // the pack until he gives a print run.
+  product({
+    title: 'Greeting card, The Monument with Snow, Newcastle-on-Tyne',
+    slug: 'greeting-card-the-monument-with-snow-newcastle-on-tyne-1996',
+    product_type: 'other',
+    price_pence: 295,
+    stock_count: 100,
+    dimensions: 'A6, 105 x 148mm',
+    description:
+      'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    images: images('greeting-card-the-monument-with-snow-newcastle-on-tyne-1996', [{ file: 'the-monument-with-snow-newcastle-on-tyne-1996.jpg', alt: 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour' }]),
+  }),
+
+  product({
+    title: 'Greeting card, St Cuthbert’s Church, Gateshead-on-Tyne',
+    slug: 'greeting-card-st-cuthberts-church-gateshead-on-tyne-1982',
+    product_type: 'other',
+    price_pence: 295,
+    stock_count: 100,
+    dimensions: 'A6, 105 x 148mm',
+    description:
+      'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 including the envelope.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    images: images('greeting-card-st-cuthberts-church-gateshead-on-tyne-1982', [{ file: 'st-cuthberts-church-gateshead-on-tyne-1982.jpg', alt: 'St Cuthbert’s Church, Gateshead-on-Tyne, 1982, oil' }]),
+  }),
+
+  product({
+    title: 'Greeting card, Bensham Road, Gateshead',
+    slug: 'greeting-card-bensham-road-gateshead-1970',
+    product_type: 'other',
+    price_pence: 295,
+    stock_count: 100,
+    dimensions: 'A6, 105 x 148mm',
+    description:
+      'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 including the envelope.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    images: images('greeting-card-bensham-road-gateshead-1970', [{ file: 'bensham-road-gateshead-1970.jpg', alt: 'Bensham Road, Gateshead, 1970, watercolour' }]),
+  }),
+
+  product({
+    title: 'Greeting card, Street meeting with snow, Gateshead',
+    slug: 'greeting-card-street-meeting-with-snow-gateshead-1972',
+    product_type: 'other',
+    price_pence: 295,
+    stock_count: 100,
+    dimensions: 'A6, 105 x 148mm',
+    description:
+      'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 including the envelope.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    images: images('greeting-card-street-meeting-with-snow-gateshead-1972', [{ file: 'street-meeting-with-snow-gateshead-1972.jpg', alt: 'Street meeting with snow, Gateshead, 1972, watercolour' }]),
+  }),
+
+  product({
+    title: 'Greeting card, Cotfield Street, Bensham, Gateshead-on-Tyne',
+    slug: 'greeting-card-cotfield-street-bensham-gateshead',
+    product_type: 'other',
+    price_pence: 295,
+    stock_count: 100,
+    dimensions: 'A6, 105 x 148mm',
+    description:
+      'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 including the envelope.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+    images: images('greeting-card-cotfield-street-bensham-gateshead', [{ file: 'cotfield-street-bensham-gateshead.jpg', alt: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour' }]),
   }),
 ]
 

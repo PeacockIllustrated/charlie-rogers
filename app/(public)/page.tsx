@@ -19,7 +19,7 @@ function must<T>(v: T | undefined | null, what: string): T {
 
 const hero = must(entryBySlug('bensham-road-gateshead-1970'), 'hero entry')
 const origin = must(entryBySlug('cotfield-street-bensham-gateshead'), 'origin entry')
-const first = must(entryBySlug('back-cotfield-street-gateshead'), 'first painting')
+const first = must(entryBySlug('october-morning-cotfield-street-gateshead'), 'first painting')
 
 // The salon: the photographed originals and the largest card artwork, hung as
 // a wall rather than a grid. Spans are set per picture to suit its shape.
@@ -127,10 +127,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* His own words, the book's title line */}
+      {/* His own words, the book's title line, beside the man himself */}
       <section className="border-y border-rule">
-        <div className="mx-auto max-w-content px-6 py-16 lg:py-24">
-          <blockquote className="mx-auto max-w-4xl text-center">
+        <div className="mx-auto grid max-w-content items-center gap-12 px-6 py-16 lg:grid-cols-12 lg:gap-16 lg:py-24">
+          {/* Brian Rankin asked for this photograph on the landing page,
+              12 October 2026. A photograph, not a painting, so it is framed
+              plainly rather than set on a painting's mount. */}
+          <figure className="lg:col-span-5">
+            <div className="mx-auto max-w-[26rem] border border-rule bg-paper-warm p-3">
+              <Image
+                src="/artwork/web/charlie-rogers-backyard-239-westbourne-avenue-1966.jpg"
+                width={1200}
+                height={1595}
+                alt="Charlie Rogers in 1966, standing on the steps against the brick wall of the back yard at 239 Westbourne Avenue, drawing in a sketchbook, with a dustbin at left and an old wooden chair stacked on a crate at right."
+                sizes="(min-width: 1024px) 26rem, 100vw"
+                className="block h-auto w-full"
+              />
+            </div>
+            <figcaption className="mx-auto mt-3 max-w-[26rem] font-sans text-xs text-ink-mute">
+              Charlie sketching in the back yard of 239 Westbourne Avenue, 1966.
+            </figcaption>
+          </figure>
+          <blockquote className="lg:col-span-7">
             <p className="font-serif text-h1 italic text-ink">
               &ldquo;I feel I have spent much of my career being pursued by
               bulldozers.&rdquo;
@@ -231,7 +249,7 @@ export default function Home() {
               />
             </div>
           </div>
-          {/* The view from his aunt's front window: the painting itself */}
+          {/* The same back lane, as it went to the Royal Academy in 1967 */}
           <div className="lg:col-span-7 lg:pt-16">
             <Plate
               className="mx-auto max-w-[30rem]"
@@ -246,8 +264,8 @@ export default function Home() {
                     {first.title}
                   </Link>
                   <span className="mt-1 block">
-                    Charlie&rsquo;s first successful submission to the Royal
-                    Academy Summer Exhibition.
+                    Pen and wash. Accepted for the Royal Academy Summer
+                    Exhibition in 1967, his first time there.
                   </span>
                 </>
               }

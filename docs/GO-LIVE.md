@@ -73,7 +73,7 @@ These stop Brian's launch product from being sold. They need Tom, not code.
 | Special edition, 100 copies, £25, exclusive to the site | Listed in the shop; not linked or purchasable (blockers 1 to 4) |
 | Greeting card pack, £10 for 5, A6 | Listed; images pending migration (blocker 3) |
 | Nine prints | Listed as price on application; correctly not purchasable, files are not print quality |
-| Print specifications, Paul Wright at the Biscuit | Done |
+| Print specifications, Paul Wright at the Biscuit Factory | Done |
 | Talks by Brian | Done, on `/exhibitions` |
 | Saltwell Towers and library exhibitions, QR codes | Done, on `/exhibitions` |
 | Saltwell Park video | Not possible; Mail Drop expired, he has to resend |

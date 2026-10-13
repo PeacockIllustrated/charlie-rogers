@@ -72,7 +72,7 @@ export const storySections: StorySection[] = [
     imageCaption: 'Gateshead Cenotaph, oil',
     paragraphs: [
       'His first exhibition came about by chance. In March 1965, a painter dropped out of a three-man show at Harry Lord\'s Univision Gallery in Newcastle\'s Bigg Market. Lord offered Charlie the gap. Mounted on pieces of card, the drawings sold. Norman Cornish attended that first exhibition; the two men became lifelong friends, sketching together around each other\'s territory for decades.',
-      'Exhibitions at the Shipley Art Gallery, the Westgate Gallery, and the Scottish Royal Academy followed. Charlie entered the Royal Academy Summer Exhibition in London four times, accepted in 1967, 1972, 1975, and 1981. The 1967 entry was another Cotfield Street painting, finished shortly before the street came down. In 1981 he attended the Midsummer Eve Soiree at the Royal Academy and was introduced to the Prince of Wales. In 1994 he exhibited at a Royal Charity Exhibition opened by Princess Margaret.',
+      'Exhibitions at the Shipley Art Gallery, the Westgate Gallery, and the Scottish Royal Academy followed. Charlie entered the Royal Academy Summer Exhibition in London four times, accepted in 1967, 1972, 1975, and 1981. The 1967 entry was “October morning: Cotfield Street, Gateshead”, the same back lane he had first painted from his aunt’s window. In 1981 he attended the Midsummer Eve Soiree at the Royal Academy and was introduced to the Prince of Wales. In 1994 he exhibited at a Royal Charity Exhibition opened by Princess Margaret.',
     ],
   },
   {

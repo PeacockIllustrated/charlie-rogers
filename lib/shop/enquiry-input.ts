@@ -67,6 +67,8 @@ export function enquiryPrompt(productType: string): string {
       return 'For example, how many copies you would like and where they would be posted.'
     case 'other':
       return 'For example, how many you would like and where they would be posted.'
+    case 'print':
+      return 'For example, the standard print or the limited edition, how many you would like, and where they would be sent.'
     default:
       return 'For example, whether prints will be made of this painting, or anything you would like to know about it.'
   }

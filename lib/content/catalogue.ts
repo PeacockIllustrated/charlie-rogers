@@ -61,15 +61,31 @@ const fourDoorsPhoto = extract('page_044_img_001')
 export const catalogue: Entry[] = [
   // Photographed from the originals
   {
-    slug: 'back-cotfield-street-gateshead',
-    title: 'Back Cotfield Street, Gateshead',
+    // Brian Rankin, 12 October 2026: the back lane he sent is titled "October
+    // morning: Cotfield Street, Gateshead", and it was accepted for the Royal
+    // Academy Summer Exhibition in 1967. Listed as "Back Cotfield Street"
+    // until then; next.config.mjs redirects the old address.
+    slug: 'october-morning-cotfield-street-gateshead',
+    title: 'October morning: Cotfield Street, Gateshead',
     medium: 'Pen and wash',
     image: original('back-cotfield-street-gateshead', 1067, 1736),
     alt: 'The cobbled back lane of Cotfield Street seen from above: yard walls and outhouses, chimney stacks, a telegraph pole, and a poster on the gable end at right.',
     origin: 'original',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',
-    note: 'The back lane Charlie painted from his aunt’s window at 262 Bensham Road, and his first painting accepted for the Royal Academy Summer Exhibition. Photographed in its frame and supplied by Brian Rankin in October 2026.',
+    note: 'The back lane Charlie first painted from his aunt’s window at 262 Bensham Road. Accepted for the Royal Academy Summer Exhibition in 1967, his first time there. Photographed in its frame and supplied by Brian Rankin in October 2026.',
+  },
+  {
+    slug: '239-westbourne-avenue-gateshead-1974',
+    title: '239 Westbourne Avenue, Gateshead',
+    year: 1974,
+    medium: 'Pencil',
+    image: original('239-westbourne-avenue-gateshead-1974', 1200, 1619),
+    alt: 'Pencil sketch of the front of 239 Westbourne Avenue: the bay window at left, the front door under its stone lintel, a drainpipe between them, and the gate posts and railings in the foreground.',
+    origin: 'original',
+    theme: 'charlies-gateshead',
+    place: '239-westbourne-avenue',
+    note: 'The house where Charlie was born. Inscribed at the foot "Front door" and "239 Westbourne Ave, 24/3/74, C. H. Rogers". Supplied by Brian Rankin in October 2026.',
   },
   {
     slug: 'the-joke-shop-gateshead-on-tyne-1966',

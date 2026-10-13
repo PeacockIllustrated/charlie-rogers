@@ -5,7 +5,7 @@ import { Button } from '@/components/Button'
 import { BackLink } from '@/components/BackLink'
 import { ProductImageGallery } from '@/components/shop/ProductImageGallery'
 import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
-import { formatPrice, cn } from '@/lib/shop/utils'
+import { displayPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { catalogueBySlug } from '@/lib/shop/catalogue'
@@ -86,14 +86,18 @@ export default async function ProductDetailPage({
     <div className="mx-auto max-w-content px-6 py-12">
       <BackLink href="/shop">All products</BackLink>
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div>
+      {/* grid-cols-1, not the implicit column, and min-w-0 on both sides:
+          iPhone Safari sized the implicit column to the painting's full pixel
+          width, so the page ran off the right of the screen (Brian's
+          screenshot, 12 October 2026). */}
+      <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="min-w-0">
           <ProductImageGallery images={product.images ?? []} title={product.title} productType={product.product_type} />
         </div>
 
         {/* The details sit on a warm panel beside the picture, like a label
             card beside a hung work */}
-        <div className="self-start border border-rule bg-paper-warm p-6 sm:p-8">
+        <div className="min-w-0 self-start border border-rule bg-paper-warm p-6 sm:p-8">
           <Eyebrow>{PRODUCT_TYPE_LABELS[product.product_type]}</Eyebrow>
           <h1 className="mt-3 font-serif text-h1">{product.title}</h1>
 
@@ -103,7 +107,7 @@ export default async function ProductDetailPage({
               (isSold || soldOut) && 'line-through opacity-60',
             )}
           >
-            {formatPrice(product.price_pence)}
+            {displayPrice(product)}
           </p>
 
           {product.description && (

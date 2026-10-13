@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Roundel } from '@/components/Roundel'
-import { formatPrice, shopImageUrl, cn } from '@/lib/shop/utils'
+import { displayPrice, shopImageUrl, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 
 export function ProductCard({ product }: { product: ShopProduct }) {
@@ -12,7 +12,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
   return (
     <Link
       href={`/shop/${product.slug}`}
-      className="group flex h-full flex-col border border-rule bg-paper p-3 transition-colors duration-colour hover:border-ink-mute"
+      className="group flex h-full min-w-0 flex-col border border-rule bg-paper p-3 transition-colors duration-colour hover:border-ink-mute"
     >
       {/* Fixed aspect box so titles sit on a common baseline across a row.
           The painting is contained, never cropped: these are artworks, and
@@ -25,7 +25,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
             alt={primary?.alt_text ?? product.title}
             loading="lazy"
             className={cn(
-              'block max-h-full max-w-full object-contain',
+              'block min-w-0 max-h-full max-w-full object-contain',
               sold && 'opacity-70',
             )}
           />
@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           {PRODUCT_TYPE_LABELS[product.product_type]}
         </p>
         <p className="mt-1 font-serif text-body text-ink">
-          {formatPrice(product.price_pence)}
+          {displayPrice(product)}
         </p>
       </div>
     </Link>
