@@ -7,7 +7,11 @@
 --    print at £45 or a limited edition of 50 at £120, delivered free. The row
 --    holds the lower price and the site shows "From £45.00". Town Moor is not
 --    on the sheet and is left as it is, price on application.
--- 2. Street Meeting with Snow, on the sheet but not yet listed, is added.
+-- 2. Street Meeting, Gateshead, on the sheet but not yet listed, is added,
+--    with Brian's photographs of its limited edition. It is not the card
+--    design "Street meeting with snow, 1972". An earlier draft of this file
+--    listed it under that name with the card picture; if that row exists it
+--    is renamed below rather than duplicated.
 -- 3. Each of the five card designs is added as a single card at £2.95,
 --    including the envelope. Stock is a placeholder 100, as for the pack.
 --
@@ -36,12 +40,29 @@ WHERE product_type = 'print'
     'pop-1967'
   );
 
+UPDATE charlie_products
+SET title = 'Street Meeting, Gateshead',
+    slug = 'street-meeting-gateshead',
+    medium = 'Oil on canvas',
+    year_text = NULL,
+    description = 'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
+    updated_at = now()
+WHERE slug = 'street-meeting-with-snow-gateshead-1972'
+  AND product_type = 'print'
+  AND NOT EXISTS (SELECT 1 FROM charlie_products WHERE slug = 'street-meeting-gateshead');
+
+DELETE FROM charlie_product_images i
+USING charlie_products p
+WHERE i.product_id = p.id
+  AND p.slug = 'street-meeting-gateshead'
+  AND i.storage_path = '/artwork/cards/street-meeting-with-snow-gateshead-1972.jpg';
+
 INSERT INTO charlie_products
   (title, slug, description, price_pence, product_type, status, medium, dimensions, year_text, edition, stock_count, is_featured)
 VALUES
-  ('Street Meeting with Snow, Gateshead', 'street-meeting-with-snow-gateshead-1972',
-   'Accepted for the Royal Academy Summer Exhibition in 1972, the second of Charlie’s four paintings to hang there.',
-   4500, 'print', 'published', 'Watercolour', '40.6 x 50.8 cm (16 x 20 in)', '1972', 'Standard print, or limited edition of 50', 0, false),
+  ('Street Meeting, Gateshead', 'street-meeting-gateshead',
+   'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
+   4500, 'print', 'published', 'Oil on canvas', '40.6 x 50.8 cm (16 x 20 in)', NULL, 'Standard print, or limited edition of 50', 0, false),
   ('Greeting card, The Monument with Snow, Newcastle-on-Tyne', 'greeting-card-the-monument-with-snow-newcastle-on-tyne-1996',
    'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
@@ -74,13 +95,32 @@ ON CONFLICT (slug) DO NOTHING;
 INSERT INTO charlie_product_images (product_id, storage_path, alt_text, display_order, is_primary)
 SELECT p.id, v.path, v.alt, 0, true
 FROM (VALUES
-  ('street-meeting-with-snow-gateshead-1972', '/artwork/cards/street-meeting-with-snow-gateshead-1972.jpg', 'Street meeting with snow, Gateshead, 1972, watercolour'),
   ('greeting-card-the-monument-with-snow-newcastle-on-tyne-1996', '/artwork/cards/the-monument-with-snow-newcastle-on-tyne-1996.jpg', 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour'),
   ('greeting-card-st-cuthberts-church-gateshead-on-tyne-1982', '/artwork/cards/st-cuthberts-church-gateshead-on-tyne-1982.jpg', 'St Cuthbert’s Church, Gateshead-on-Tyne, 1982, oil'),
   ('greeting-card-bensham-road-gateshead-1970', '/artwork/cards/bensham-road-gateshead-1970.jpg', 'Bensham Road, Gateshead, 1970, watercolour'),
   ('greeting-card-street-meeting-with-snow-gateshead-1972', '/artwork/cards/street-meeting-with-snow-gateshead-1972.jpg', 'Street meeting with snow, Gateshead, 1972, watercolour'),
   ('greeting-card-cotfield-street-bensham-gateshead', '/artwork/cards/cotfield-street-bensham-gateshead.jpg', 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour')
 ) AS v(slug, path, alt)
+JOIN charlie_products p ON p.slug = v.slug
+WHERE NOT EXISTS (
+  SELECT 1 FROM charlie_product_images i WHERE i.product_id = p.id
+);
+
+-- Several pictures each, all or none: only where the product has no picture
+-- yet. Street Meeting's limited edition, and Brian's photographs of the book
+-- and its Christmas 2026 display, 13 October 2026.
+INSERT INTO charlie_product_images (product_id, storage_path, alt_text, display_order, is_primary)
+SELECT p.id, v.path, v.alt, v.ord, v.ord = 0
+FROM (VALUES
+  ('street-meeting-gateshead', 0, '/artwork/shop/street-meeting-gateshead-limited-edition-mounted.jpg', 'The limited edition print of Street Meeting, Gateshead in its white mount, with the Charlie Rogers Collection label on the wine red corner.'),
+  ('street-meeting-gateshead', 1, '/artwork/shop/street-meeting-gateshead-limited-edition-easel.jpg', 'The mounted limited edition print of Street Meeting, Gateshead standing on an easel in a garden.'),
+  ('street-meeting-gateshead', 2, '/artwork/shop/street-meeting-gateshead-certificate.jpg', 'The certificate of authenticity for the limited edition giclée print of Street Meeting, Gateshead, with space for the edition number.'),
+  ('pursued-by-bulldozers-special-edition', 0, '/artwork/book/pursued-by-bulldozers.jpg', 'The hardback of Charlie Rogers, Pursued by Bulldozers, standing open on a stone table, the snowy back lane of its cover facing out.'),
+  ('pursued-by-bulldozers-special-edition', 1, '/artwork/book/pursued-by-bulldozers-standing.jpg', 'The book standing on a table in a gallery, framed drawings by Charlie Rogers on the wall behind.'),
+  ('pursued-by-bulldozers-special-edition', 2, '/artwork/book/pursued-by-bulldozers-studio-table.jpg', 'The book on a table laid as Charlie''s studio: a framed drawing, a wireless, brushes in a jar, a teacup and a bronze dog.'),
+  ('pursued-by-bulldozers-special-edition', 3, '/artwork/book/christmas-2026-display.jpg', 'The Christmas 2026 display box of the limited edition, labelled perfect Christmas gift, in a gallery hung with Charlie''s paintings.'),
+  ('pursued-by-bulldozers-special-edition', 4, '/artwork/book/christmas-2026-display-gallery.jpg', 'The Christmas 2026 display box in front of a large photograph of Charlie Rogers.')
+) AS v(slug, ord, path, alt)
 JOIN charlie_products p ON p.slug = v.slug
 WHERE NOT EXISTS (
   SELECT 1 FROM charlie_product_images i WHERE i.product_id = p.id

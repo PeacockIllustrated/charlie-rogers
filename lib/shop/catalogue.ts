@@ -126,6 +126,19 @@ export const CATALOGUE: CatalogueProduct[] = [
     edition: 'Limited to 100 copies',
     // Brian's edition size. Mirrored by the orders migration for the live table.
     stock_count: 100,
+    // Brian Rankin's photographs, 13 October 2026: the book itself, and the
+    // display made for the Christmas 2026 limited edition.
+    images: images(
+      'pursued-by-bulldozers-special-edition',
+      [
+        { file: 'pursued-by-bulldozers.jpg', alt: 'The hardback of Charlie Rogers, Pursued by Bulldozers, standing open on a stone table, the snowy back lane of its cover facing out.' },
+        { file: 'pursued-by-bulldozers-standing.jpg', alt: 'The book standing on a table in a gallery, framed drawings by Charlie Rogers on the wall behind.' },
+        { file: 'pursued-by-bulldozers-studio-table.jpg', alt: 'The book on a table laid as Charlie’s studio: a framed drawing, a wireless, brushes in a jar, a teacup and a bronze dog.' },
+        { file: 'christmas-2026-display.jpg', alt: 'The Christmas 2026 display box of the limited edition, labelled perfect Christmas gift, in a gallery hung with Charlie’s paintings.' },
+        { file: 'christmas-2026-display-gallery.jpg', alt: 'The Christmas 2026 display box in front of a large photograph of Charlie Rogers.' },
+      ],
+      'artwork/book',
+    ),
     // Brian's 16 September 2026 email carries three things: the special
     // edition terms, the price, and the book's own description. All three are
     // his words. His heading "SPECIAL EDITION - EXCLUSIVE TO THIS WEBSITE" is
@@ -363,24 +376,30 @@ export const CATALOGUE: CatalogueProduct[] = [
     ),
   }),
 
-  // On the info sheet of 12 October 2026 but not in the shop before it. The
-  // copy is the book's own fact: the painting hung at the Royal Academy in
-  // 1972 (lib/content/exhibitions.ts). The picture is the card proof, the only
-  // file held; the printer works from the scan.
+  // On the info sheet of 12 October 2026 but not in the shop before it.
+  // Brian's photographs of 13 October show the limited edition of this one:
+  // the mounted print, on the easel, and its certificate of authenticity.
+  // Not the card design "Street meeting with snow, 1972", a different
+  // painting. The mount says 1971 and the certificate 1969, so no year is
+  // given until Brian says which; both say oil on canvas.
   product({
-    title: 'Street Meeting with Snow, Gateshead',
-    slug: 'street-meeting-with-snow-gateshead-1972',
+    title: 'Street Meeting, Gateshead',
+    slug: 'street-meeting-gateshead',
     product_type: 'print',
     price_pence: PRINT_FROM_PENCE,
     dimensions: PRINT_SIZE,
     edition: PRINT_EDITION_TEXT,
-    year_text: '1972',
-    medium: 'Watercolour',
+    medium: 'Oil on canvas',
     description:
-      'Accepted for the Royal Academy Summer Exhibition in 1972, the second of Charlie’s four paintings to hang there.',
+      'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
     images: images(
-      'street-meeting-with-snow-gateshead-1972',
-      [{ file: 'street-meeting-with-snow-gateshead-1972.jpg', alt: 'Street meeting with snow, Gateshead, 1972, watercolour' }],
+      'street-meeting-gateshead',
+      [
+        { file: 'street-meeting-gateshead-limited-edition-mounted.jpg', alt: 'The limited edition print of Street Meeting, Gateshead in its white mount, with the Charlie Rogers Collection label on the wine red corner.' },
+        { file: 'street-meeting-gateshead-limited-edition-easel.jpg', alt: 'The mounted limited edition print of Street Meeting, Gateshead standing on an easel in a garden.' },
+        { file: 'street-meeting-gateshead-certificate.jpg', alt: 'The certificate of authenticity for the limited edition giclée print of Street Meeting, Gateshead, with space for the edition number.' },
+      ],
+      'artwork/shop',
     ),
   }),
 

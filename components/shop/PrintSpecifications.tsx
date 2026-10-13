@@ -8,6 +8,7 @@
 //
 // The size, the two editions and free delivery come from his email of 12
 // October 2026; see lib/shop/prints.ts.
+import Image from 'next/image'
 import { PRINT_DELIVERY, PRINT_EDITIONS, PRINT_SIZE } from '@/lib/shop/prints'
 import { formatPence } from '@/lib/shop/utils'
 
@@ -45,6 +46,32 @@ export function PrintSpecifications() {
           <dd className="font-serif text-body text-ink">{PRINT_DELIVERY}</dd>
         </div>
       </dl>
+
+      {/* Brian Rankin's photographs of the limited edition, 13 October 2026:
+          the print in its mount, and the certificate that comes with it. */}
+      <figure className="mb-6">
+        <div className="grid grid-cols-2 gap-3">
+          <Image
+            src="/artwork/shop/street-meeting-gateshead-limited-edition-mounted.jpg"
+            width={1600}
+            height={1253}
+            alt="A limited edition print in its white mount, with the Charlie Rogers Collection label on the wine red corner."
+            sizes="(min-width: 640px) 18rem, 45vw"
+            className="block aspect-[4/5] w-full object-cover"
+          />
+          <Image
+            src="/artwork/shop/street-meeting-gateshead-certificate.jpg"
+            width={1131}
+            height={1600}
+            alt="The certificate of authenticity that comes with each limited edition print."
+            sizes="(min-width: 640px) 18rem, 45vw"
+            className="block aspect-[4/5] w-full object-cover object-top"
+          />
+        </div>
+        <figcaption className="mt-2 font-sans text-xs text-ink-mute">
+          The limited edition, mounted, with its certificate. Shown with Street Meeting, Gateshead.
+        </figcaption>
+      </figure>
 
       <p className="font-serif text-body text-ink-soft">
         Each of our high quality prints is made using Archival Pigment (Giclée)

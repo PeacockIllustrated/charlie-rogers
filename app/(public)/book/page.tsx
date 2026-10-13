@@ -1,9 +1,9 @@
+import Image from 'next/image'
 import type { Metadata } from 'next'
 
 import Link from 'next/link'
 import { Eyebrow } from '@/components/Eyebrow'
 import { Ledger } from '@/components/Ledger'
-import { Roundel } from '@/components/Roundel'
 import { BookFlip } from '@/components/BookFlip'
 import { catalogueBySlug } from '@/lib/shop/catalogue'
 import { bookFacts, bookDescription, bookContents } from '@/lib/content/book'
@@ -71,9 +71,20 @@ export default function BookPage() {
               </div>
             )}
           </div>
-          <div className="flex justify-center lg:col-span-5">
-            <Roundel size={280} tone="paper" title="The Charlie Rogers logo" />
-          </div>
+          {/* Brian Rankin's photograph of the book, October 2026 */}
+          <figure className="lg:col-span-5">
+            <div className="border border-paper/20 bg-paper p-3">
+              <Image
+                src="/artwork/book/pursued-by-bulldozers.jpg"
+                width={1600}
+                height={1200}
+                alt="The hardback of Charlie Rogers, Pursued by Bulldozers, standing open on a stone table, the snowy back lane of its cover facing out."
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                priority
+                className="block h-auto w-full"
+              />
+            </div>
+          </figure>
         </div>
       </section>
 
@@ -93,6 +104,19 @@ export default function BookPage() {
                 {price}. The standard edition is available from Come View My Art
                 Gallery, Sheriffs Highway, Low Fell, Gateshead.
               </p>
+              <figure className="mt-8 max-w-md">
+                <Image
+                  src="/artwork/book/christmas-2026-display.jpg"
+                  width={1600}
+                  height={1200}
+                  alt="The Christmas 2026 display box of the limited edition, labelled perfect Christmas gift, in a gallery hung with Charlie’s paintings."
+                  sizes="(min-width: 1024px) 28rem, 100vw"
+                  className="block h-auto w-full border border-rule"
+                />
+                <figcaption className="mt-2 font-sans text-xs text-ink-mute">
+                  The Christmas 2026 display.
+                </figcaption>
+              </figure>
             </div>
           </section>
         )}
