@@ -43,27 +43,27 @@ VALUES
    'Accepted for the Royal Academy Summer Exhibition in 1972, the second of Charlie’s four paintings to hang there.',
    4500, 'print', 'published', 'Watercolour', '40.6 x 50.8 cm (16 x 20 in)', '1972', 'Standard print, or limited edition of 50', 0, false),
   ('Greeting card, The Monument with Snow, Newcastle-on-Tyne', 'greeting-card-the-monument-with-snow-newcastle-on-tyne-1996',
-   'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope.
+   'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
 All Charlie Rogers paintings and sketches © Charles Rogers Junior.',
    295, 'other', 'published', NULL, 'A6, 105 x 148mm', NULL, NULL, 100, false),
   ('Greeting card, St Cuthbert’s Church, Gateshead-on-Tyne', 'greeting-card-st-cuthberts-church-gateshead-on-tyne-1982',
-   'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 including the envelope.
+   'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
 All Charlie Rogers paintings and sketches © Charles Rogers Junior.',
    295, 'other', 'published', NULL, 'A6, 105 x 148mm', NULL, NULL, 100, false),
   ('Greeting card, Bensham Road, Gateshead', 'greeting-card-bensham-road-gateshead-1970',
-   'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 including the envelope.
+   'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
 All Charlie Rogers paintings and sketches © Charles Rogers Junior.',
    295, 'other', 'published', NULL, 'A6, 105 x 148mm', NULL, NULL, 100, false),
   ('Greeting card, Street meeting with snow, Gateshead', 'greeting-card-street-meeting-with-snow-gateshead-1972',
-   'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 including the envelope.
+   'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
 All Charlie Rogers paintings and sketches © Charles Rogers Junior.',
    295, 'other', 'published', NULL, 'A6, 105 x 148mm', NULL, NULL, 100, false),
   ('Greeting card, Cotfield Street, Bensham, Gateshead-on-Tyne', 'greeting-card-cotfield-street-bensham-gateshead',
-   'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 including the envelope.
+   'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
 All Charlie Rogers paintings and sketches © Charles Rogers Junior.',
    295, 'other', 'published', NULL, 'A6, 105 x 148mm', NULL, NULL, 100, false)
@@ -85,5 +85,16 @@ JOIN charlie_products p ON p.slug = v.slug
 WHERE NOT EXISTS (
   SELECT 1 FROM charlie_product_images i WHERE i.product_id = p.id
 );
+
+-- Brian Rankin, 13 October 2026: every card is stamped with the official
+-- Charlie Rogers logo. Appended to the pack's description once.
+UPDATE charlie_products
+SET description = replace(
+      description,
+      'Cotfield Street, Bensham, Gateshead-on-Tyne.',
+      'Cotfield Street, Bensham, Gateshead-on-Tyne. Each card is stamped with the official Charlie Rogers logo.'),
+    updated_at = now()
+WHERE slug = 'greeting-card-collection'
+  AND description NOT LIKE '%stamped with the official Charlie Rogers logo%';
 
 NOTIFY pgrst, 'reload schema';

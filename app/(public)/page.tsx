@@ -19,7 +19,7 @@ function must<T>(v: T | undefined | null, what: string): T {
 
 const hero = must(entryBySlug('bensham-road-gateshead-1970'), 'hero entry')
 const origin = must(entryBySlug('cotfield-street-bensham-gateshead'), 'origin entry')
-const first = must(entryBySlug('october-morning-cotfield-street-gateshead'), 'first painting')
+const first = must(entryBySlug('back-cotfield-street-gateshead'), 'first painting')
 
 // The salon: the photographed originals and the largest card artwork, hung as
 // a wall rather than a grid. Spans are set per picture to suit its shape.
@@ -249,7 +249,7 @@ export default function Home() {
               />
             </div>
           </div>
-          {/* The same back lane, as it went to the Royal Academy in 1967 */}
+          {/* The view from his aunt's front window: the painting itself */}
           <div className="lg:col-span-7 lg:pt-16">
             <Plate
               className="mx-auto max-w-[30rem]"
@@ -264,8 +264,7 @@ export default function Home() {
                     {first.title}
                   </Link>
                   <span className="mt-1 block">
-                    Pen and wash. Accepted for the Royal Academy Summer
-                    Exhibition in 1967, his first time there.
+                    Pen and wash, November 1964.
                   </span>
                 </>
               }
