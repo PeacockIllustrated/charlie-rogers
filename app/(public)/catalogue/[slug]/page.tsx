@@ -56,6 +56,7 @@ const titleSourceLabel = {
   caption: 'the book’s caption',
   inscription: 'Charlie’s inscription on the painting',
   'location key': 'the book’s location key, page 27',
+  brian: 'Brian Rankin, October 2026',
 } as const
 
 export default async function EntryPage({

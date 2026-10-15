@@ -12,7 +12,9 @@ import { extract } from '@/lib/paintings'
 //             and dated in his card captions
 //   book      a plate in the book PDF, titled from the book's printed caption,
 //             Charlie's inscription on the painting, or the page 27 location
-//             key, as noted on the entry
+//             key, as noted on the entry. Brian Rankin corrected titles,
+//             years and media on 13 October 2026; his titles are marked
+//             titleSource 'brian'.
 // A missing year or medium stays missing and the page says so.
 
 export type Origin = 'original' | 'card' | 'book'
@@ -32,7 +34,7 @@ export type Entry = {
   origin: Origin
   bookPage?: number
   // Where the title comes from, for book plates.
-  titleSource?: 'caption' | 'inscription' | 'location key'
+  titleSource?: 'caption' | 'inscription' | 'location key' | 'brian'
   theme?: string
   place?: string
   // The matching listing in the shop, when there is one.
@@ -61,15 +63,32 @@ const fourDoorsPhoto = extract('page_044_img_001')
 export const catalogue: Entry[] = [
   // Photographed from the originals
   {
+    // Brian Rankin, 13 October 2026: dated November 1964. His email of the
+    // day before called the back lane he sent "October morning: Cotfield
+    // Street, Gateshead", his 1967 Royal Academy painting; the two do not
+    // square, so the Royal Academy claim is left off until he confirms.
     slug: 'back-cotfield-street-gateshead',
     title: 'Back Cotfield Street, Gateshead',
+    year: 1964,
     medium: 'Pen and wash',
     image: original('back-cotfield-street-gateshead', 1067, 1736),
     alt: 'The cobbled back lane of Cotfield Street seen from above: yard walls and outhouses, chimney stacks, a telegraph pole, and a poster on the gable end at right.',
     origin: 'original',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',
-    note: 'The back lane Charlie painted from his aunt’s window at 262 Bensham Road, and his first painting accepted for the Royal Academy Summer Exhibition. Photographed in its frame and supplied by Brian Rankin in October 2026.',
+    note: 'The back lane Charlie painted from his aunt’s window at 262 Bensham Road in November 1964, the painting that started it all. Photographed in its frame and supplied by Brian Rankin in October 2026.',
+  },
+  {
+    slug: '239-westbourne-avenue-gateshead-1974',
+    title: '239 Westbourne Avenue, Gateshead',
+    year: 1974,
+    medium: 'Pencil',
+    image: original('239-westbourne-avenue-gateshead-1974', 1200, 1619),
+    alt: 'Pencil sketch of the front of 239 Westbourne Avenue: the bay window at left, the front door under its stone lintel, a drainpipe between them, and the gate posts and railings in the foreground.',
+    origin: 'original',
+    theme: 'charlies-gateshead',
+    place: '239-westbourne-avenue',
+    note: 'The house where Charlie was born. Inscribed at the foot "Front door" and "239 Westbourne Ave, 24/3/74, C. H. Rogers". Supplied by Brian Rankin in October 2026.',
   },
   {
     slug: 'the-joke-shop-gateshead-on-tyne-1966',
@@ -192,6 +211,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'street-meeting-with-snow-gateshead-1972',
     title: 'Street Meeting with Snow, Gateshead',
+    medium: 'Watercolour',
     year: 1972,
     image: card('street-meeting-with-snow-gateshead-1972', 579, 405),
     alt: 'A brass band and a crowd in caps gathered in a snowy Gateshead street, a red banner raised, a pram at right.',
@@ -201,6 +221,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'st-cuthberts-church-gateshead-on-tyne-1982',
     title: 'St Cuthbert’s Church, Gateshead-on-Tyne',
+    medium: 'Oil on board',
     year: 1982,
     image: card('st-cuthberts-church-gateshead-on-tyne-1982', 605, 423),
     alt: 'A stone church with a slender spire across a snowy road under a clear blue sky.',
@@ -211,6 +232,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'the-monument-with-snow-newcastle-on-tyne-1996',
     title: 'The Monument with Snow, Newcastle-on-Tyne',
+    medium: 'Watercolour',
     year: 1996,
     image: card('the-monument-with-snow-newcastle-on-tyne-1996', 1200, 838),
     alt: "Grey's Monument in snow, the domed curve of Grey Street behind, small figures crossing the square.",
@@ -232,18 +254,22 @@ export const catalogue: Entry[] = [
   // Plates in the book
   {
     slug: 'saltwell-park',
-    title: 'Saltwell Park',
+    title: 'Saltwell Towers, Gateshead-on-Tyne',
+    medium: 'Watercolour',
+    year: 2017,
     image: book('page_039_img_000'),
     alt: 'Saltwell Towers in watercolour: a slate-spired corner tower and crenellated red brick, a bare tree in early leaf.',
     origin: 'book',
     bookPage: 39,
-    titleSource: 'location key',
+    titleSource: 'brian',
     theme: 'charlies-gateshead',
     place: 'saltwell-park',
   },
   {
     slug: 'shipley-art-gallery',
     title: 'Shipley Art Gallery',
+    medium: 'Watercolour',
+    year: 2011,
     image: book('page_038_img_001'),
     alt: 'The portico of the Shipley Art Gallery with paired columns, a red telephone box and figures at the railings.',
     origin: 'book',
@@ -254,18 +280,22 @@ export const catalogue: Entry[] = [
   },
   {
     slug: 'gateshead-cenotaph',
-    title: 'Gateshead Cenotaph',
+    title: 'The Cenotaph, Gateshead',
+    medium: 'Oil on paper',
+    year: 1983,
     image: book('page_036_img_000'),
     alt: 'The Gateshead Cenotaph in oil, a soldier in its niche, a lamp standard and a figure walking a black dog.',
     origin: 'book',
     bookPage: 36,
-    titleSource: 'location key',
+    titleSource: 'brian',
     theme: 'charlies-gateshead',
     place: 'gateshead-cenotaph',
   },
   {
     slug: 'st-cuthberts-church-bensham',
     title: 'St Cuthbert’s Church, Bensham',
+    medium: 'Oil on board',
+    year: 1980,
     image: book('page_032_img_002'),
     alt: 'A house hung with red creeper beside a broach spire and gabled transept, a figure in blue at the gate.',
     origin: 'book',
@@ -276,18 +306,21 @@ export const catalogue: Entry[] = [
   },
   {
     slug: 'cotfield-street-in-snow',
-    title: 'Cotfield Street',
+    title: 'Cotfield Street, Bensham',
+    medium: 'Oil on board',
     image: book('page_031_img_003'),
     alt: 'Cotfield Street in snow, a corner shop with a green window, a dark house closing the street, smoking chimneys.',
     origin: 'book',
     bookPage: 31,
-    titleSource: 'location key',
+    titleSource: 'brian',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',
   },
   {
     slug: 'lady-vernon-school-yard',
     title: 'Lady Vernon School Yard',
+    medium: 'Oil on paper',
+    year: 1968,
     image: book('page_032_img_000'),
     alt: 'A snowy school yard with children at play below terraced houses and a church, in a dark frame.',
     origin: 'book',
@@ -298,6 +331,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'high-street-shops-gateshead-on-tyne-2005',
     title: 'High Street Shops, Gateshead-on-Tyne',
+    medium: 'Watercolour',
     year: 2005,
     image: book('page_042_img_000'),
     alt: 'A run of shopfronts on Gateshead High Street in watercolour and pen, flags above the roofline.',
@@ -309,6 +343,8 @@ export const catalogue: Entry[] = [
   {
     slug: 'the-central-bar-gateshead',
     title: 'The Central Bar, Gateshead',
+    medium: 'Watercolour and pen',
+    year: 2010,
     image: book('page_048_img_000'),
     alt: 'The Central Bar, a tall wedge-shaped Victorian pub on a corner, drawn in pen with watercolour.',
     origin: 'book',
@@ -319,6 +355,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'at-the-cenotaph-gateshead-remembrance-sunday-2010',
     title: 'At the Cenotaph, Gateshead, Remembrance Sunday',
+    medium: 'Watercolour',
     year: 2010,
     image: book('page_037_img_000'),
     alt: 'Crowds gathered at the Gateshead Cenotaph for Remembrance Sunday, a church tower beyond.',
@@ -331,6 +368,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'cenotaph-at-shipcote-gateshead-on-tyne-2018',
     title: 'Cenotaph at Shipcote, Gateshead-on-Tyne',
+    medium: 'Watercolour',
     year: 2018,
     image: book('page_037_img_003'),
     alt: 'The Cenotaph at Shipcote in snow and bare trees, a parade passing, painted at eighty-eight.',
@@ -342,18 +380,21 @@ export const catalogue: Entry[] = [
   },
   {
     slug: 'quayside',
-    title: 'Quayside',
+    title: 'Fish Market, Quayside, Newcastle',
+    medium: 'Watercolour and pen',
+    year: 1979,
     image: book('page_076_img_000'),
     alt: 'A statue group on a pediment above an arched gateway on the Newcastle Quayside, figures at the foot.',
     origin: 'book',
     bookPage: 76,
-    titleSource: 'location key',
+    titleSource: 'brian',
     theme: 'newcastle',
     place: 'quayside-newcastle',
   },
   {
     slug: 'quayside-newcastle-on-tyne-sunday-1987',
     title: 'Quayside, Newcastle-on-Tyne, Sunday',
+    medium: 'Watercolour',
     year: 1987,
     image: book('page_078_img_000'),
     alt: 'The Quayside Sunday market seen from above, stalls and crowds along the river, with an inset of a pavement artist.',
@@ -366,6 +407,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'his-hotel-room-paris-1966',
     title: 'His hotel room, Paris',
+    medium: 'Watercolour',
     year: 1966,
     image: book('page_059_img_000'),
     alt: 'A hotel bedroom drawn in heavy black line with yellow wash: an iron bedstead, a radiator, an inscribed address.',
@@ -377,17 +419,20 @@ export const catalogue: Entry[] = [
   },
   {
     slug: 'bridge-hotel-newcastle',
-    title: 'Bridge Hotel',
+    title: 'Bridge Hotel, Newcastle-on-Tyne',
+    medium: 'Watercolour',
+    year: 1997,
     image: book('page_094_img_000'),
     alt: 'The Bridge Hotel in Newcastle beside a stone tower, the arch of the Tyne Bridge behind.',
     origin: 'book',
     bookPage: 94,
-    titleSource: 'caption',
+    titleSource: 'brian',
     theme: 'imagery',
   },
   {
     slug: 'spectators-chester-moor-2008',
     title: 'Spectators, Chester Moor',
+    medium: 'Watercolour',
     year: 2008,
     image: book('page_017_img_000'),
     alt: 'Two spectators in coats and hats watching a match, in watercolour, inscribed and dated.',
@@ -400,6 +445,7 @@ export const catalogue: Entry[] = [
   {
     slug: 'saltwell-park-2003',
     title: 'Saltwell Park, 23 April 2003',
+    medium: 'Pencil sketch',
     year: 2003,
     image: book('page_069_img_000'),
     alt: 'A pencil sketch of figures in Saltwell Park, a child on a ball, adults standing in conversation.',

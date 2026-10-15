@@ -46,6 +46,12 @@ export const metadata: Metadata = {
   },
   description:
     'The life and work of Charlie Rogers, 1930 to 2020, the self-taught Gateshead painter who documented Tyneside before the bulldozers arrived.',
+  // Google Search Console's HTML tag method. The token is the content="..."
+  // value Search Console shows; set it in Vercel and redeploy. Unset, no tag
+  // is written. Verifying by DNS record instead needs nothing here.
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
 }
 
 const personJsonLd = {

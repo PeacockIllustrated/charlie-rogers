@@ -39,11 +39,11 @@ export const places: Place[] = [
       basis:
         'Midpoint of Westbourne Avenue, Bensham. House numbering along the terrace is not recorded here, so the birthplace itself is not pinned.',
     },
-    // Kept at the 176x143 page 27 contact-sheet extract. The street with the
-    // large white hoarding and the figure walking a dog is not reproduced
-    // anywhere else among the 316 extracts, so there is no larger version of
-    // this painting to move to.
-    image: '/paintings/web/page_027_img_001.jpg',
+    // Charlie's own pencil sketch of the front door, dated 24/3/74 and
+    // supplied by Brian Rankin in October 2026. It replaces the page 27
+    // contact-sheet extract, which was a street with a white hoarding and not
+    // the house itself.
+    image: '/artwork/web/239-westbourne-avenue-gateshead-1974.jpg',
     paragraphs: [
       "Charlie was born at 239 Westbourne Avenue on 16 January 1930. The terrace house on the Bensham ridge appears in his work as both a subject and a point of origin, a fixed coordinate for everything that followed.",
       'The street still stands. The house is unremarkable from the outside, which is exactly the point. Charlie spent his career finding what was remarkable in the unremarkable before it disappeared.',

@@ -34,3 +34,13 @@ export function shopImageUrl(
 export function formatPrice(pence: number): string {
   return pence > 0 ? formatPence(pence) : 'Price on application'
 }
+
+// What a listing shows. A print comes in two editions at two prices, and the
+// row holds the lower one, so it reads "From £45.00" rather than claiming one
+// price for both.
+export function displayPrice(product: { price_pence: number; product_type: string }): string {
+  if (product.product_type === 'print' && product.price_pence > 0) {
+    return `From ${formatPence(product.price_pence)}`
+  }
+  return formatPrice(product.price_pence)
+}

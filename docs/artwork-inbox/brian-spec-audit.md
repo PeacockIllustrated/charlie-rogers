@@ -232,7 +232,7 @@ Read across all 40 messages for requests, not only the product ones.
 - **Print specifications.** "This is his description. Please include this on
   the new website." (11 June 2026). Present in
   `components/shop/PrintSpecifications.tsx`, on the shop listing and on every
-  print page, credited to Paul Wright at the Biscuit.
+  print page, credited to Paul Wright at the Biscuit Factory.
 - **Talks.** "Charlie Rogers Talks personally presented by Brian Rankin. Ask
   for details." (12 June 2026). Present on `/exhibitions`.
 - **Exhibitions and the QR codes.** Saltwell Towers and the Gateshead Central

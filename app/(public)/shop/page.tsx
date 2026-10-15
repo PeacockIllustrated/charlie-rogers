@@ -87,7 +87,11 @@ export default async function ShopPage() {
             </div>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          // grid-cols-1 rather than the implicit column: an implicit column
+          // sizes to its widest content, and iPhone Safari counts a
+          // painting's full pixel width there, which pushed the cards off the
+          // right of the screen (Brian's screenshot, 12 October 2026).
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
