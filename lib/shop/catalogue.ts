@@ -380,8 +380,8 @@ export const CATALOGUE: CatalogueProduct[] = [
   // Brian's photographs of 13 October show the limited edition of this one:
   // the mounted print, on the easel, and its certificate of authenticity.
   // Not the card design "Street meeting with snow, 1972", a different
-  // painting. The mount says 1971 and the certificate 1969, so no year is
-  // given until Brian says which; both say oil on canvas.
+  // painting. The mount label says 1971, but the certificate says 1969 and
+  // so does Charlie's signature on the painting itself, so 1969 it is.
   product({
     title: 'Street Meeting, Gateshead',
     slug: 'street-meeting-gateshead',
@@ -390,6 +390,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     dimensions: PRINT_SIZE,
     edition: PRINT_EDITION_TEXT,
     medium: 'Oil on canvas',
+    year_text: '1969',
     description:
       'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
     images: images(

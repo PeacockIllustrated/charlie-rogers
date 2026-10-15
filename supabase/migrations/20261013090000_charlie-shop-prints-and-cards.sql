@@ -44,7 +44,7 @@ UPDATE charlie_products
 SET title = 'Street Meeting, Gateshead',
     slug = 'street-meeting-gateshead',
     medium = 'Oil on canvas',
-    year_text = NULL,
+    year_text = '1969',
     description = 'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
     updated_at = now()
 WHERE slug = 'street-meeting-with-snow-gateshead-1972'
@@ -62,7 +62,7 @@ INSERT INTO charlie_products
 VALUES
   ('Street Meeting, Gateshead', 'street-meeting-gateshead',
    'Shown here as the limited edition: a giclée print in its mount, with the certificate of authenticity that comes with every one of the fifty.',
-   4500, 'print', 'published', 'Oil on canvas', '40.6 x 50.8 cm (16 x 20 in)', NULL, 'Standard print, or limited edition of 50', 0, false),
+   4500, 'print', 'published', 'Oil on canvas', '40.6 x 50.8 cm (16 x 20 in)', '1969', 'Standard print, or limited edition of 50', 0, false),
   ('Greeting card, The Monument with Snow, Newcastle-on-Tyne', 'greeting-card-the-monument-with-snow-newcastle-on-tyne-1996',
    'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.
 
