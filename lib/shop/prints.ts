@@ -19,3 +19,6 @@ export const PRINT_FROM_PENCE = Math.min(...PRINT_EDITIONS.map((e) => e.price_pe
 export const PRINT_EDITION_TEXT = 'Standard print, or limited edition of 50'
 
 export const PRINT_DELIVERY = 'Free delivery'
+
+// Brian Rankin, 23 October 2026.
+export const PRINT_STAMP = 'Each print is embossed with the Charlie Rogers blind stamp.'

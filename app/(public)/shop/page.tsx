@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Button } from '@/components/Button'
 import { ProductCard } from '@/components/shop/ProductCard'
 import { PrintSpecifications } from '@/components/shop/PrintSpecifications'
+import { GalleryVisit } from '@/components/GalleryVisit'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { CATALOGUE } from '@/lib/shop/catalogue'
 import type { ShopProduct } from '@/lib/shop/types'
@@ -65,6 +66,13 @@ export default async function ShopPage() {
             : 'The book, the cards, and the paintings themselves. There is no checkout yet, so everything here is by enquiry.'}
         </p>
       </header>
+
+      {/* Brian Rankin, 23 October 2026: until the shop takes orders online,
+          customers order through his gallery, so its details lead the shop
+          in the run up to Christmas. */}
+      <div className="mx-auto mt-12 max-w-content px-6">
+        <GalleryVisit id="shop-gallery" />
+      </div>
 
       <div className="mt-12 border-y border-rule bg-paper-warm py-12 lg:py-16">
         <div className="mx-auto max-w-content px-6">

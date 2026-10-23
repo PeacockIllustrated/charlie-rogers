@@ -15,6 +15,8 @@ import { isCheckoutOpen } from '@/lib/shop/checkout-open'
 import { canStoreOrders } from '@/lib/shop/orders'
 import { enquiryPrompt } from '@/lib/shop/enquiry-input'
 import { EnquiryForm } from '@/components/shop/EnquiryForm'
+import Link from 'next/link'
+import { gallery } from '@/lib/content/gallery'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
@@ -176,6 +178,26 @@ export default async function ProductDetailPage({
                     : 'This is not sold online yet, and enquiries are not open on this version of the site.'}
                 </p>
               </>
+            )}
+
+            {/* Brian Rankin, 23 October 2026: until orders are taken here,
+                customers can order through his gallery. */}
+            {!canAdd && !isSold && !soldOut && (
+              <p className="mt-6 border-t border-rule pt-5 font-serif text-body text-ink-soft">
+                Or order through the gallery: call{' '}
+                <a href={gallery.phoneHref} className="tabular-nums text-bensham underline underline-offset-4">
+                  {gallery.phone}
+                </a>
+                , email{' '}
+                <a href={`mailto:${gallery.email}`} className="break-words text-bensham underline underline-offset-4">
+                  {gallery.email}
+                </a>
+                , or{' '}
+                <Link href="/gallery" className="text-bensham underline underline-offset-4">
+                  visit the gallery
+                </Link>{' '}
+                in Gateshead.
+              </p>
             )}
           </div>
         </div>

@@ -417,7 +417,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     // printed product and nothing he has sent contradicts it.
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A pack of five cards reproducing Charlie Rogers paintings and sketches: The Monument with Snow, Newcastle-on-Tyne 1996; St Cuthbert’s Church, Gateshead-on-Tyne 1982; Bensham Road, Gateshead 1970; Street meeting with snow, Gateshead 1972; and Cotfield Street, Bensham, Gateshead-on-Tyne. Each card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A pack of five cards reproducing Charlie Rogers paintings and sketches: The Monument with Snow, Newcastle-on-Tyne 1996; St Cuthbert’s Church, Gateshead-on-Tyne 1982; Bensham Road, Gateshead 1970; Street meeting with snow, Gateshead 1972; and Cotfield Street, Bensham, Gateshead-on-Tyne. Each card is stamped with the official Charlie Rogers logo. Single cards are also available, £2.95 each plus postage.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     // The five designs, extracted from Brian's Charlie Rogers Christmas Card
     // Selection PDF of 17 September 2026. Alt text is his own caption wording.
     //
@@ -449,7 +449,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     ]),
   }),
   // Single cards, £2.95 each including the envelope: Brian Rankin, 12 October
-  // 2026. One listing per design rather than one listing with a choice, so an
+  // 2026; "plus postage", 23 October 2026. One listing per design rather than one listing with a choice, so an
   // order says which card was bought. Stock is the same placeholder 100 as
   // the pack until he gives a print run.
   product({
@@ -460,7 +460,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-the-monument-with-snow-newcastle-on-tyne-1996', [{ file: 'the-monument-with-snow-newcastle-on-tyne-1996.jpg', alt: 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour' }]),
   }),
 
@@ -472,7 +472,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-st-cuthberts-church-gateshead-on-tyne-1982', [{ file: 'st-cuthberts-church-gateshead-on-tyne-1982.jpg', alt: 'St Cuthbert’s Church, Gateshead-on-Tyne, 1982, oil' }]),
   }),
 
@@ -484,7 +484,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-bensham-road-gateshead-1970', [{ file: 'bensham-road-gateshead-1970.jpg', alt: 'Bensham Road, Gateshead, 1970, watercolour' }]),
   }),
 
@@ -496,7 +496,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-street-meeting-with-snow-gateshead-1972', [{ file: 'street-meeting-with-snow-gateshead-1972.jpg', alt: 'Street meeting with snow, Gateshead, 1972, watercolour' }]),
   }),
 
@@ -508,7 +508,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-cotfield-street-bensham-gateshead', [{ file: 'cotfield-street-bensham-gateshead.jpg', alt: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour' }]),
   }),
 ]

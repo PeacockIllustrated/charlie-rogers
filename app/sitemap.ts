@@ -8,7 +8,7 @@ import { themes } from '@/lib/content/themes'
 // The public archive only. The shop is left out while it is noindex and
 // unlinked (see docs/SHOP.md); add it here in the same change that opens it.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ['', '/story', '/work', '/places', '/people', '/timeline', '/exhibitions', '/book']
+  const pages = ['', '/story', '/work', '/places', '/people', '/timeline', '/exhibitions', '/gallery', '/book']
 
   return [
     ...pages.map((path) => ({ url: `${SITE_URL}${path}` })),
