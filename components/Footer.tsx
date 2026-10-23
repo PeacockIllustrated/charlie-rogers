@@ -10,6 +10,7 @@ const footerLinks = [
   { href: '/people', label: 'People' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/exhibitions', label: 'Exhibitions' },
+  { href: '/gallery', label: 'Visit the gallery' },
   { href: '/book', label: 'The book' },
   { href: '/shop', label: 'Shop' },
 ]

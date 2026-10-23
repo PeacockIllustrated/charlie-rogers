@@ -7,9 +7,10 @@
 // phrase, so the apostrophe is dropped here. Everything else is his wording.
 //
 // The size, the two editions and free delivery come from his email of 12
-// October 2026; see lib/shop/prints.ts.
+// October 2026; see lib/shop/prints.ts. The blind stamp is from his email of
+// 23 October 2026.
 import Image from 'next/image'
-import { PRINT_DELIVERY, PRINT_EDITIONS, PRINT_SIZE } from '@/lib/shop/prints'
+import { PRINT_DELIVERY, PRINT_EDITIONS, PRINT_SIZE, PRINT_STAMP } from '@/lib/shop/prints'
 import { formatPence } from '@/lib/shop/utils'
 
 export function PrintSpecifications() {
@@ -41,6 +42,10 @@ export function PrintSpecifications() {
             <dd className="font-serif text-body text-bensham">{formatPence(e.price_pence)}</dd>
           </div>
         ))}
+        <div className="py-3">
+          <dt className="sr-only">Blind stamp</dt>
+          <dd className="font-serif text-body text-ink">{PRINT_STAMP}</dd>
+        </div>
         <div className="py-3">
           <dt className="sr-only">Delivery</dt>
           <dd className="font-serif text-body text-ink">{PRINT_DELIVERY}</dd>
