@@ -49,11 +49,22 @@ export default async function AdminAppLayout({
     )
   }
 
+  // What is waiting, for the counts beside Orders and Enquiries. A failed
+  // query (a table not migrated yet) simply shows no count.
+  const [ordersRes, enquiriesRes] = await Promise.all([
+    supabase.from('charlie_orders').select('id', { count: 'exact', head: true }).in('status', ['pending', 'paid']),
+    supabase.from('charlie_enquiries').select('id', { count: 'exact', head: true }).eq('status', 'new'),
+  ])
+  const counts = {
+    '/admin/orders': ordersRes.error ? 0 : (ordersRes.count ?? 0),
+    '/admin/enquiries': enquiriesRes.error ? 0 : (enquiriesRes.count ?? 0),
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-paper-warm md:flex-row">
-      <AdminSidebar userEmail={user.email ?? 'Signed in'} />
+      <AdminSidebar userEmail={user.email ?? 'Signed in'} counts={counts} />
       <div className="flex-1 min-w-0">
-        <main className="p-6 md:p-10 max-w-5xl">{children}</main>
+        <main className="p-6 md:p-10 max-w-6xl">{children}</main>
       </div>
     </div>
   )

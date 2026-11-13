@@ -3,13 +3,14 @@
 A test commerce surface for the Charlie Rogers site, modelled on the
 durham-stickmakers product CMS. Products (books, prints, originals) are managed
 through an admin dashboard backed by Supabase, and shown on a public `/shop`.
-The book and the greeting card pack can be put in a basket and ordered;
-everything else is by enquiry. Payment is a plug-in point: orders are taken
+The book, the greeting cards and the prints can be put in a basket and
+ordered; originals are by enquiry. Payment is a plug-in point: orders are taken
 without online payment until Stripe is added. See "Checkout and payment".
 
 `/shop` is linked from the site header and footer (added 12 October 2026 at
-Tom's request). It is still set to `noindex` and disallowed in `robots.ts`, so
-search engines leave it alone until that is lifted.
+Tom's request). Since 13 November 2026 the shop and its product pages are
+open to search engines, in the sitemap, and carry Product structured data;
+the basket, checkout and order pages stay `noindex` and disallowed.
 
 ## Architecture
 
@@ -99,11 +100,35 @@ enough for a handful of admins; set up custom SMTP in Supabase if it is not.
 
 ### What can be bought
 
-Only published, priced products of type `book` or `other` with stock left
-(`purchasability()` in `lib/shop/commerce.ts`). Prints and originals are always
-by enquiry: the files we hold are not print quality, and CLAUDE.md rules out a
-print purchase flow against them. `charlie_place_order` applies the same rule
-in the database, so the two must be widened together when scans arrive.
+Published, priced products of type `book`, `other` (the cards) or `print`
+with stock left (`purchasability()` in `lib/shop/commerce.ts`). Originals are
+always by enquiry.
+
+Prints have been saleable since 13 November 2026. CLAUDE.md held them back
+because the files on the site are around 108ppi, but Brian Rankin confirmed
+on 12 October 2026 that Paul Wright prints from his own scans of the
+originals, so our files are never what is printed.
+
+A print is bought as one of its editions, rows in `charlie_product_options`:
+a standard print (£45, made to order, stock left blank) and a limited edition
+of 50 (£120, counted down). Each edition is priced and counted on its own;
+the print's own price is only the "From" figure. Editions are edited in the
+admin under Editions on each print, and a print added in the admin gets them
+with one button. Prints are delivered free, so an order of prints alone has
+no postage; anything else in the order brings the UK postage from Settings.
+
+`charlie_place_order` applies the same rules in the database (migration
+20261113090000), so the two must change together.
+
+### Taking orders before Stripe
+
+With the checkout set to "Open, payment by arrangement", a customer fills a
+basket and places an order with no card payment. The order reserves its
+stock, the shop gets an email with the order and the customer's details
+(reply to it to reach them), and the customer gets a receipt saying nothing
+has been taken and that the shop will be in touch to arrange payment. Mark
+the order paid in the admin once the money arrives. Both emails need
+email (Make or Resend, see "Setting up email") and the "Send new orders to" address.
 
 ### The flow
 
@@ -145,7 +170,7 @@ table and takes effect at once:
 
 The page also shows, as yes or no, the two things only the hosting
 environment can set: `SUPABASE_SERVICE_ROLE_KEY` (needed to save any order)
-and `RESEND_API_KEY` with `SHOP_EMAIL_FROM` (needed to send the order email).
+and the email values in "Setting up email" (needed to send the order email).
 Secrets never go in the settings table.
 
 Before the migration is applied, or on a preview without the service key,
@@ -189,8 +214,7 @@ The painting pages in the catalogue link straight to it (`#enquire`).
   service role. A hidden honeypot field and a limit of five enquiries per
   email address an hour keep scripts out.
 - The admins are emailed at the "Send new orders and enquiries to" address in
-  Settings, with reply-to set to the customer, when `RESEND_API_KEY` and
-  `SHOP_EMAIL_FROM` are set. Optional: every enquiry is listed regardless.
+  Settings, with reply-to set to the customer, once email is set up. Optional: every enquiry is listed regardless.
 - `/admin/enquiries` lists them, new first, with buttons to mark replied,
   close and reopen. The dashboard shows how many are waiting.
 - The table needs `20261012090000_charlie-shop-enquiries.sql`. It has no
@@ -198,3 +222,57 @@ The painting pages in the catalogue link straight to it (`#enquire`).
 - Without `SUPABASE_SERVICE_ROLE_KEY` enquiries cannot be saved, so the page
   falls back to a mailto to `NEXT_PUBLIC_ENQUIRY_EMAIL`, or says enquiries are
   not open if that is unset too.
+
+## Setting up email
+
+Until email is set up, orders and enquiries are saved and listed in the admin,
+but nobody is emailed, and each skipped email is logged as a warning. The
+dashboard's "Ready for orders" list and Settings both say so.
+
+The site can send through either of two services. Make is used when both of
+its values are set; otherwise Resend.
+
+### Make (the "client sites · send email" scenario)
+
+OneDesign's Make account has one scenario that sends email for client sites.
+It starts with a webhook, then a router with one route per client. Each route
+checks the client name and a key, answers the site, and sends through a
+connected mailbox with that client's from address.
+
+The site posts this JSON to the webhook:
+
+```json
+{ "client": "charlie", "key": "...", "to": "...", "subject": "...", "html": "...", "replyTo": "..." }
+```
+
+1. In Make, open "client sites · send email" and add a route for Charlie, a
+   copy of an existing one with the filter `client` = `charlie` and `key` = a
+   long random string. Set the from address on its Send an email module to an
+   address the connected mailbox is allowed to send as.
+2. Turn the scenario on.
+3. In Vercel, under the project's Settings, Environment Variables, add for
+   Production: `MAKE_EMAIL_WEBHOOK_URL` (the scenario's webhook address) and
+   `MAKE_EMAIL_KEY` (the same random string). Redeploy.
+4. In Admin > Settings, save the "Send new orders and enquiries to" address,
+   then press "Send a test email".
+
+### Resend
+
+1. Create a Resend account and add the domain `charlierogers.art`. Resend
+   lists a few DNS records (SPF, DKIM); add them where the domain's DNS is
+   managed and wait for Resend to show the domain as verified.
+2. Create an API key in Resend.
+3. In Vercel, add for Production: `RESEND_API_KEY` (the key) and
+   `SHOP_EMAIL_FROM`, for example `Charlie Rogers <shop@charlierogers.art>`.
+   Redeploy.
+4. In Admin > Settings, save the notification address and press "Send a test
+   email".
+
+## Admin dashboard
+
+The dashboard opens with "Ready for orders", a checklist of what has to be
+true before an order reaches anyone, which folds to one line once it is all
+done. Below it: orders waiting for payment or posting, new enquiries, what
+has sold by product and edition, and stock running low. Orders and Enquiries
+have ready-written emails (asking for payment, saying it has been posted,
+replying to an enquiry) that open in the admin's own mail program.

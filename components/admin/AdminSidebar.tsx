@@ -12,7 +12,7 @@ const SECTIONS = [
   { href: '/admin/settings', label: 'Settings' },
 ]
 
-export function AdminSidebar({ userEmail }: { userEmail: string }) {
+export function AdminSidebar({ userEmail, counts = {} }: { userEmail: string; counts?: Record<string, number> }) {
   const pathname = usePathname()
 
   return (
@@ -35,13 +35,24 @@ export function AdminSidebar({ userEmail }: { userEmail: string }) {
               key={s.href}
               href={s.href}
               className={cn(
-                'block px-3 py-2 font-sans text-small font-medium transition-colors',
+                'flex items-center justify-between gap-3 px-3 py-2 font-sans text-small font-medium transition-colors',
                 active
                   ? 'bg-bensham text-paper'
                   : 'text-ink-soft hover:bg-paper-warm',
               )}
             >
-              {s.label}
+              <span>{s.label}</span>
+              {(counts[s.href] ?? 0) > 0 && (
+                <span
+                  className={cn(
+                    'min-w-[1.5rem] px-1.5 py-0.5 text-center font-sans text-xs tabular-nums',
+                    active ? 'bg-paper text-bensham' : 'bg-bensham text-paper',
+                  )}
+                  aria-label={`${counts[s.href]} waiting`}
+                >
+                  {counts[s.href]}
+                </span>
+              )}
             </Link>
           )
         })}

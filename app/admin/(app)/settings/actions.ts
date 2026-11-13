@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/admin-auth'
 import { poundsToPence } from '@/lib/shop/product-input'
+import { sendTestEmail } from '@/lib/shop/notify'
 
 export interface SettingsState {
   ok?: boolean
@@ -54,4 +55,26 @@ export async function saveShopSettings(_prev: SettingsState, formData: FormData)
   revalidatePath('/shop', 'layout')
   revalidatePath('/admin/settings')
   return { ok: true }
+}
+
+export interface TestEmailState {
+  ok?: boolean
+  message?: string
+}
+
+// Send a test email to the notification address saved in Settings, so the
+// admin can see whether order and enquiry emails will arrive.
+export async function sendTestEmailAction(_prev: TestEmailState, _formData: FormData): Promise<TestEmailState> {
+  const { user, error: authError } = await requireAdmin()
+  if (authError || !user) return { ok: false, message: 'You are not signed in as an admin.' }
+
+  const supabase = await createSupabaseServerClient()
+  const { data } = await supabase.from('charlie_shop_settings').select('order_notify_email').eq('id', true).maybeSingle()
+  const to = (data as { order_notify_email: string | null } | null)?.order_notify_email
+  if (!to) return { ok: false, message: 'Save an address under "Send new orders and enquiries to" first.' }
+
+  const result = await sendTestEmail(to)
+  return result.ok
+    ? { ok: true, message: `Sent to ${to}. If it has not arrived within a few minutes, check the spam folder.` }
+    : { ok: false, message: `Not sent. ${result.reason}` }
 }

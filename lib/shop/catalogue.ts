@@ -1,5 +1,5 @@
 import type { ShopProduct } from './types'
-import { PRINT_EDITION_TEXT, PRINT_FROM_PENCE, PRINT_SIZE } from './prints'
+import { PRINT_EDITIONS, PRINT_EDITION_TEXT, PRINT_FROM_PENCE, PRINT_SIZE } from './prints'
 
 // The local catalogue, used when Supabase is not configured so the shop can be
 // reviewed before any database exists. Once Supabase is pointed at, the live
@@ -76,6 +76,22 @@ function product(
     created_at: NOW,
     updated_at: NOW,
     images: [],
+    // A priced print is sold in Brian's two editions. Mirrors the
+    // charlie_product_options rows written by 20261113090000.
+    options:
+      p.product_type === 'print' && (p.price_pence ?? 0) > 0
+        ? PRINT_EDITIONS.map((e, i) => ({
+            id: `${p.slug}-${e.code}`,
+            product_id: p.slug,
+            code: e.code,
+            name: e.name,
+            detail: e.detail,
+            price_pence: e.price_pence,
+            stock_count: e.stock_count,
+            display_order: i,
+            is_active: true,
+          }))
+        : [],
     ...p,
   }
 }
@@ -404,6 +420,34 @@ export const CATALOGUE: CatalogueProduct[] = [
     ),
   }),
 
+  // The fifth painting on Brian's Charlie Rogers Collection info sheet, which
+  // he named on 13 October 2026. Reproduced in the book on page 76; the
+  // picture here is the plate from the book, which is enough for the web. The
+  // print itself is made by Paul Wright from his scan of the original.
+  product({
+    title: 'Fish Market, Quayside, Newcastle',
+    slug: 'fish-market-quayside-newcastle-1979',
+    product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
+    medium: 'Watercolour and pen',
+    year_text: '1979',
+    description:
+      'Charlie’s 1979 painting of the Fish Market on Newcastle Quayside, in watercolour and pen. Reproduced in Pursued by Bulldozers.',
+    images: [
+      {
+        id: 'fish-market-quayside-newcastle-1979-1',
+        product_id: 'fish-market-quayside-newcastle-1979',
+        storage_path: '/paintings/web/page_076_img_000.jpg',
+        alt_text: 'Fish Market, Quayside, Newcastle, 1979: a statue group on a pediment above an arched gateway on the Newcastle Quayside, figures at the foot.',
+        display_order: 0,
+        is_primary: true,
+        created_at: NOW,
+      },
+    ],
+  }),
+
   product({
     title: 'Greeting card collection',
     slug: 'greeting-card-collection',
@@ -417,7 +461,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     // printed product and nothing he has sent contradicts it.
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A pack of five cards reproducing Charlie Rogers paintings and sketches: The Monument with Snow, Newcastle-on-Tyne 1996; St Cuthbert’s Church, Gateshead-on-Tyne 1982; Bensham Road, Gateshead 1970; Street meeting with snow, Gateshead 1972; and Cotfield Street, Bensham, Gateshead-on-Tyne. Each card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A pack of five cards reproducing Charlie Rogers paintings and sketches: The Monument with Snow, Newcastle-on-Tyne 1996; St Cuthbert’s Church, Gateshead-on-Tyne 1982; Bensham Road, Gateshead 1970; Street meeting with snow, Gateshead 1972; and Cotfield Street, Bensham, Gateshead-on-Tyne. Each card is stamped with the official Charlie Rogers logo. Single cards are also available, £2.95 each plus postage.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     // The five designs, extracted from Brian's Charlie Rogers Christmas Card
     // Selection PDF of 17 September 2026. Alt text is his own caption wording.
     //
@@ -449,7 +493,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     ]),
   }),
   // Single cards, £2.95 each including the envelope: Brian Rankin, 12 October
-  // 2026. One listing per design rather than one listing with a choice, so an
+  // 2026; "plus postage", 23 October 2026. One listing per design rather than one listing with a choice, so an
   // order says which card was bought. Stock is the same placeholder 100 as
   // the pack until he gives a print run.
   product({
@@ -460,7 +504,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of The Monument with Snow, Newcastle-on-Tyne 1996, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-the-monument-with-snow-newcastle-on-tyne-1996', [{ file: 'the-monument-with-snow-newcastle-on-tyne-1996.jpg', alt: 'The Monument with Snow, Newcastle-on-Tyne, 1996, watercolour' }]),
   }),
 
@@ -472,7 +516,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of St Cuthbert’s Church, Gateshead-on-Tyne 1982, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-st-cuthberts-church-gateshead-on-tyne-1982', [{ file: 'st-cuthberts-church-gateshead-on-tyne-1982.jpg', alt: 'St Cuthbert’s Church, Gateshead-on-Tyne, 1982, oil' }]),
   }),
 
@@ -484,7 +528,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Bensham Road, Gateshead 1970, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-bensham-road-gateshead-1970', [{ file: 'bensham-road-gateshead-1970.jpg', alt: 'Bensham Road, Gateshead, 1970, watercolour' }]),
   }),
 
@@ -496,7 +540,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Street meeting with snow, Gateshead 1972, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-street-meeting-with-snow-gateshead-1972', [{ file: 'street-meeting-with-snow-gateshead-1972.jpg', alt: 'Street meeting with snow, Gateshead, 1972, watercolour' }]),
   }),
 
@@ -508,7 +552,7 @@ export const CATALOGUE: CatalogueProduct[] = [
     stock_count: 100,
     dimensions: 'A6, 105 x 148mm',
     description:
-      'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
+      'A single greeting card of Cotfield Street, Bensham, Gateshead-on-Tyne, from the greeting card collection. £2.95 plus postage, including the envelope. The card is stamped with the official Charlie Rogers logo.\n\nAll Charlie Rogers paintings and sketches © Charles Rogers Junior.',
     images: images('greeting-card-cotfield-street-bensham-gateshead', [{ file: 'cotfield-street-bensham-gateshead.jpg', alt: 'Cotfield Street, Bensham, Gateshead-on-Tyne, watercolour' }]),
   }),
 ]

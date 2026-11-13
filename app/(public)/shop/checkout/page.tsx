@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic'
 // the page needs to change.
 const COPY = {
   manual: {
-    note: 'No payment is taken online. Placing the order reserves your copies, and we will email you to arrange payment and confirm postage before anything is sent.',
+    note: 'No payment is taken online yet. Placing the order reserves it, and we will email you to arrange payment, and confirm any postage, before anything is sent.',
     submit: 'Place order',
   },
   stripe: {
@@ -40,8 +40,8 @@ export default async function CheckoutPage() {
           <div className="max-w-reading border border-rule bg-paper-warm p-6 sm:p-8">
             <h2 className="font-serif text-h3">Online ordering is not open yet</h2>
             <p className="mt-3 font-serif text-body text-ink-soft">
-              Your basket is kept in this browser in the meantime. The book and
-              the cards can still be asked about from their pages in the shop.
+              Your basket is kept in this browser in the meantime. Everything in
+              the shop can still be asked about from its own page.
             </p>
             <div className="mt-8">
               <Button href="/shop">Back to the shop</Button>

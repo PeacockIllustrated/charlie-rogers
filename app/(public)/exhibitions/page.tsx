@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { SectionHeading } from '@/components/SectionHeading'
+import Link from 'next/link'
 import { BookCallout } from '@/components/BookCallout'
+import { GalleryVisit } from '@/components/GalleryVisit'
+import { gallery } from '@/lib/content/gallery'
 import { exhibitions } from '@/lib/content/exhibitions'
 import type { Exhibition } from '@/lib/content/types'
 
@@ -120,9 +123,8 @@ export default function ExhibitionsPage() {
 
             {/* Brian Rankin offers these and asked for them on the site, 12 June 2026.
                 His wording: "Charlie Rogers Talks personally presented by Brian
-                Rankin. Ask for details." Deliberately no link: the site has no
-                contact page or address to send an enquiry to yet, and inventing one
-                would be worse than leaving his "ask for details" as written. */}
+                Rankin. Ask for details." Details now go to his gallery, whose
+                address and phone he sent on 15 October 2026. */}
             <section
               className="border border-rule border-t-2 border-t-ink bg-paper p-5 sm:p-6"
               aria-labelledby="talks-heading"
@@ -137,11 +139,25 @@ export default function ExhibitionsPage() {
                 person by Brian Rankin, who compiled Pursued by Bulldozers.
               </p>
               <p className="mt-4 font-sans text-small text-ink-mute">
-                Ask for details.
+                Ask for details at the gallery, on{' '}
+                <a href={gallery.phoneHref} className="tabular-nums text-bensham underline underline-offset-4">
+                  {gallery.phone}
+                </a>
+                , or see{' '}
+                <Link href="/gallery" className="text-bensham underline underline-offset-4">
+                  visiting the gallery
+                </Link>
+                .
               </p>
             </section>
           </div>
         </div>
+      </div>
+
+      {/* The World of Charlie Rogers Exhibition hangs at Brian Rankin's
+          gallery now, so the record ends where it can be seen. */}
+      <div className="mx-auto mt-16 max-w-content px-6">
+        <GalleryVisit id="exhibitions-gallery" />
       </div>
 
       <div className="mx-auto max-w-content px-6">

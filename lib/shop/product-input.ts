@@ -165,8 +165,9 @@ export function productWarnings(p: {
 }): string[] {
   const out: string[] = []
   // Books and the card pack are ordered online, so their price and stock
-  // matter. Prints and originals are by enquiry, where stock means nothing
-  // and no price is the norm until Brian sets one.
+  // matter. Prints sell through their editions (charlie_product_options) and
+  // originals are by enquiry, so neither uses the listing stock or price
+  // for sale.
   const online = p.product_type === undefined || p.product_type === 'book' || p.product_type === 'other'
   if (p.status === 'published') {
     if (p.imageCount === 0) out.push('Published with no image')

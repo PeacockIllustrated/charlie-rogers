@@ -6,6 +6,7 @@ import { ClearBasket } from '@/components/shop/ClearBasket'
 import { OrderTotals } from '@/components/shop/OrderSummary'
 import { fetchOrderForCustomer, ORDER_STATUS_LABELS } from '@/lib/shop/orders'
 import { formatPence } from '@/lib/shop/utils'
+import { displayTitle } from '@/lib/shop/commerce'
 
 export const metadata: Metadata = {
   title: 'Your order',
@@ -42,7 +43,7 @@ export default async function OrderPage({
       <p className="mt-6 max-w-reading font-serif text-lead text-ink-soft">
         {order.status === 'pending'
           ? order.payment_provider === 'manual'
-            ? `Your order is reserved. No payment has been taken yet: we will email ${order.customer_email} to arrange payment and confirm postage before anything is sent.`
+            ? `Your order is reserved. No payment has been taken yet: we will email ${order.customer_email} to arrange payment${order.postage_pence === null ? ' and confirm postage' : ''} before anything is sent.`
             : 'Your order is reserved while payment is confirmed.'
           : order.status === 'cancelled'
             ? 'This order has been cancelled.'
@@ -56,9 +57,9 @@ export default async function OrderPage({
         <section className="lg:col-span-7">
           <ul className="border-t border-rule">
             {order.items.map((item) => (
-              <li key={item.product_slug} className="flex justify-between gap-4 border-b border-rule py-4">
+              <li key={`${item.product_slug}:${item.option_code ?? ''}`} className="flex justify-between gap-4 border-b border-rule py-4">
                 <span className="font-serif text-body">
-                  {item.product_title}
+                  {displayTitle(item.product_title, item.option_name)}
                   <span className="font-sans text-small text-ink-mute"> &times; {item.quantity}</span>
                 </span>
                 <span className="font-serif text-body">{formatPence(item.line_total_pence)}</span>

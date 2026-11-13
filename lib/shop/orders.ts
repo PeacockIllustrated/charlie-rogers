@@ -24,6 +24,9 @@ export interface OrderItem {
   product_slug: string
   product_title: string
   product_type: ProductType
+  // The edition bought, for a print. Null for everything else.
+  option_code: string | null
+  option_name: string | null
   quantity: number
   unit_price_pence: number
   line_total_pence: number
@@ -120,7 +123,7 @@ export async function placeOrder(input: {
 }
 
 const ORDER_COLUMNS =
-  'id, order_number, status, customer_name, customer_email, customer_phone, shipping_address, notes, subtotal_pence, postage_pence, total_pence, payment_provider, created_at, items:charlie_order_items(product_slug, product_title, product_type, quantity, unit_price_pence, line_total_pence)'
+  'id, order_number, status, customer_name, customer_email, customer_phone, shipping_address, notes, subtotal_pence, postage_pence, total_pence, payment_provider, created_at, items:charlie_order_items(product_slug, product_title, product_type, option_code, option_name, quantity, unit_price_pence, line_total_pence)'
 
 // The customer's own view of an order. Both the number and the token must
 // match; a wrong token is indistinguishable from a missing order.

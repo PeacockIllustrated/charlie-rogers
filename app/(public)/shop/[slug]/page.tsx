@@ -9,12 +9,16 @@ import { displayPrice, cn } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS, type ShopProduct } from '@/lib/shop/types'
 import { createSupabaseServerClient, isSupabaseConfigured } from '@/lib/supabase/server'
 import { catalogueBySlug } from '@/lib/shop/catalogue'
-import { purchasability, maxQuantity } from '@/lib/shop/commerce'
-import { AddToBasket } from '@/components/shop/AddToBasket'
+import { purchasability, maxQuantity, activeOptions } from '@/lib/shop/commerce'
+import { AddToBasket, type BasketChoice } from '@/components/shop/AddToBasket'
 import { isCheckoutOpen } from '@/lib/shop/checkout-open'
 import { canStoreOrders } from '@/lib/shop/orders'
 import { enquiryPrompt } from '@/lib/shop/enquiry-input'
 import { EnquiryForm } from '@/components/shop/EnquiryForm'
+import Link from 'next/link'
+import { gallery } from '@/lib/content/gallery'
+import { SITE_URL } from '@/lib/site'
+import { shopImageUrl } from '@/lib/shop/utils'
 
 async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   // No database yet, so fall back to the local catalogue. See lib/shop/catalogue.ts.
@@ -22,7 +26,7 @@ async function fetchProduct(slug: string): Promise<ShopProduct | null> {
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
     .from('charlie_products')
-    .select('*, images:charlie_product_images(*)')
+    .select('*, images:charlie_product_images(*), options:charlie_product_options(*)')
     .eq('slug', slug)
     .in('status', ['published', 'sold'])
     .maybeSingle()
@@ -50,7 +54,7 @@ export async function generateMetadata({
     title: product.meta_title ?? product.title,
     description:
       product.meta_description ?? product.description?.slice(0, 160) ?? undefined,
-    robots: { index: false, follow: false },
+    alternates: { canonical: `/shop/${product.slug}` },
   }
 }
 
@@ -65,13 +69,21 @@ export default async function ProductDetailPage({
 
   const isSold = product.status === 'sold'
   const saleable = purchasability(product)
-  // Out of stock is "sold out" only for things that are sold online; a print
-  // at stock 0 is by enquiry, not sold out.
+  // Out of stock is "sold out" only for things that are sold online. A print
+  // is sold out only when every one of its editions is.
   const soldOut = !saleable.ok && saleable.reason === 'sold-out'
-  // Offer the basket only when an order can actually be placed. Until then the
-  // book and the cards fall back to enquiry like everything else, so nobody
+  // Offer the basket only when an order can actually be placed. Until then
+  // everything falls back to enquiry, so nobody
   // fills a basket they cannot check out.
   const canAdd = saleable.ok && (await isCheckoutOpen())
+  // A print is bought as one of its editions, each priced and counted on its own.
+  const choices: BasketChoice[] = activeOptions(product).map((o) => ({
+    code: o.code,
+    name: o.name,
+    detail: o.detail,
+    pricePence: o.price_pence,
+    maxQuantity: maxQuantity(product, o.code),
+  }))
   // Read literally: Next inlines NEXT_PUBLIC_ variables by matching source text.
   const enquiryEmail = process.env.NEXT_PUBLIC_ENQUIRY_EMAIL
 
@@ -82,8 +94,41 @@ export default async function ProductDetailPage({
   if (product.year_text) spec.push({ label: 'Year', value: product.year_text })
   if (product.edition) spec.push({ label: 'Edition', value: product.edition })
 
+  // Product structured data, so search results can show the price and
+  // whether it is in stock. Offers follow what can actually be ordered.
+  const primary = product.images?.find((i) => i.is_primary) ?? product.images?.[0]
+  const imageUrl = shopImageUrl(primary?.storage_path)
+  const offer = (pricePence: number, inStock: boolean, name?: string) => ({
+    '@type': 'Offer',
+    ...(name ? { name } : {}),
+    price: (pricePence / 100).toFixed(2),
+    priceCurrency: 'GBP',
+    availability: inStock ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut',
+    url: `${SITE_URL}/shop/${product.slug}`,
+  })
+  const offers =
+    choices.length > 0
+      ? choices.map((c) => offer(c.pricePence, c.maxQuantity > 0, c.name))
+      : product.price_pence > 0 && product.product_type !== 'original'
+        ? [offer(product.price_pence, !isSold && !soldOut)]
+        : []
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.meta_description ?? product.description?.slice(0, 300) ?? undefined,
+    image: imageUrl ? (imageUrl.startsWith('/') ? `${SITE_URL}${imageUrl}` : imageUrl) : undefined,
+    brand: { '@type': 'Brand', name: 'Charlie Rogers' },
+    ...(offers.length > 0 ? { offers } : {}),
+  }
+
   return (
     <div className="mx-auto max-w-content px-6 py-12">
+      <script
+        type="application/ld+json"
+        // Built here from our own fields; < is escaped so no value can close the tag.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      />
       <BackLink href="/shop">All products</BackLink>
 
       {/* grid-cols-1, not the implicit column, and min-w-0 on both sides:
@@ -129,10 +174,9 @@ export default async function ProductDetailPage({
             </dl>
           )}
 
-          {/* The book and the card pack go in the basket. Everything else,
-              the paintings above all, is by enquiry: the files we hold are not
-              print quality (see lib/shop/commerce.ts), so nothing here may be
-              bought online until high resolution scans arrive.
+          {/* The book, the cards and the prints go in the basket once the
+              checkout is open (see lib/shop/commerce.ts). Originals, and
+              anything while the checkout is closed, are by enquiry.
 
               Enquiries go to the admins: saved for /admin/enquiries and
               emailed to the address in Settings. Without the service role
@@ -142,7 +186,7 @@ export default async function ProductDetailPage({
               button that does nothing. */}
           <div className="mt-8">
             {canAdd ? (
-              <AddToBasket slug={product.slug} title={product.title} maxQuantity={maxQuantity(product)} />
+              <AddToBasket slug={product.slug} title={product.title} maxQuantity={maxQuantity(product)} choices={choices} />
             ) : isSold || soldOut ? (
               <>
                 <p className="inline-block border border-rule px-4 py-2 font-sans text-small uppercase tracking-eyebrow text-ink-mute">
@@ -176,6 +220,26 @@ export default async function ProductDetailPage({
                     : 'This is not sold online yet, and enquiries are not open on this version of the site.'}
                 </p>
               </>
+            )}
+
+            {/* Brian Rankin, 23 October 2026: until orders are taken here,
+                customers can order through his gallery. */}
+            {!canAdd && !isSold && !soldOut && (
+              <p className="mt-6 border-t border-rule pt-5 font-serif text-body text-ink-soft">
+                Or order through the gallery: call{' '}
+                <a href={gallery.phoneHref} className="tabular-nums text-bensham underline underline-offset-4">
+                  {gallery.phone}
+                </a>
+                , email{' '}
+                <a href={`mailto:${gallery.email}`} className="break-words text-bensham underline underline-offset-4">
+                  {gallery.email}
+                </a>
+                , or{' '}
+                <Link href="/gallery" className="text-bensham underline underline-offset-4">
+                  visit the gallery
+                </Link>{' '}
+                in Gateshead.
+              </p>
             )}
           </div>
         </div>

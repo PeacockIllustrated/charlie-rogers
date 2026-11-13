@@ -1,12 +1,12 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { quoteBasket, sanitiseBasket, basketFromQuote, type Quote } from '@/lib/shop/commerce'
+import { quoteBasket, sanitiseBasket, basketFromQuote, type BasketLine, type Quote } from '@/lib/shop/commerce'
 import { validateCheckoutDetails, type CheckoutErrors } from '@/lib/shop/checkout-input'
 import { fetchProductsBySlugs } from '@/lib/shop/products'
 import { canStoreOrders, placeOrder } from '@/lib/shop/orders'
 import { getPaymentProvider } from '@/lib/shop/payments'
-import { notifyShopOfOrder } from '@/lib/shop/notify'
+import { notifyCustomerOfOrder, notifyShopOfOrder } from '@/lib/shop/notify'
 import { getShopSettings } from '@/lib/shop/settings'
 
 // Price whatever the browser holds. Called by the basket and the checkout so
@@ -26,7 +26,7 @@ export interface CheckoutState {
   message?: string
   // The basket changed under the customer: their stored basket should be
   // replaced with this, and they should look again before resubmitting.
-  revisedBasket?: Array<{ slug: string; quantity: number }>
+  revisedBasket?: BasketLine[]
   // Echoed back so a failed submission does not empty the form.
   values?: Record<string, string>
 }
@@ -106,7 +106,14 @@ export async function placeOrderAction(
 
   // Only the manual provider is told about here. A card payment provider
   // notifies from its webhook, once the money has actually arrived.
-  if (provider.id === 'manual') await notifyShopOfOrder(settings.orderNotifyEmail, result.order, checked.details, quote)
+  // The customer is sent a receipt saying nothing has been taken and that the
+  // shop will be in touch to arrange payment.
+  if (provider.id === 'manual') {
+    await Promise.all([
+      notifyShopOfOrder(settings.orderNotifyEmail, result.order, checked.details, quote),
+      notifyCustomerOfOrder(settings.orderNotifyEmail, result.order, checked.details, quote),
+    ])
+  }
 
   const { redirectTo } = await provider.startPayment(result.order)
   // Outside any try block: redirect() works by throwing.

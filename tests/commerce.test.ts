@@ -43,6 +43,12 @@ function product(p: Partial<ShopProduct> & Pick<ShopProduct, 'slug'>): ShopProdu
 const book = product({ slug: 'book', title: 'The special edition' })
 const cards = product({ slug: 'cards', title: 'Greeting cards', product_type: 'other', price_pence: 1000 })
 const print = product({ slug: 'print', title: 'Town Moor', product_type: 'print', price_pence: 4000 })
+const original = product({ slug: 'original', title: 'An original', product_type: 'original', price_pence: 90000 })
+const editions = (slug: string, limitedStock: number | null = 50) => [
+  { id: `${slug}-s`, product_id: slug, code: 'standard', name: 'Standard print', detail: null, price_pence: 4500, stock_count: null, display_order: 0, is_active: true },
+  { id: `${slug}-l`, product_id: slug, code: 'limited', name: 'Limited edition', detail: null, price_pence: 12000, stock_count: limitedStock, display_order: 1, is_active: true },
+]
+const pop = product({ slug: 'pop', title: 'Pop', product_type: 'print', price_pence: 4500, stock_count: 0, options: editions('pop') })
 
 test('sanitiseBasket drops junk, merges duplicates and clamps', () => {
   assert.deepEqual(sanitiseBasket('nope'), [])
@@ -63,10 +69,12 @@ test('sanitiseBasket drops junk, merges duplicates and clamps', () => {
   )
 })
 
-test('only priced, published books and cards in stock can be bought', () => {
+test('only priced, published books, cards and prints in stock can be bought', () => {
   assert.equal(purchasability(book).ok, true)
   assert.equal(purchasability(cards).ok, true)
-  assert.deepEqual(purchasability(print), { ok: false, reason: 'not-for-sale-online' })
+  // A print with no editions has nothing to be sold at.
+  assert.deepEqual(purchasability(print), { ok: false, reason: 'unpriced' })
+  assert.deepEqual(purchasability(original), { ok: false, reason: 'not-for-sale-online' })
   assert.deepEqual(purchasability(product({ slug: 'x', price_pence: 0 })), { ok: false, reason: 'unpriced' })
   assert.deepEqual(purchasability(product({ slug: 'x', status: 'sold' })), { ok: false, reason: 'unpublished' })
   assert.deepEqual(purchasability(product({ slug: 'x', stock_count: 0 })), { ok: false, reason: 'sold-out' })
@@ -109,7 +117,7 @@ test('quoteBasket removes what cannot be bought and says why', () => {
   )
   assert.deepEqual(q.lines.map((l) => l.slug), ['book'])
   assert.equal(q.problems.length, 2)
-  assert.match(q.problems[0].message, /Town Moor is by enquiry only/)
+  assert.match(q.problems[0].message, /Town Moor is not priced yet/)
   assert.match(q.problems[1].message, /no longer listed/)
 })
 
@@ -173,4 +181,61 @@ test('productWarnings: stock and price matter only for what is ordered online', 
     'Sold out online: stock is zero',
   ])
   assert.deepEqual(productWarnings({ ...base, product_type: 'other', price_pence: 1000, stock_count: 5 }), [])
+})
+
+test('prints are bought in an edition, at the edition price, from its stock', () => {
+  assert.equal(purchasability(pop).ok, true)
+  assert.equal(purchasability(pop, 'limited').ok, true)
+  assert.deepEqual(purchasability(pop, 'framed'), { ok: false, reason: 'unpublished' })
+  assert.equal(maxQuantity(pop, 'standard'), MAX_LINE_QUANTITY)
+  assert.equal(maxQuantity(product({ slug: 'p', product_type: 'print', options: editions('p', 3) }), 'limited'), 3)
+  const soldOut = product({ slug: 'p', product_type: 'print', options: editions('p', 0) })
+  assert.deepEqual(purchasability(soldOut, 'limited'), { ok: false, reason: 'sold-out' })
+  assert.equal(purchasability(soldOut, 'standard').ok, true)
+})
+
+test('quoteBasket prices each edition as its own line, and prints post free', () => {
+  const q = quoteBasket(
+    [
+      { slug: 'pop', option: 'limited', quantity: 1 },
+      { slug: 'pop', option: 'standard', quantity: 2 },
+    ],
+    [pop],
+    395,
+  )
+  assert.deepEqual(q.lines.map((l) => [l.key, l.unitPence, l.optionName]), [
+    ['pop:limited', 12000, 'Limited edition'],
+    ['pop:standard', 4500, 'Standard print'],
+  ])
+  assert.equal(q.subtotalPence, 21000)
+  assert.equal(q.postagePence, 0)
+  assert.equal(q.totalPence, 21000)
+})
+
+test('quoteBasket charges postage when anything other than a print is in the order', () => {
+  const q = quoteBasket([{ slug: 'pop', option: 'limited', quantity: 1 }, { slug: 'cards', quantity: 1 }], [pop, cards], 395)
+  assert.equal(q.postagePence, 395)
+  assert.equal(quoteBasket([{ slug: 'cards', quantity: 1 }], [cards], null).postagePence, null)
+})
+
+test('quoteBasket removes a print with no edition chosen, and an edition that has gone', () => {
+  const q = quoteBasket([{ slug: 'pop', quantity: 1 }, { slug: 'pop', option: 'framed', quantity: 1 }], [pop])
+  assert.equal(q.lines.length, 0)
+  assert.match(q.problems[0].message, /choose an edition of Pop/)
+  assert.match(q.problems[1].message, /no longer listed/)
+})
+
+test('sanitiseBasket keeps editions apart and drops bad option codes', () => {
+  assert.deepEqual(
+    sanitiseBasket([
+      { slug: 'pop', option: 'limited', quantity: 1 },
+      { slug: 'pop', option: 'limited', quantity: 1 },
+      { slug: 'pop', option: 'standard', quantity: 1 },
+      { slug: 'pop', option: 'Bad Code', quantity: 1 },
+    ]),
+    [
+      { slug: 'pop', option: 'limited', quantity: 2 },
+      { slug: 'pop', option: 'standard', quantity: 1 },
+    ],
+  )
 })

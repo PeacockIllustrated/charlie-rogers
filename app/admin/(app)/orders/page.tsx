@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ORDER_COLUMNS, ORDER_STATUS_LABELS, type Order, type OrderStatus } from '@/lib/shop/orders'
+import { displayTitle } from '@/lib/shop/commerce'
 import { formatPence, cn } from '@/lib/shop/utils'
 import { penceToPounds } from '@/lib/shop/product-input'
 import { setOrderPostage, setOrderStatus } from './actions'
 import { StatusButton } from './StatusButton'
+import { mailtoHref, paymentRequestMail, postedMail } from '@/lib/shop/mail-templates'
 
 const FILTERS: Array<{ value: OrderStatus | 'all'; label: string }> = [
   { value: 'all', label: 'All' },
@@ -36,14 +38,18 @@ const ACTION_LABELS: Partial<Record<OrderStatus, string>> = {
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; error?: string }>
+  searchParams: Promise<{ status?: string; error?: string; q?: string }>
 }) {
-  const { status, error: actionError } = await searchParams
+  const { status, error: actionError, q: rawQ } = await searchParams
+  // Characters that mean something to the PostgREST filter syntax are
+  // dropped, so a search can only ever be a search.
+  const q = (rawQ ?? '').replace(/[,()%*"\\]/g, ' ').trim().slice(0, 80)
   const filter = FILTERS.find((f) => f.value === status)?.value ?? 'all'
 
   const supabase = await createSupabaseServerClient()
   let query = supabase.from('charlie_orders').select(ORDER_COLUMNS).order('created_at', { ascending: false }).limit(200)
   if (filter !== 'all') query = query.eq('status', filter)
+  if (q) query = query.or(`order_number.ilike.%${q}%,customer_name.ilike.%${q}%,customer_email.ilike.%${q}%`)
   const { data, error } = await query
   const orders = (data as Order[] | null) ?? []
 
@@ -56,6 +62,7 @@ export default async function AdminOrdersPage({
         </p>
       </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <Link
@@ -70,6 +77,32 @@ export default async function AdminOrdersPage({
           </Link>
         ))}
       </div>
+      <form method="get" className="flex gap-2" role="search">
+        {filter !== 'all' && <input type="hidden" name="status" value={filter} />}
+        <label htmlFor="order-search" className="sr-only">
+          Search orders
+        </label>
+        <input
+          id="order-search"
+          name="q"
+          defaultValue={q}
+          placeholder="Order number, name or email"
+          className="input w-64 py-1.5"
+        />
+        <button type="submit" className="btn-admin-outline">
+          Search
+        </button>
+      </form>
+      </div>
+
+      {q && (
+        <p className="font-sans text-small text-ink-soft">
+          {orders.length} {orders.length === 1 ? 'order matches' : 'orders match'} &ldquo;{q}&rdquo;.{' '}
+          <Link href={filter === 'all' ? '/admin/orders' : `/admin/orders?status=${filter}`} className="underline underline-offset-4 hover:text-bensham">
+            Clear search
+          </Link>
+        </p>
+      )}
 
       {actionError && (
         <div role="alert" className="border border-bensham/30 bg-bensham/5 px-4 py-3 font-sans text-small text-bensham">
@@ -92,7 +125,7 @@ export default async function AdminOrdersPage({
           {orders.map((o) => {
             const a = o.shipping_address
             return (
-              <li key={o.id} className="border border-rule bg-paper p-5">
+              <li key={o.id} id={`order-${o.id}`} className="scroll-mt-6 border border-rule bg-paper p-5">
                 <div className="flex flex-wrap items-baseline justify-between gap-3">
                   <p className="font-serif text-h4">
                     {o.order_number}
@@ -108,8 +141,8 @@ export default async function AdminOrdersPage({
                 <div className="mt-4 grid gap-6 md:grid-cols-3">
                   <ul className="space-y-1 font-sans text-small md:col-span-1">
                     {o.items.map((i) => (
-                      <li key={i.product_slug}>
-                        {i.quantity} &times; {i.product_title}
+                      <li key={`${i.product_slug}:${i.option_code ?? ''}`}>
+                        {i.quantity} &times; {displayTitle(i.product_title, i.option_name)}
                       </li>
                     ))}
                     <li className="pt-2 text-ink-soft">
@@ -157,6 +190,22 @@ export default async function AdminOrdersPage({
                 )}
 
                 {o.notes && <p className="mt-4 border-l-2 border-rule pl-3 font-serif text-body text-ink-soft whitespace-pre-wrap">{o.notes}</p>}
+
+                {(o.status === 'pending' || o.status === 'paid') && (
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 font-sans text-small">
+                    <span className="text-ink-mute">Email the customer:</span>
+                    {o.status === 'pending' && (
+                      <a href={mailtoHref(paymentRequestMail(o))} className="text-bensham underline underline-offset-4">
+                        Ask for payment
+                      </a>
+                    )}
+                    {o.status === 'paid' && (
+                      <a href={mailtoHref(postedMail(o))} className="text-bensham underline underline-offset-4">
+                        Say it has been posted
+                      </a>
+                    )}
+                  </div>
+                )}
 
                 {NEXT[o.status].length > 0 && (
                   <div className="mt-5 flex flex-wrap gap-2 border-t border-rule pt-4">

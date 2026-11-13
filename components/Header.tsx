@@ -16,6 +16,7 @@ const nav = [
   { href: '/people', label: 'People' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/exhibitions', label: 'Exhibitions' },
+  { href: '/gallery', label: 'Gallery' },
   { href: '/book', label: 'The book' },
   { href: '/shop', label: 'Shop' },
 ]

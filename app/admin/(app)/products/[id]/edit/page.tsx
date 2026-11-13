@@ -8,6 +8,7 @@ import {
 import { penceToPounds } from '@/lib/shop/product-input'
 import { PRODUCT_STATUS_LABELS } from '@/lib/shop/types'
 import type { ShopProduct, ShopProductImage } from '@/lib/shop/types'
+import { EditionsPanel } from './EditionsPanel'
 
 export const metadata = { title: 'Edit product' }
 
@@ -25,11 +26,21 @@ export default async function EditProductPage({
   const { error: carriedError } = await searchParams
   const supabase = await createSupabaseServerClient()
 
-  const { data: product } = await supabase
+  let { data: product, error } = await supabase
     .from('charlie_products')
-    .select('*, images:charlie_product_images(*)')
+    .select('*, images:charlie_product_images(*), options:charlie_product_options(*)')
     .eq('id', id)
     .maybeSingle()
+  // Before 20261113090000 is applied there is no options table. Still let the
+  // listing be edited rather than showing a 404.
+  if (error) {
+    console.error(`[admin] product ${id} with options failed, retrying without:`, error.message)
+    ;({ data: product } = await supabase
+      .from('charlie_products')
+      .select('*, images:charlie_product_images(*)')
+      .eq('id', id)
+      .maybeSingle())
+  }
 
   if (!product) notFound()
 
@@ -86,6 +97,7 @@ export default async function EditProductPage({
         initial={initial}
         initialErrors={carriedError ? [carriedError] : []}
       />
+      <EditionsPanel productId={typed.id} options={typed.options ?? []} isPrint={typed.product_type === 'print'} />
     </div>
   )
 }
