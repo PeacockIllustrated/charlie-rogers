@@ -3,13 +3,14 @@
 A test commerce surface for the Charlie Rogers site, modelled on the
 durham-stickmakers product CMS. Products (books, prints, originals) are managed
 through an admin dashboard backed by Supabase, and shown on a public `/shop`.
-The book and the greeting card pack can be put in a basket and ordered;
-everything else is by enquiry. Payment is a plug-in point: orders are taken
+The book, the greeting cards and the prints can be put in a basket and
+ordered; originals are by enquiry. Payment is a plug-in point: orders are taken
 without online payment until Stripe is added. See "Checkout and payment".
 
 `/shop` is linked from the site header and footer (added 12 October 2026 at
-Tom's request). It is still set to `noindex` and disallowed in `robots.ts`, so
-search engines leave it alone until that is lifted.
+Tom's request). Since 13 November 2026 the shop and its product pages are
+open to search engines, in the sitemap, and carry Product structured data;
+the basket, checkout and order pages stay `noindex` and disallowed.
 
 ## Architecture
 
@@ -99,11 +100,35 @@ enough for a handful of admins; set up custom SMTP in Supabase if it is not.
 
 ### What can be bought
 
-Only published, priced products of type `book` or `other` with stock left
-(`purchasability()` in `lib/shop/commerce.ts`). Prints and originals are always
-by enquiry: the files we hold are not print quality, and CLAUDE.md rules out a
-print purchase flow against them. `charlie_place_order` applies the same rule
-in the database, so the two must be widened together when scans arrive.
+Published, priced products of type `book`, `other` (the cards) or `print`
+with stock left (`purchasability()` in `lib/shop/commerce.ts`). Originals are
+always by enquiry.
+
+Prints have been saleable since 13 November 2026. CLAUDE.md held them back
+because the files on the site are around 108ppi, but Brian Rankin confirmed
+on 12 October 2026 that Paul Wright prints from his own scans of the
+originals, so our files are never what is printed.
+
+A print is bought as one of its editions, rows in `charlie_product_options`:
+a standard print (£45, made to order, stock left blank) and a limited edition
+of 50 (£120, counted down). Each edition is priced and counted on its own;
+the print's own price is only the "From" figure. Editions are edited in the
+admin under Editions on each print, and a print added in the admin gets them
+with one button. Prints are delivered free, so an order of prints alone has
+no postage; anything else in the order brings the UK postage from Settings.
+
+`charlie_place_order` applies the same rules in the database (migration
+20261113090000), so the two must change together.
+
+### Taking orders before Stripe
+
+With the checkout set to "Open, payment by arrangement", a customer fills a
+basket and places an order with no card payment. The order reserves its
+stock, the shop gets an email with the order and the customer's details
+(reply to it to reach them), and the customer gets a receipt saying nothing
+has been taken and that the shop will be in touch to arrange payment. Mark
+the order paid in the admin once the money arrives. Both emails need
+`RESEND_API_KEY`, `SHOP_EMAIL_FROM` and the "Send new orders to" address.
 
 ### The flow
 

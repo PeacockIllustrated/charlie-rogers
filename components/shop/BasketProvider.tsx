@@ -1,10 +1,10 @@
 'use client'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { sanitiseBasket, MAX_LINE_QUANTITY, type BasketLine } from '@/lib/shop/commerce'
+import { sanitiseBasket, lineKey, MAX_LINE_QUANTITY, type BasketLine } from '@/lib/shop/commerce'
 
-// The basket lives in the visitor's browser: slugs and quantities only, never
-// prices (see lib/shop/commerce.ts). No account, no cookie for the server to
+// The basket lives in the visitor's browser: slugs, editions and quantities
+// only, never prices (see lib/shop/commerce.ts). No account, no cookie for the server to
 // read, nothing stored about anyone until they place an order.
 //
 // Kept in step across tabs through the storage event, so adding the book in
@@ -18,9 +18,10 @@ interface BasketContextValue {
   // False until the stored basket has been read. Lets the basket page avoid
   // flashing "empty" before it knows.
   ready: boolean
-  add: (slug: string, quantity?: number) => void
-  setQuantity: (slug: string, quantity: number) => void
-  remove: (slug: string) => void
+  // Lines are addressed by lineKey(): the slug, plus the edition for a print.
+  add: (slug: string, quantity?: number, option?: string) => void
+  setQuantity: (key: string, quantity: number) => void
+  remove: (key: string) => void
   replace: (lines: BasketLine[]) => void
   clear: () => void
 }
@@ -72,23 +73,23 @@ export function BasketProvider({ children }: { children: ReactNode }) {
       lines,
       ready,
       count: lines.reduce((n, l) => n + l.quantity, 0),
-      add: (slug, quantity = 1) =>
+      add: (slug, quantity = 1, option) =>
         update((prev) => {
-          const existing = prev.find((l) => l.slug === slug)
-          if (!existing) return [...prev, { slug, quantity }]
+          const line: BasketLine = option ? { slug, option, quantity } : { slug, quantity }
+          const key = lineKey(line)
+          const existing = prev.find((l) => lineKey(l) === key)
+          if (!existing) return [...prev, line]
           return prev.map((l) =>
-            l.slug === slug
-              ? { slug, quantity: Math.min(l.quantity + quantity, MAX_LINE_QUANTITY) }
-              : l,
+            lineKey(l) === key ? { ...l, quantity: Math.min(l.quantity + quantity, MAX_LINE_QUANTITY) } : l,
           )
         }),
-      setQuantity: (slug, quantity) =>
+      setQuantity: (key, quantity) =>
         update((prev) =>
           quantity < 1
-            ? prev.filter((l) => l.slug !== slug)
-            : prev.map((l) => (l.slug === slug ? { slug, quantity } : l)),
+            ? prev.filter((l) => lineKey(l) !== key)
+            : prev.map((l) => (lineKey(l) === key ? { ...l, quantity } : l)),
         ),
-      remove: (slug) => update((prev) => prev.filter((l) => l.slug !== slug)),
+      remove: (key) => update((prev) => prev.filter((l) => lineKey(l) !== key)),
       replace: (next) => update(() => next),
       clear: () => update(() => []),
     }),

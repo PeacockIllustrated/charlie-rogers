@@ -1,5 +1,5 @@
 import type { ShopProduct } from './types'
-import { PRINT_EDITION_TEXT, PRINT_FROM_PENCE, PRINT_SIZE } from './prints'
+import { PRINT_EDITIONS, PRINT_EDITION_TEXT, PRINT_FROM_PENCE, PRINT_SIZE } from './prints'
 
 // The local catalogue, used when Supabase is not configured so the shop can be
 // reviewed before any database exists. Once Supabase is pointed at, the live
@@ -76,6 +76,22 @@ function product(
     created_at: NOW,
     updated_at: NOW,
     images: [],
+    // A priced print is sold in Brian's two editions. Mirrors the
+    // charlie_product_options rows written by 20261113090000.
+    options:
+      p.product_type === 'print' && (p.price_pence ?? 0) > 0
+        ? PRINT_EDITIONS.map((e, i) => ({
+            id: `${p.slug}-${e.code}`,
+            product_id: p.slug,
+            code: e.code,
+            name: e.name,
+            detail: e.detail,
+            price_pence: e.price_pence,
+            stock_count: e.stock_count,
+            display_order: i,
+            is_active: true,
+          }))
+        : [],
     ...p,
   }
 }
@@ -402,6 +418,34 @@ export const CATALOGUE: CatalogueProduct[] = [
       ],
       'artwork/shop',
     ),
+  }),
+
+  // The fifth painting on Brian's Charlie Rogers Collection info sheet, which
+  // he named on 13 October 2026. Reproduced in the book on page 76; the
+  // picture here is the plate from the book, which is enough for the web. The
+  // print itself is made by Paul Wright from his scan of the original.
+  product({
+    title: 'Fish Market, Quayside, Newcastle',
+    slug: 'fish-market-quayside-newcastle-1979',
+    product_type: 'print',
+    price_pence: PRINT_FROM_PENCE,
+    dimensions: PRINT_SIZE,
+    edition: PRINT_EDITION_TEXT,
+    medium: 'Watercolour and pen',
+    year_text: '1979',
+    description:
+      'Charlie’s 1979 painting of the Fish Market on Newcastle Quayside, in watercolour and pen. Reproduced in Pursued by Bulldozers.',
+    images: [
+      {
+        id: 'fish-market-quayside-newcastle-1979-1',
+        product_id: 'fish-market-quayside-newcastle-1979',
+        storage_path: '/paintings/web/page_076_img_000.jpg',
+        alt_text: 'Fish Market, Quayside, Newcastle, 1979: a statue group on a pediment above an arched gateway on the Newcastle Quayside, figures at the foot.',
+        display_order: 0,
+        is_primary: true,
+        created_at: NOW,
+      },
+    ],
   }),
 
   product({

@@ -5,6 +5,7 @@ import { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 import { placeOrderAction, type CheckoutState } from '@/app/(public)/shop/actions'
 import { formatPence } from '@/lib/shop/utils'
+import { displayTitle } from '@/lib/shop/commerce'
 import type { CheckoutField } from '@/lib/shop/checkout-input'
 import { Button } from '@/components/Button'
 import { useBasket } from './BasketProvider'
@@ -157,9 +158,9 @@ export function CheckoutForm({ paymentNote, submitLabel }: { paymentNote: string
         <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">Your order</p>
         <ul className="mt-4 space-y-3 border-b border-rule pb-4">
           {quote.lines.map((l) => (
-            <li key={l.slug} className="flex justify-between gap-4 font-serif text-body">
+            <li key={l.key} className="flex justify-between gap-4 font-serif text-body">
               <span>
-                {l.title}
+                {displayTitle(l.title, l.optionName)}
                 <span className="font-sans text-small text-ink-mute"> &times; {l.quantity}</span>
               </span>
               <span className="shrink-0">{formatPence(l.lineTotalPence)}</span>

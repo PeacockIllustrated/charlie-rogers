@@ -299,7 +299,7 @@ export function ProductForm({
             <Field
               label="Type"
               htmlFor="product_type"
-              help="A book or other item can be ordered online once it has a price and stock. Prints and originals are always by enquiry."
+              help="A book or other item can be ordered online once it has a price and stock. A print is ordered in its editions, set under Editions below once it is saved. Originals are always by enquiry."
             >
               <select
                 id="product_type"

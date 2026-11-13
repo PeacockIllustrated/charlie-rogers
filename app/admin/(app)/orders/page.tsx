@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ORDER_COLUMNS, ORDER_STATUS_LABELS, type Order, type OrderStatus } from '@/lib/shop/orders'
+import { displayTitle } from '@/lib/shop/commerce'
 import { formatPence, cn } from '@/lib/shop/utils'
 import { penceToPounds } from '@/lib/shop/product-input'
 import { setOrderPostage, setOrderStatus } from './actions'
@@ -108,8 +109,8 @@ export default async function AdminOrdersPage({
                 <div className="mt-4 grid gap-6 md:grid-cols-3">
                   <ul className="space-y-1 font-sans text-small md:col-span-1">
                     {o.items.map((i) => (
-                      <li key={i.product_slug}>
-                        {i.quantity} &times; {i.product_title}
+                      <li key={`${i.product_slug}:${i.option_code ?? ''}`}>
+                        {i.quantity} &times; {displayTitle(i.product_title, i.option_name)}
                       </li>
                     ))}
                     <li className="pt-2 text-ink-soft">

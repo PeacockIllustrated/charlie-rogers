@@ -11,8 +11,8 @@ import { isCheckoutOpen } from '@/lib/shop/checkout-open'
 export const metadata: Metadata = {
   title: 'Shop',
   description:
-    'The book about Charlie Rogers, and, in time, fine art prints of his paintings.',
-  robots: { index: false, follow: false },
+    'Pursued by Bulldozers, the special edition of the book about Charlie Rogers, with greeting cards and fine art prints of his paintings of Gateshead and Newcastle.',
+  alternates: { canonical: '/shop' },
 }
 
 // The copy depends on whether the checkout is open, which an admin can
@@ -21,12 +21,13 @@ export const dynamic = 'force-dynamic'
 
 export default async function ShopPage() {
   let products: ShopProduct[] = []
+  const open = await isCheckoutOpen()
 
   if (isSupabaseConfigured()) {
     const supabase = await createSupabaseServerClient()
     const { data, error } = await supabase
       .from('charlie_products')
-      .select('*, images:charlie_product_images(*)')
+      .select('*, images:charlie_product_images(*), options:charlie_product_options(*)')
       .in('status', ['published', 'sold'])
       .order('is_featured', { ascending: false })
       .order('updated_at', { ascending: false })
@@ -61,18 +62,21 @@ export default async function ShopPage() {
           <h1 className="mt-4 font-serif text-display">Shop</h1>
         </div>
         <p className="font-serif text-lead text-ink-soft lg:col-span-5 lg:self-end">
-          {(await isCheckoutOpen())
-            ? 'The book, the cards, and the paintings themselves. The special edition and the cards can be ordered here; the paintings are by enquiry until prints can be made from the originals.'
+          {open
+            ? 'The special edition of the book, the greeting cards, and fine art prints of Charlie’s paintings, all to order here. Prints are delivered free.'
             : 'The book, the cards, and the paintings themselves. There is no checkout yet, so everything here is by enquiry.'}
         </p>
       </header>
 
       {/* Brian Rankin, 23 October 2026: until the shop takes orders online,
-          customers order through his gallery, so its details lead the shop
-          in the run up to Christmas. */}
-      <div className="mx-auto mt-12 max-w-content px-6">
-        <GalleryVisit id="shop-gallery" />
-      </div>
+          customers order through his gallery, so its details lead the shop.
+          Once the checkout is open the products lead and the gallery follows,
+          for anyone who would rather call in or phone. */}
+      {!open && (
+        <div className="mx-auto mt-12 max-w-content px-6">
+          <GalleryVisit id="shop-gallery" />
+        </div>
+      )}
 
       <div className="mt-12 border-y border-rule bg-paper-warm py-12 lg:py-16">
         <div className="mx-auto max-w-content px-6">
@@ -114,6 +118,12 @@ export default async function ShopPage() {
       {products.some((p) => p.product_type === 'print') && (
         <div className="mx-auto max-w-content px-6 pt-16">
           <PrintSpecifications />
+        </div>
+      )}
+
+      {open && (
+        <div className="mx-auto max-w-content px-6 pt-16">
+          <GalleryVisit id="shop-gallery" />
         </div>
       )}
     </div>

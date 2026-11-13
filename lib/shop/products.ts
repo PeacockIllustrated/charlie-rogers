@@ -13,7 +13,7 @@ export async function fetchProductsBySlugs(slugs: string[]): Promise<ShopProduct
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
     .from('charlie_products')
-    .select('*, images:charlie_product_images(*)')
+    .select('*, images:charlie_product_images(*), options:charlie_product_options(*)')
     .in('slug', slugs)
     .in('status', ['published', 'sold'])
 

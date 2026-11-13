@@ -5,6 +5,7 @@ import { Button } from '@/components/Button'
 import { Roundel } from '@/components/Roundel'
 import { formatPence, shopImageUrl } from '@/lib/shop/utils'
 import { PRODUCT_TYPE_LABELS } from '@/lib/shop/types'
+import { displayTitle } from '@/lib/shop/commerce'
 import { useBasket } from './BasketProvider'
 import { useQuote } from './useQuote'
 import { OrderTotals } from './OrderSummary'
@@ -43,8 +44,8 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
         <div className="max-w-reading border border-rule bg-paper p-6 sm:p-8">
           <h2 className="font-serif text-h3">Your basket is empty</h2>
           <p className="mt-3 font-serif text-body text-ink-soft">
-            The special edition of the book and the greeting cards can be ordered
-            here. The paintings are by enquiry.
+            The special edition of the book, the greeting cards and the prints
+            can all be ordered here. Original paintings are by enquiry.
           </p>
           <div className="mt-8">
             <Button href="/shop">Back to the shop</Button>
@@ -62,7 +63,7 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
           {quote.lines.map((line) => {
             const img = shopImageUrl(line.imagePath)
             return (
-              <li key={line.slug} className="grid grid-cols-[5rem_1fr] gap-4 border-b border-rule py-5 sm:grid-cols-[6rem_1fr_auto]">
+              <li key={line.key} className="grid grid-cols-[5rem_1fr] gap-4 border-b border-rule py-5 sm:grid-cols-[6rem_1fr_auto]">
                 <div className="flex aspect-square items-center justify-center bg-mount p-2">
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -79,15 +80,18 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
                   <Link href={`/shop/${line.slug}`} className="mt-1 block font-serif text-h4 hover:text-bensham">
                     {line.title}
                   </Link>
+                  {line.optionName && (
+                    <p className="mt-1 font-sans text-small text-ink">{line.optionName}</p>
+                  )}
                   <p className="mt-1 font-sans text-small text-ink-soft">{formatPence(line.unitPence)} each</p>
                   <div className="mt-3 flex items-center gap-4">
                     <label className="flex items-center gap-2 font-sans text-small text-ink-soft">
                       <span>Quantity</span>
                       <select
                         value={line.quantity}
-                        onChange={(e) => setQuantity(line.slug, Number(e.target.value))}
+                        onChange={(e) => setQuantity(line.key, Number(e.target.value))}
                         className="input w-20 py-1"
-                        aria-label={`Quantity of ${line.title}`}
+                        aria-label={`Quantity of ${displayTitle(line.title, line.optionName)}`}
                       >
                         {Array.from({ length: line.maxQuantity }, (_, i) => i + 1).map((n) => (
                           <option key={n} value={n}>
@@ -98,7 +102,7 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
                     </label>
                     <button
                       type="button"
-                      onClick={() => remove(line.slug)}
+                      onClick={() => remove(line.key)}
                       className="font-sans text-small text-ink-soft underline underline-offset-4 hover:text-bensham"
                     >
                       Remove
