@@ -135,14 +135,18 @@ export default async function ProductDetailPage({
           iPhone Safari sized the implicit column to the painting's full pixel
           width, so the page ran off the right of the screen (Brian's
           screenshot, 12 October 2026). */}
-      <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="min-w-0">
+      {/* On a wide screen the picture and, for prints, the specification share
+          the left column, and the details run beside both, so neither column
+          is left with a long empty stretch. On a phone they stack in reading
+          order: picture, details, specification. */}
+      <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-12">
+        <div className="min-w-0 lg:col-start-1 lg:row-start-1">
           <ProductImageGallery images={product.images ?? []} title={product.title} productType={product.product_type} />
         </div>
 
         {/* The details sit on a warm panel beside the picture, like a label
             card beside a hung work */}
-        <div className="min-w-0 self-start border border-rule bg-paper-warm p-6 sm:p-8">
+        <div className="min-w-0 self-start border border-rule bg-paper-warm p-6 sm:p-8 lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <Eyebrow>{PRODUCT_TYPE_LABELS[product.product_type]}</Eyebrow>
           <h1 className="mt-3 font-serif text-h1">{product.title}</h1>
 
@@ -227,7 +231,7 @@ export default async function ProductDetailPage({
             {!canAdd && !isSold && !soldOut && (
               <p className="mt-6 border-t border-rule pt-5 font-serif text-body text-ink-soft">
                 Or order through the gallery: call{' '}
-                <a href={gallery.phoneHref} className="tabular-nums text-bensham underline underline-offset-4">
+                <a href={gallery.phoneHref} className="whitespace-nowrap tabular-nums text-bensham underline underline-offset-4">
                   {gallery.phone}
                 </a>
                 , email{' '}
@@ -243,15 +247,15 @@ export default async function ProductDetailPage({
             )}
           </div>
         </div>
-      </div>
 
-      {/* Only on prints. The specification is about how a print is made, so it
-          has no bearing on the book or the greeting cards. */}
-      {product.product_type === 'print' && (
-        <div className="mt-16">
-          <PrintSpecifications />
-        </div>
-      )}
+        {/* Only on prints. The specification is about how a print is made, so
+            it has no bearing on the book or the greeting cards. */}
+        {product.product_type === 'print' && (
+          <div className="min-w-0 lg:col-start-1 lg:row-start-2">
+            <PrintSpecifications />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

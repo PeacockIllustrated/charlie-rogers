@@ -1,9 +1,10 @@
 import type { CheckoutDetails } from './checkout-input'
 import type { EnquiryDetails } from './enquiry-input'
 import { displayTitle, type Quote } from './commerce'
+import { renderEmailHtml, renderEmailText } from './email-layout'
+import { customerReceiptEmail, shopEnquiryEmail, shopOrderEmail, testEmail, type Built, type EmailCustomer, type EmailOrder } from './email-content'
 import { confirmationPath, type PlacedOrder } from './payments'
 import { SITE_URL } from '@/lib/site'
-import { formatPence } from './utils'
 
 // How this deployment sends email. Two ways are supported:
 //
@@ -35,23 +36,17 @@ export function emailSetup(): { ok: boolean; missing: string[]; via: Transport |
 
 interface Mail {
   to: string
-  subject: string
-  text: string
   replyTo?: string | null
+  email: Built
 }
-
-const escapeHtml = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-
-// The Make route sends HTML, so plain text is escaped and its line breaks kept.
-const asHtml = (text: string) =>
-  `<div style="font-family:Georgia,serif;font-size:15px;line-height:1.5;color:#1d1a17">${escapeHtml(text).replace(/\n/g, '<br>')}</div>`
 
 // Send one email by whichever transport is set up. Resolves to null when it
 // was accepted, or a short reason when it was not. Never throws.
 async function deliver(mail: Mail): Promise<string | null> {
   const via = transport()
   if (!via) return 'email is not set up'
+  const html = renderEmailHtml(mail.email.doc)
+  const { subject } = mail.email
   try {
     const res =
       via === 'make'
@@ -62,8 +57,8 @@ async function deliver(mail: Mail): Promise<string | null> {
               client: 'charlie',
               key: process.env.MAKE_EMAIL_KEY,
               to: mail.to,
-              subject: mail.subject,
-              html: asHtml(mail.text),
+              subject,
+              html,
               replyTo: mail.replyTo ?? '',
             }),
           })
@@ -73,8 +68,9 @@ async function deliver(mail: Mail): Promise<string | null> {
             body: JSON.stringify({
               from: process.env.SHOP_EMAIL_FROM,
               to: mail.to,
-              subject: mail.subject,
-              text: mail.text,
+              subject,
+              html,
+              text: renderEmailText(mail.email.doc),
               ...(mail.replyTo ? { reply_to: mail.replyTo } : {}),
             }),
           })
@@ -104,26 +100,46 @@ function skipped(what: string, to: string | null): boolean {
   return false
 }
 
-// A plain test message from Admin > Settings, so whoever runs the shop can see
-// that email works before a customer relies on it. Returns what the sender said.
+// A test message from Admin > Settings, so whoever runs the shop can see that
+// email works before a customer relies on it. Returns what the sender said.
 export async function sendTestEmail(to: string): Promise<{ ok: true } | { ok: false; reason: string }> {
   const { ok, missing } = emailSetup()
   if (!ok) return { ok: false, reason: `${missing.join(' and ')} not set in the hosting environment (Vercel).` }
-  const failed = await deliver({
-    to,
-    subject: 'Charlie Rogers shop: test email',
-    text: 'This is a test from Admin > Settings. If you are reading it, order and enquiry emails will reach this address.',
-  })
+  const failed = await deliver({ to, email: testEmail() })
   return failed ? { ok: false, reason: failed } : { ok: true }
 }
 
-// Tell the shop a new order has come in, by email. Without it
-// a manual order would sit in the admin with nobody knowing to look.
+function emailOrder(order: PlacedOrder, quote: Quote): EmailOrder {
+  return {
+    orderNumber: order.orderNumber,
+    lines: quote.lines.map((l) => ({
+      label: `${l.quantity} x ${displayTitle(l.title, l.optionName)}`,
+      pence: l.lineTotalPence,
+    })),
+    subtotalPence: quote.subtotalPence,
+    postagePence: quote.postagePence,
+    totalPence: order.totalPence,
+  }
+}
+
+function emailCustomer(details: CheckoutDetails): EmailCustomer {
+  const a = details.address
+  return {
+    name: details.name,
+    email: details.email,
+    phone: details.phone ?? null,
+    address: [a.line1, a.line2, a.town, a.county, a.postcode].filter((l): l is string => Boolean(l)),
+    notes: details.notes ?? null,
+  }
+}
+
+// Tell the shop a new order has come in. Without it a manual order would sit
+// in the admin with nobody knowing to look.
 //
 // Best effort and optional: without email set up (see emailSetup), or a
 // notification address at /admin/settings, this does nothing. A failed send is
 // logged and never fails the order, which is already saved by the time this
-// runs. Plain fetch, so there is no dependency for one call.
+// runs. Reply-to is the customer.
 export async function notifyShopOfOrder(
   to: string | null,
   order: PlacedOrder,
@@ -131,26 +147,14 @@ export async function notifyShopOfOrder(
   quote: Quote,
 ): Promise<void> {
   if (skipped(`order ${order.orderNumber}`, to) || !to) return
-
-  const a = details.address
-  const text = [
-    `Order ${order.orderNumber}`,
-    '',
-    ...orderLines(quote),
-    `Total ${formatPence(order.totalPence)}`,
-    '',
-    details.name,
-    details.email,
-    details.phone ?? '',
-    [a.line1, a.line2, a.town, a.county, a.postcode].filter(Boolean).join(', '),
-    '',
-    details.notes ? `Note: ${details.notes}` : '',
-    'No payment has been taken. The customer has been emailed to say you will be in touch to arrange payment. Reply to this email to reach them, and mark the order paid in the admin once it has been.',
-  ]
-    .filter((l, i, all) => l !== '' || all[i - 1] !== '')
-    .join('\n')
-
-  await send({ to, replyTo: details.email, subject: `New order ${order.orderNumber}`, text }, `order notification for ${order.orderNumber}`)
+  await send(
+    {
+      to,
+      replyTo: details.email,
+      email: shopOrderEmail(emailOrder(order, quote), emailCustomer(details), `${SITE_URL}/admin/orders`),
+    },
+    `order notification for ${order.orderNumber}`,
+  )
 }
 
 // Tell the admins someone has asked about a product. Same rules as the order
@@ -163,39 +167,17 @@ export async function notifyShopOfEnquiry(
   details: EnquiryDetails,
 ): Promise<void> {
   if (skipped(`enquiry about ${enquiry.productSlug}`, to) || !to) return
-
-  const text = [
-    `New enquiry about ${enquiry.productTitle}`,
-    '',
-    details.message,
-    '',
-    details.name,
-    details.email,
-    details.phone ?? '',
-    '',
-    'Reply to this email to answer them directly.',
-    enquiry.adminUrl ? `Every enquiry is also listed at ${enquiry.adminUrl}` : 'Every enquiry is also listed in the admin, under Enquiries.',
-  ]
-    .filter((l, i, all) => l !== '' || all[i - 1] !== '')
-    .join('\n')
-
   await send(
-    { to, replyTo: details.email, subject: `Enquiry: ${enquiry.productTitle}`, text },
+    {
+      to,
+      replyTo: details.email,
+      email: shopEnquiryEmail(
+        { productTitle: enquiry.productTitle, message: details.message, name: details.name, email: details.email, phone: details.phone ?? null },
+        enquiry.adminUrl ?? `${SITE_URL}/admin/enquiries`,
+      ),
+    },
     `enquiry notification for ${enquiry.productSlug}`,
   )
-}
-
-function postageText(pence: number | null): string {
-  return pence === null ? 'to be confirmed' : pence === 0 ? 'free' : formatPence(pence)
-}
-
-function orderLines(quote: Quote): string[] {
-  return [
-    ...quote.lines.map((l) => `${l.quantity} x ${displayTitle(l.title, l.optionName)}, ${formatPence(l.lineTotalPence)}`),
-    '',
-    `Subtotal ${formatPence(quote.subtotalPence)}`,
-    `UK postage ${postageText(quote.postagePence)}`,
-  ]
 }
 
 // The customer's receipt for an order taken without online payment. Until
@@ -211,32 +193,12 @@ export async function notifyCustomerOfOrder(
   quote: Quote,
 ): Promise<void> {
   if (skipped(`customer receipt for ${order.orderNumber}`, shopEmail)) return
-  const a = details.address
-  const firstName = details.name.split(' ')[0]
-  const text = [
-    `Dear ${firstName},`,
-    '',
-    `Thank you for your order, ${order.orderNumber}.`,
-    '',
-    ...orderLines(quote),
-    `${quote.postagePence === null ? 'Total before postage' : 'Total'} ${formatPence(order.totalPence)}`,
-    '',
-    quote.postagePence === null
-      ? 'No payment has been taken. We will email you shortly to arrange payment and confirm the postage. Nothing is sent until payment has been received.'
-      : 'No payment has been taken. We will email you shortly to arrange payment. Nothing is sent until payment has been received.',
-    '',
-    'Posting to:',
-    [details.name, a.line1, a.line2, a.town, a.county, a.postcode].filter(Boolean).join(', '),
-    '',
-    `You can see your order at any time here: ${SITE_URL}${confirmationPath(order)}`,
-    '',
-    'If anything is wrong, or you have a question, reply to this email.',
-    '',
-    'Charlie Rogers, Pursued by Bulldozers',
-  ].join('\n')
-
   await send(
-    { to: details.email, replyTo: shopEmail, subject: `Your Charlie Rogers order ${order.orderNumber}`, text },
+    {
+      to: details.email,
+      replyTo: shopEmail,
+      email: customerReceiptEmail(emailOrder(order, quote), emailCustomer(details), `${SITE_URL}${confirmationPath(order)}`),
+    },
     `customer receipt for ${order.orderNumber}`,
   )
 }

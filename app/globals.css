@@ -418,3 +418,69 @@
     opacity: 1;
   }
 }
+
+/* Picture frames for the shop. Tom, 13 November 2026: images floating on the
+   page without a border looked cheap. Each shop picture is now framed the way
+   a print leaves Paul Wright's: a dark moulding, a thin gilt slip, a cream
+   mount weighted at the bottom, and a cut bevel round the picture. All of it
+   is borders and padding, so the house rules hold: square corners and no
+   shadows. The moulding's gradient suggests the profile catching the light. */
+@layer components {
+  .frame {
+    --frame-w: 10px;
+    --mount-x: 9%;
+    display: inline-block;
+    max-width: 100%;
+    padding: var(--frame-w);
+    background: linear-gradient(135deg, #3a332c 0%, #1a1916 38%, #2b2520 62%, #1a1916 100%);
+    border: 1px solid #0f0e0c;
+  }
+  .frame-sm { --frame-w: 6px; --mount-x: 7%; }
+  .frame-lg { --frame-w: 16px; --mount-x: 10%; }
+  .frame-slip {
+    padding: 2px;
+    background: linear-gradient(135deg, #d4a94e 0%, #b8842c 45%, #8f6620 100%);
+  }
+  .frame-mount {
+    background: #f6f1e6;
+    padding: var(--mount-x) var(--mount-x) calc(var(--mount-x) * 1.35);
+  }
+  .frame-bevel {
+    display: block;
+    border: 2px solid #fffdf8;
+    outline: 1px solid #d9d2c0;
+  }
+  .frame-bevel > img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* The wall a framed picture hangs on, in a card or on a product page. */
+  .frame-wall {
+    background: #ece4d3;
+  }
+  /* A photograph, not a painting: set like a print on card, with a white
+     border and a hairline, so it reads as a photograph of the thing rather
+     than the thing hung on the wall. Used for photographs of the mounted
+     edition, the certificate and the basket thumbnails. */
+  .frame-photo {
+    display: block;
+    background: #fffdf8;
+    padding: 6px;
+    border: 1px solid #d9d2c0;
+  }
+  .frame-photo > img {
+    display: block;
+  }
+  /* A slim moulding for thumbnails, where a full frame would swamp the
+     picture. */
+  .frame-thin {
+    display: block;
+    padding: 3px;
+    background: linear-gradient(135deg, #3a332c 0%, #1a1916 50%, #2b2520 100%);
+  }
+  .frame-thin > * {
+    display: block;
+    border: 2px solid #f6f1e6;
+  }
+}

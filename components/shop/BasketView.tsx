@@ -64,10 +64,12 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
             const img = shopImageUrl(line.imagePath)
             return (
               <li key={line.key} className="grid grid-cols-[5rem_1fr] gap-4 border-b border-rule py-5 sm:grid-cols-[6rem_1fr_auto]">
-                <div className="flex aspect-square items-center justify-center bg-mount p-2">
+                <div className="frame-wall flex aspect-square items-center justify-center p-2.5">
                   {img ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={img} alt={line.imageAlt ?? ''} className="max-h-full max-w-full object-contain" />
+                    <span className="frame-thin max-w-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img} alt={line.imageAlt ?? ''} className="block max-h-14 w-auto max-w-full sm:max-h-[4.5rem]" />
+                    </span>
                   ) : (
                     // No photograph yet: the roundel stands in, as on the shop cards.
                     <Roundel size={56} tone={line.productType === 'book' ? 'bensham' : 'ink'} />
