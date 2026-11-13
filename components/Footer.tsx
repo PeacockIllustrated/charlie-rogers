@@ -7,6 +7,7 @@ const footerLinks = [
   { href: '/story', label: 'The story' },
   { href: '/work', label: 'The work' },
   { href: '/places', label: 'Places' },
+  { href: '/walk', label: 'Walk the race' },
   { href: '/people', label: 'People' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/exhibitions', label: 'Exhibitions' },
