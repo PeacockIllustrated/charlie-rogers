@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import type { Metadata } from 'next'
 import { RaceRow } from '@/components/RaceRow'
 import { Demolition } from '@/components/graphics/Demolition'
@@ -102,6 +103,18 @@ export default function PlacesIndex() {
                 against survey records. Paris and Spennymoor sit outside the
                 frame and are listed below rather than plotted.
               </p>
+              <Link
+                href="/walk"
+                className="mt-6 block border border-rule border-t-2 border-t-bensham bg-paper p-4 transition-colors hover:border-ink-mute"
+              >
+                <span className="font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
+                  On foot
+                </span>
+                <span className="mt-2 block font-serif text-h4 text-ink">Walk the race</span>
+                <span className="mt-1 block font-serif text-body text-ink-soft">
+                  Eight Gateshead stops in walking order, from Saltwell Park to the railway.
+                </span>
+              </Link>
             </div>
             <div className="lg:col-span-8">
               <PlacesMap places={places} />
