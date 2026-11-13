@@ -128,7 +128,7 @@ stock, the shop gets an email with the order and the customer's details
 (reply to it to reach them), and the customer gets a receipt saying nothing
 has been taken and that the shop will be in touch to arrange payment. Mark
 the order paid in the admin once the money arrives. Both emails need
-`RESEND_API_KEY`, `SHOP_EMAIL_FROM` and the "Send new orders to" address.
+email (Make or Resend, see "Setting up email") and the "Send new orders to" address.
 
 ### The flow
 
@@ -170,7 +170,7 @@ table and takes effect at once:
 
 The page also shows, as yes or no, the two things only the hosting
 environment can set: `SUPABASE_SERVICE_ROLE_KEY` (needed to save any order)
-and `RESEND_API_KEY` with `SHOP_EMAIL_FROM` (needed to send the order email).
+and the email values in "Setting up email" (needed to send the order email).
 Secrets never go in the settings table.
 
 Before the migration is applied, or on a preview without the service key,
@@ -214,8 +214,7 @@ The painting pages in the catalogue link straight to it (`#enquire`).
   service role. A hidden honeypot field and a limit of five enquiries per
   email address an hour keep scripts out.
 - The admins are emailed at the "Send new orders and enquiries to" address in
-  Settings, with reply-to set to the customer, when `RESEND_API_KEY` and
-  `SHOP_EMAIL_FROM` are set. Optional: every enquiry is listed regardless.
+  Settings, with reply-to set to the customer, once email is set up. Optional: every enquiry is listed regardless.
 - `/admin/enquiries` lists them, new first, with buttons to mark replied,
   close and reopen. The dashboard shows how many are waiting.
 - The table needs `20261012090000_charlie-shop-enquiries.sql`. It has no
@@ -226,19 +225,48 @@ The painting pages in the catalogue link straight to it (`#enquire`).
 
 ## Setting up email
 
-Until these are set, orders and enquiries are saved and listed in the admin,
+Until email is set up, orders and enquiries are saved and listed in the admin,
 but nobody is emailed, and each skipped email is logged as a warning. The
 dashboard's "Ready for orders" list and Settings both say so.
+
+The site can send through either of two services. Make is used when both of
+its values are set; otherwise Resend.
+
+### Make (the "client sites · send email" scenario)
+
+OneDesign's Make account has one scenario that sends email for client sites.
+It starts with a webhook, then a router with one route per client. Each route
+checks the client name and a key, answers the site, and sends through a
+connected mailbox with that client's from address.
+
+The site posts this JSON to the webhook:
+
+```json
+{ "client": "charlie", "key": "...", "to": "...", "subject": "...", "html": "...", "replyTo": "..." }
+```
+
+1. In Make, open "client sites · send email" and add a route for Charlie, a
+   copy of an existing one with the filter `client` = `charlie` and `key` = a
+   long random string. Set the from address on its Send an email module to an
+   address the connected mailbox is allowed to send as.
+2. Turn the scenario on.
+3. In Vercel, under the project's Settings, Environment Variables, add for
+   Production: `MAKE_EMAIL_WEBHOOK_URL` (the scenario's webhook address) and
+   `MAKE_EMAIL_KEY` (the same random string). Redeploy.
+4. In Admin > Settings, save the "Send new orders and enquiries to" address,
+   then press "Send a test email".
+
+### Resend
 
 1. Create a Resend account and add the domain `charlierogers.art`. Resend
    lists a few DNS records (SPF, DKIM); add them where the domain's DNS is
    managed and wait for Resend to show the domain as verified.
 2. Create an API key in Resend.
-3. In Vercel, under the project's Settings, Environment Variables, add for
-   Production: `RESEND_API_KEY` (the key) and `SHOP_EMAIL_FROM`, for example
-   `Charlie Rogers <shop@charlierogers.art>`. Redeploy.
-4. In Admin > Settings, save the "Send new orders and enquiries to" address,
-   then press "Send a test email".
+3. In Vercel, add for Production: `RESEND_API_KEY` (the key) and
+   `SHOP_EMAIL_FROM`, for example `Charlie Rogers <shop@charlierogers.art>`.
+   Redeploy.
+4. In Admin > Settings, save the notification address and press "Send a test
+   email".
 
 ## Admin dashboard
 
