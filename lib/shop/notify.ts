@@ -5,6 +5,52 @@ import { confirmationPath, type PlacedOrder } from './payments'
 import { SITE_URL } from '@/lib/site'
 import { formatPence } from './utils'
 
+// Whether this deployment can send email at all. Without both values every
+// email below is skipped, which used to happen silently: an enquiry was saved
+// and nobody was told (Tom's test enquiry, 13 November 2026). Now each skip is
+// logged, and the admin dashboard and Settings say so in plain words.
+export function emailSetup(): { ok: boolean; missing: string[] } {
+  const missing = ['RESEND_API_KEY', 'SHOP_EMAIL_FROM'].filter((k) => !process.env[k])
+  return { ok: missing.length === 0, missing }
+}
+
+function skipped(what: string, to: string | null): boolean {
+  const { ok, missing } = emailSetup()
+  if (!ok) {
+    console.warn(`[shop] ${what} not emailed: ${missing.join(' and ')} not set in the hosting environment`)
+    return true
+  }
+  if (!to) {
+    console.warn(`[shop] ${what} not emailed: no "Send new orders and enquiries to" address in Admin > Settings`)
+    return true
+  }
+  return false
+}
+
+// A plain test message from Admin > Settings, so whoever runs the shop can see
+// that email works before a customer relies on it. Returns what Resend said.
+export async function sendTestEmail(to: string): Promise<{ ok: true } | { ok: false; reason: string }> {
+  const { ok, missing } = emailSetup()
+  if (!ok) return { ok: false, reason: `${missing.join(' and ')} not set in the hosting environment (Vercel).` }
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: process.env.SHOP_EMAIL_FROM,
+        to,
+        subject: 'Charlie Rogers shop: test email',
+        text: 'This is a test from Admin > Settings. If you are reading it, order and enquiry emails will reach this address.',
+      }),
+    })
+    if (res.ok) return { ok: true }
+    const body = await res.text().catch(() => '')
+    return { ok: false, reason: `Resend refused it (${res.status}). ${body.slice(0, 300)}` }
+  } catch (err) {
+    return { ok: false, reason: `Could not reach Resend: ${String(err)}` }
+  }
+}
+
 // Tell the shop a new order has come in, by email through Resend. Without it
 // a manual order would sit in the admin with nobody knowing to look.
 //
@@ -18,9 +64,9 @@ export async function notifyShopOfOrder(
   details: CheckoutDetails,
   quote: Quote,
 ): Promise<void> {
+  if (skipped(`order ${order.orderNumber}`, to)) return
   const key = process.env.RESEND_API_KEY
   const from = process.env.SHOP_EMAIL_FROM
-  if (!key || !from || !to) return
 
   const a = details.address
   const text = [
@@ -61,9 +107,9 @@ export async function notifyShopOfEnquiry(
   enquiry: { productTitle: string; productSlug: string; adminUrl: string | null },
   details: EnquiryDetails,
 ): Promise<void> {
+  if (skipped(`enquiry about ${enquiry.productSlug}`, to)) return
   const key = process.env.RESEND_API_KEY
   const from = process.env.SHOP_EMAIL_FROM
-  if (!key || !from || !to) return
 
   const text = [
     `New enquiry about ${enquiry.productTitle}`,
@@ -131,8 +177,8 @@ export async function notifyCustomerOfOrder(
   details: CheckoutDetails,
   quote: Quote,
 ): Promise<void> {
+  if (skipped(`customer receipt for ${order.orderNumber}`, shopEmail)) return
   const from = process.env.SHOP_EMAIL_FROM
-  if (!process.env.RESEND_API_KEY || !from || !shopEmail) return
 
   const a = details.address
   const firstName = details.name.split(' ')[0]

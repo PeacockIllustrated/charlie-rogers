@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ENQUIRY_COLUMNS, ENQUIRY_STATUS_LABELS, type Enquiry, type EnquiryStatus } from '@/lib/shop/enquiries'
 import { cn } from '@/lib/shop/utils'
 import { setEnquiryStatus } from './actions'
+import { enquiryReplyMail, mailtoHref } from '@/lib/shop/mail-templates'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,7 +46,7 @@ export default async function AdminEnquiriesPage({
       <div>
         <h1 className="font-serif text-h1">Enquiries</h1>
         <p className="mt-1 font-sans text-small text-ink-mute">
-          Sent from the product pages, newest first. Reply by email, then mark it replied.
+          Sent from the product pages, newest first. Reply by email opens a ready-written reply in your mail program; mark it replied once it has gone.
         </p>
       </div>
 
@@ -79,7 +80,7 @@ export default async function AdminEnquiriesPage({
       ) : (
         <ul className="space-y-4">
           {enquiries.map((q) => (
-            <li key={q.id} className="border border-rule bg-paper p-5">
+            <li key={q.id} id={`enquiry-${q.id}`} className="scroll-mt-6 border border-rule bg-paper p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <p className="font-serif text-h4">
                   <a href={`/shop/${q.product_slug}`} target="_blank" rel="noreferrer" className="hover:text-bensham">
@@ -108,12 +109,17 @@ export default async function AdminEnquiriesPage({
 
               <p className="mt-4 border-l-2 border-rule pl-3 font-serif text-body text-ink-soft whitespace-pre-wrap">{q.message}</p>
 
-              <div className="mt-5 flex flex-wrap gap-2 border-t border-rule pt-4">
-                {ACTIONS[q.status].map((a, i) => (
+              <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-rule pt-4">
+                {q.status !== 'closed' && (
+                  <a href={mailtoHref(enquiryReplyMail(q))} className="btn-admin">
+                    Reply by email
+                  </a>
+                )}
+                {ACTIONS[q.status].map((a) => (
                   <form key={a.status} action={setEnquiryStatus}>
                     <input type="hidden" name="id" value={q.id} />
                     <input type="hidden" name="status" value={a.status} />
-                    <button type="submit" className={i === 0 ? 'btn-admin' : 'btn-admin-outline'}>
+                    <button type="submit" className="btn-admin-outline">
                       {a.label}
                     </button>
                   </form>

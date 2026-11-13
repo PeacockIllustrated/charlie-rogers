@@ -2,6 +2,8 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { canStoreOrders } from '@/lib/shop/orders'
 import { penceToPounds } from '@/lib/shop/product-input'
 import { SettingsForm } from './SettingsForm'
+import { TestEmailButton } from './TestEmailButton'
+import { emailSetup } from '@/lib/shop/notify'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,9 +27,9 @@ export default async function AdminSettingsPage() {
   const environment = [
     { label: 'Orders can be saved', ok: canStoreOrders(), fix: 'Set SUPABASE_SERVICE_ROLE_KEY in the hosting environment.' },
     {
-      label: 'Order emails can be sent',
-      ok: Boolean(process.env.RESEND_API_KEY && process.env.SHOP_EMAIL_FROM),
-      fix: 'Set RESEND_API_KEY and SHOP_EMAIL_FROM in the hosting environment.',
+      label: 'Order and enquiry emails can be sent',
+      ok: emailSetup().ok,
+      fix: `Set ${emailSetup().missing.join(' and ')} in Vercel, under Settings, Environment Variables. Until then orders and enquiries are saved here but nobody is emailed.`,
     },
   ]
 
@@ -73,6 +75,17 @@ export default async function AdminSettingsPage() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="border border-rule bg-paper p-6">
+        <h2 className="font-serif text-h3">Check that email works</h2>
+        <p className="mt-2 max-w-reading font-sans text-small text-ink-soft">
+          Sends a short test message to the address above, the same way an order
+          or enquiry email is sent.
+        </p>
+        <div className="mt-4">
+          <TestEmailButton disabled={!row?.order_notify_email} />
+        </div>
       </section>
     </div>
   )

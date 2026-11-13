@@ -8,12 +8,12 @@ const MODES = [
   {
     value: 'closed',
     label: 'Closed',
-    detail: 'Nothing can be ordered. The book and the cards show an enquiry button, like the paintings.',
+    detail: 'Nothing can be ordered. Every product shows an enquiry form instead.',
   },
   {
     value: 'manual',
     label: 'Open, payment by arrangement',
-    detail: 'Customers can order the book and the cards. Copies are reserved, no card payment is taken, and you email each customer to arrange payment and postage.',
+    detail: 'Customers can order the book, the cards and the prints. Stock is reserved, no card payment is taken, the customer is emailed a receipt, and you email them to arrange payment.',
   },
 ] as const
 

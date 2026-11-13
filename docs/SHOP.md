@@ -223,3 +223,28 @@ The painting pages in the catalogue link straight to it (`#enquire`).
 - Without `SUPABASE_SERVICE_ROLE_KEY` enquiries cannot be saved, so the page
   falls back to a mailto to `NEXT_PUBLIC_ENQUIRY_EMAIL`, or says enquiries are
   not open if that is unset too.
+
+## Setting up email
+
+Until these are set, orders and enquiries are saved and listed in the admin,
+but nobody is emailed, and each skipped email is logged as a warning. The
+dashboard's "Ready for orders" list and Settings both say so.
+
+1. Create a Resend account and add the domain `charlierogers.art`. Resend
+   lists a few DNS records (SPF, DKIM); add them where the domain's DNS is
+   managed and wait for Resend to show the domain as verified.
+2. Create an API key in Resend.
+3. In Vercel, under the project's Settings, Environment Variables, add for
+   Production: `RESEND_API_KEY` (the key) and `SHOP_EMAIL_FROM`, for example
+   `Charlie Rogers <shop@charlierogers.art>`. Redeploy.
+4. In Admin > Settings, save the "Send new orders and enquiries to" address,
+   then press "Send a test email".
+
+## Admin dashboard
+
+The dashboard opens with "Ready for orders", a checklist of what has to be
+true before an order reaches anyone, which folds to one line once it is all
+done. Below it: orders waiting for payment or posting, new enquiries, what
+has sold by product and edition, and stock running low. Orders and Enquiries
+have ready-written emails (asking for payment, saying it has been posted,
+replying to an enquiry) that open in the admin's own mail program.
