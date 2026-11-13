@@ -159,8 +159,11 @@ export default function TimelinePage() {
               id={era.slug}
               className={`scroll-mt-32 ${i % 2 ? 'border-y border-rule bg-paper-warm' : ''}`}
             >
-              <div className="mx-auto max-w-content px-6 pb-8 pt-14">
-              <Reveal as="header" className="max-w-reading">
+              {/* On a wide screen the era's title holds the left of the page
+                  while its moments run down the right, so the cards no longer
+                  leave half the page empty. */}
+              <div className="mx-auto max-w-content px-6 pb-8 pt-14 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:pb-14">
+              <Reveal as="header" className="max-w-reading lg:sticky lg:top-40 lg:col-span-4 lg:self-start">
                 <Eyebrow>{era.range}</Eyebrow>
                 <h2 className="mt-3 font-serif text-h2">{era.label}</h2>
                 <p className="mt-3 font-serif text-body-lg text-ink-soft">
@@ -172,7 +175,7 @@ export default function TimelinePage() {
                   rule the entries draw. It sits outside the list because only
                   list items belong inside an ol, and before it so that the
                   entry markers paint on top of it. */}
-              <div className="relative mt-8">
+              <div className="relative mt-8 lg:col-span-8 lg:mt-0">
                 <ProgressTrack steps={events.length} />
                 <ol>
                   {events.map((event) => (

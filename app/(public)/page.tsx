@@ -27,7 +27,7 @@ const salon: { slug: string; span: string }[] = [
   { slug: 'the-joke-shop-gateshead-on-tyne-1966', span: 'lg:col-span-7' },
   { slug: 'pop-1967', span: 'lg:col-span-5 lg:mt-24' },
   { slug: 'the-men-on-the-seats-1973', span: 'lg:col-span-5' },
-  { slug: 'bigg-market-newcastle-on-tyne-1975', span: 'lg:col-span-7 lg:-mt-16' },
+  { slug: 'bigg-market-newcastle-on-tyne-1975', span: 'lg:col-span-7 lg:mt-10' },
   { slug: 'the-monument-with-snow-newcastle-on-tyne-1996', span: 'lg:col-span-6' },
   { slug: 'four-doors-at-school-street-gateshead-1977', span: 'lg:col-span-6 lg:mt-12' },
 ]
@@ -304,7 +304,7 @@ export default function Home() {
             The whole catalogue
           </Button>
         </div>
-        <div className="mt-12 grid gap-x-10 gap-y-14 lg:grid-cols-12">
+        <div className="mt-12 grid gap-x-10 gap-y-14 lg:grid-cols-12 lg:items-start">
           {salon.map(({ slug, span }) => (
             <SalonPiece key={slug} entry={must(entryBySlug(slug), slug)} span={span} />
           ))}

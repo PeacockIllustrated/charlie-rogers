@@ -74,9 +74,11 @@ function Chapter({ section, number }: { section: StorySection; number: number })
                       {entry.title}
                       {entry.year ? `, ${entry.year}` : ''}
                     </Link>
-                  ) : (
-                    section.imageCaption
-                  )
+                  ) : section.imageCaption ? (
+                    // Set like the linked captions, so every chapter's picture
+                    // is labelled the same way.
+                    <span className="font-serif text-body italic text-ink-soft">{section.imageCaption}</span>
+                  ) : null
                 }
               />
             </div>

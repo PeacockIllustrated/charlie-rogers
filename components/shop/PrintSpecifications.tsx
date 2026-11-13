@@ -56,6 +56,7 @@ export function PrintSpecifications() {
           the print in its mount, and the certificate that comes with it. */}
       <figure className="mb-6">
         <div className="grid grid-cols-2 gap-3">
+          <div className="frame-photo">
           <Image
             src="/artwork/shop/street-meeting-gateshead-limited-edition-mounted.jpg"
             width={1600}
@@ -64,6 +65,8 @@ export function PrintSpecifications() {
             sizes="(min-width: 640px) 18rem, 45vw"
             className="block aspect-[4/5] w-full object-cover"
           />
+          </div>
+          <div className="frame-photo">
           <Image
             src="/artwork/shop/street-meeting-gateshead-certificate.jpg"
             width={1131}
@@ -72,6 +75,7 @@ export function PrintSpecifications() {
             sizes="(min-width: 640px) 18rem, 45vw"
             className="block aspect-[4/5] w-full object-cover object-top"
           />
+          </div>
         </div>
         <figcaption className="mt-2 font-sans text-xs text-ink-mute">
           The limited edition, mounted, with its certificate. Shown with Street Meeting, Gateshead.

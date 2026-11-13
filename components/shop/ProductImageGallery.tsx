@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { cn, shopImageUrl } from '@/lib/shop/utils'
 import type { ProductType, ShopProductImage } from '@/lib/shop/types'
 import { Roundel } from '@/components/Roundel'
+import { Frame } from '@/components/Frame'
 
-// Primary image plus a thumbnail rail. On a warm mount, consistent with the
-// rest of the site's painting treatment.
+// The picture hung in its frame on a wall, as on the shop page, with a rail of
+// thumbnails beneath in a slim moulding. The picture is contained, never
+// cropped, so Charlie's signature stays in its corner.
 export function ProductImageGallery({
   images,
   title,
@@ -42,7 +44,7 @@ export function ProductImageGallery({
       )
     }
     return (
-      <div className="flex aspect-[4/5] items-center justify-center bg-paper-warm">
+      <div className="frame-wall flex aspect-[4/5] items-center justify-center">
         <Roundel size={160} tone="ink" />
       </div>
     )
@@ -51,20 +53,23 @@ export function ProductImageGallery({
   const activeUrl = shopImageUrl(active.storage_path)
 
   return (
-    <div className="space-y-3">
-      <div className="bg-paper-warm p-4">
+    <div className="space-y-4">
+      <div className="frame-wall flex min-h-[22rem] items-center justify-center px-6 py-10 sm:min-h-[30rem] sm:px-12 sm:py-14">
         {activeUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={activeUrl}
-            alt={active.alt_text ?? title}
-            className="block w-full h-auto"
-          />
+          <Frame size="lg" className="max-w-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={activeUrl}
+              src={activeUrl}
+              alt={active.alt_text ?? title}
+              className="!w-auto max-h-[26rem] max-w-full sm:max-h-[32rem]"
+            />
+          </Frame>
         )}
       </div>
 
       {sorted.length > 1 && (
-        <ul className="grid grid-cols-5 gap-2">
+        <ul className="grid grid-cols-5 gap-3">
           {sorted.map((img, i) => {
             const url = shopImageUrl(img.storage_path)
             return (
@@ -73,10 +78,8 @@ export function ProductImageGallery({
                   type="button"
                   onClick={() => setActiveIndex(i)}
                   className={cn(
-                    'block w-full bg-paper-warm p-1 border-2 transition-colors',
-                    i === activeIndex
-                      ? 'border-bensham'
-                      : 'border-transparent hover:border-rule',
+                    'frame-wall flex aspect-square w-full items-center justify-center p-2 outline-offset-2 transition-colors',
+                    i === activeIndex ? 'outline outline-2 outline-bensham' : 'hover:bg-[#e6dcc8]',
                   )}
                   // The card pack's five thumbnails are five different
                   // paintings, so "image 2 of 5" tells a screen reader nothing
@@ -89,12 +92,10 @@ export function ProductImageGallery({
                   aria-current={i === activeIndex}
                 >
                   {url && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={url}
-                      alt=""
-                      className="block aspect-square w-full object-cover"
-                    />
+                    <span className="frame-thin max-h-full max-w-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt="" className="block max-h-14 w-auto max-w-full sm:max-h-16" />
+                    </span>
                   )}
                 </button>
               </li>

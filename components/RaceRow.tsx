@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { RaceLine } from './RaceLine'
 import { StatusLabel } from './StatusLabel'
+import { Roundel } from './Roundel'
 import { paintedYears } from '@/lib/content/catalogue'
 import { locationLine } from '@/lib/content/places'
 import type { Place } from '@/lib/content/types'
@@ -26,7 +27,11 @@ export function RaceRow({ place }: { place: Place }) {
             className="block aspect-[4/3] h-auto w-full object-cover"
           />
         ) : (
-          <div className="aspect-[4/3]" />
+          // No painting of this place on the site yet: the emblem stands in,
+          // rather than an empty mount that reads as a broken image.
+          <div className="flex aspect-[4/3] items-center justify-center">
+            <Roundel size={44} tone="ink" />
+          </div>
         )}
       </div>
       <div className="min-w-0">
