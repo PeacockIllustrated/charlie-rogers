@@ -83,7 +83,7 @@ export default async function AdminEnquiriesPage({
             <li key={q.id} id={`enquiry-${q.id}`} className="scroll-mt-6 border border-rule bg-paper p-5">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <p className="font-serif text-h4">
-                  <a href={`/shop/${q.product_slug}`} target="_blank" rel="noreferrer" className="hover:text-bensham">
+                  <a href={q.product_slug.startsWith('contact-') ? '/contact' : `/shop/${q.product_slug}`} target="_blank" rel="noreferrer" className="hover:text-bensham">
                     {q.product_title}
                   </a>
                   <span className="ml-3 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">

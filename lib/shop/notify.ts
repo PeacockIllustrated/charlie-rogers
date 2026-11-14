@@ -2,7 +2,7 @@ import type { CheckoutDetails } from './checkout-input'
 import type { EnquiryDetails } from './enquiry-input'
 import { displayTitle, type Quote } from './commerce'
 import { renderEmailHtml, renderEmailText } from './email-layout'
-import { customerReceiptEmail, shopEnquiryEmail, shopOrderEmail, testEmail, type Built, type EmailCustomer, type EmailOrder } from './email-content'
+import { contactEmail, customerReceiptEmail, shopEnquiryEmail, shopOrderEmail, testEmail, type Built, type EmailCustomer, type EmailOrder } from './email-content'
 import { confirmationPath, type PlacedOrder } from './payments'
 import { SITE_URL } from '@/lib/site'
 
@@ -201,4 +201,17 @@ export async function notifyCustomerOfOrder(
     },
     `customer receipt for ${order.orderNumber}`,
   )
+}
+
+// A contact page message, to the address in lib/contact.ts. Unlike the shop
+// notices this is the message itself, not a copy of something saved in the
+// admin, so the caller needs to know whether it went: resolves to null when it
+// was accepted, or the reason it was not.
+export async function sendContactMessage(
+  to: string,
+  message: Parameters<typeof contactEmail>[0],
+): Promise<string | null> {
+  const failed = await deliver({ to, replyTo: message.email, email: contactEmail(message) })
+  if (failed) console.error(`[contact] message from the contact page failed: ${failed}`)
+  return failed
 }

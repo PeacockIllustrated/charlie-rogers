@@ -19,6 +19,7 @@ const nav = [
   { href: '/gallery', label: 'Gallery' },
   { href: '/book', label: 'The book' },
   { href: '/shop', label: 'Shop' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 function isActive(pathname: string, href: string): boolean {

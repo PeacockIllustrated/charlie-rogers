@@ -9,7 +9,7 @@ import { CATALOGUE } from '@/lib/shop/catalogue'
 // The public archive and the shop. Shop products come from the local
 // catalogue, which the migrations keep in step with the live table.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ['', '/story', '/work', '/places', '/people', '/timeline', '/exhibitions', '/gallery', '/book', '/shop']
+  const pages = ['', '/story', '/work', '/places', '/people', '/timeline', '/exhibitions', '/gallery', '/book', '/shop', '/contact']
 
   return [
     ...pages.map((path) => ({ url: `${SITE_URL}${path}` })),

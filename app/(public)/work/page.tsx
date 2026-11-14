@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { CatalogueCard } from '@/components/CatalogueCard'
+import { DecadeRooms } from '@/components/DecadeRooms'
+import { decadePicks } from '@/lib/content/decades'
 import { catalogue, entriesForTheme, type Entry } from '@/lib/content/catalogue'
 import { themes, themePaintings } from '@/lib/content/themes'
 
@@ -41,7 +43,26 @@ export default function WorkIndex() {
         </p>
       </header>
 
-      <nav aria-label="Decades" className="mt-12 flex flex-wrap gap-x-6 gap-y-2 border-y border-rule py-4">
+      <section aria-labelledby="by-decade" className="mt-14">
+        <div className="mb-8 grid gap-4 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-7">
+            <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">Chosen by Brian Rankin</p>
+            <h2 id="by-decade" className="mt-3 font-serif text-h1">Decade by decade</h2>
+          </div>
+          <p className="font-serif text-body text-ink-soft lg:col-span-5">
+            A painting, or a handful, for each decade of Charlie&rsquo;s working life. Select any
+            of them to see it larger.
+          </p>
+        </div>
+        <DecadeRooms decades={decadePicks} />
+      </section>
+
+      <div className="mt-24">
+        <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">Every catalogued painting</p>
+        <h2 className="mt-3 font-serif text-h1">The full catalogue</h2>
+      </div>
+
+      <nav aria-label="Decades" className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-y border-rule py-4">
         {decades.map((d) => (
           <a
             key={d.label}
