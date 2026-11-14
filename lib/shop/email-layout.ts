@@ -27,7 +27,7 @@ export interface EmailDoc {
   blocks: EmailBlock[]
   // Who the email is for, said in the footer. Shop notices say so, so a
   // forwarded one is not mistaken for a customer email.
-  audience: 'customer' | 'shop'
+  audience: 'customer' | 'shop' | 'contact'
 }
 
 const C = {
@@ -81,7 +81,9 @@ export function renderEmailHtml(doc: EmailDoc): string {
   const footerNote =
     doc.audience === 'shop'
       ? 'Sent to the shop by charlierogers.art. Customers never see this email.'
-      : 'Sent by charlierogers.art because you ordered from the shop. Reply to this email to reach us.'
+      : doc.audience === 'contact'
+        ? 'Sent from the contact page at charlierogers.art. Replying answers the sender.'
+        : 'Sent by charlierogers.art because you ordered from the shop. Reply to this email to reach us.'
   return `<!doctype html>
 <html lang="en-GB">
 <head>

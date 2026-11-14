@@ -142,3 +142,43 @@ export function customerReceiptEmail(order: EmailOrder, customer: EmailCustomer,
     },
   }
 }
+
+// A message from the contact page, to Brian Rankin. Reply-to is the sender.
+// Photographs come as links: the email transport carries HTML only.
+export function contactEmail(message: {
+  topicLabel: string
+  text: string
+  name: string
+  email: string
+  phone: string | null
+  images: string[]
+  imagesFailed: number
+}): Built {
+  const first = message.name.trim().split(/\s+/)[0] ?? message.name
+  const photos: EmailDoc['blocks'] = message.images.map((href, i) => ({
+    kind: 'button' as const,
+    label: message.images.length > 1 ? `See photograph ${i + 1}` : 'See the photograph',
+    href,
+  }))
+  return {
+    subject: `Charlie Rogers website: ${message.topicLabel.toLowerCase()} from ${message.name}`,
+    doc: {
+      audience: 'contact',
+      preheader: `${message.name} has sent a message from the contact page.`,
+      eyebrow: `Contact page, ${message.topicLabel.toLowerCase()}`,
+      title: `A message from ${first}`,
+      blocks: [
+        { kind: 'quote', text: message.text },
+        { kind: 'details', title: 'From', lines: [message.name, message.email, message.phone ?? ''] },
+        ...photos,
+        ...(message.images.length > 0
+          ? [{ kind: 'p' as const, text: 'Photograph links work for a year. Save any you want to keep.' }]
+          : []),
+        ...(message.imagesFailed > 0
+          ? [{ kind: 'p' as const, text: `${message.imagesFailed === 1 ? 'One photograph' : `${message.imagesFailed} photographs`} could not be saved. Reply to ask for it by email.` }]
+          : []),
+        { kind: 'panel', text: 'Reply to this email and your answer goes straight to them.' },
+      ],
+    },
+  }
+}

@@ -243,12 +243,13 @@ export const catalogue: Entry[] = [
     slug: 'cotfield-street-bensham-gateshead',
     title: 'Cotfield Street, Bensham, Gateshead-on-Tyne',
     medium: 'Watercolour',
+    // Brian Rankin dated it when he chose it for The Work, 12 November 2026.
+    year: 1970,
     image: card('cotfield-street-bensham-gateshead', 635, 445),
     alt: 'Cotfield Street in watercolour: Taits corner shop at left, terraced houses running uphill, a man walking a dog.',
     origin: 'card',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',
-    note: 'Brian’s card caption gives the year as four question marks. It is the street at the heart of the story, and the year is one of the facts still to find.',
   },
 
   // Plates in the book
