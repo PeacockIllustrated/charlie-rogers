@@ -6,10 +6,12 @@ import { CatalogueCard } from '@/components/CatalogueCard'
 import { Plate } from '@/components/Plate'
 import { Prose } from '@/components/Prose'
 import { RaceLine } from '@/components/RaceLine'
+import { SaltwellCollection } from '@/components/SaltwellCollection'
 import { StatusLabel } from '@/components/StatusLabel'
 import { entriesForPlace, paintedYears } from '@/lib/content/catalogue'
 import { places, placeBySlug, locationLine } from '@/lib/content/places'
 import { extract } from '@/lib/paintings'
+import { saltwellPaintings } from '@/lib/content/saltwell'
 
 export function generateStaticParams() {
   return places.map((p) => ({ slug: p.slug }))
@@ -137,6 +139,41 @@ export default async function PlacePage({
               />
             </div>
           </div>
+        </section>
+      )}
+
+      {place.slug === 'saltwell-park' && (
+        <section id="paintings" aria-labelledby="saltwell-h" className="mt-24 border-t-2 border-ink pt-10">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:col-span-7">
+              <p className="font-sans text-xs uppercase tracking-eyebrow text-bensham">The Saltwell Park collection</p>
+              <h2 id="saltwell-h" className="mt-4 font-serif text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.95] tracking-tight">
+                Thirty-eight years in one park
+              </h2>
+            </div>
+            <div className="lg:col-span-5 lg:self-end">
+              <p className="font-serif text-body text-ink-soft">
+                Charlie came back to Saltwell Park from 1979 until 2017, in every season. He painted the Towers through
+                the trees, the gates, the boats on the lake, the bands, the summer fair being built, and the people who
+                sat on its benches. These {saltwellPaintings.length} pictures are his own titles and dates.
+              </p>
+              <dl className="mt-6 grid grid-cols-3 border-t border-rule pt-4 font-sans">
+                <div>
+                  <dt className="text-xs uppercase tracking-eyebrow text-ink-mute">Pictures</dt>
+                  <dd className="mt-1 font-serif text-h3">{saltwellPaintings.length}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-eyebrow text-ink-mute">First</dt>
+                  <dd className="mt-1 font-serif text-h3">1979</dd>
+                </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-eyebrow text-ink-mute">Last</dt>
+                  <dd className="mt-1 font-serif text-h3">2017</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <SaltwellCollection paintings={saltwellPaintings} />
         </section>
       )}
 
