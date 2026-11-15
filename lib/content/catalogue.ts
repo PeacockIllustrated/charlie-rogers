@@ -48,6 +48,12 @@ function original(file: string, width: number, height: number): Plate {
   return { src: `/artwork/web/${file}.jpg`, width, height }
 }
 
+// Brian Rankin's photographs of the paintings he chose for The Work, sent on
+// 12 November 2026. The email copies are 1920 pixels wide.
+function chosen(file: string, width: number, height: number): Plate {
+  return { src: `/artwork/decades/${file}.jpg`, width, height }
+}
+
 function card(file: string, width: number, height: number): Plate {
   return { src: `/artwork/cards/${file}.jpg`, width, height }
 }
@@ -250,6 +256,54 @@ export const catalogue: Entry[] = [
     origin: 'card',
     theme: 'charlies-gateshead',
     place: 'cotfield-street',
+  },
+
+  // Chosen by Brian Rankin for The Work, 12 November 2026. Titles and years as
+  // he sent them; he gave no media.
+  {
+    slug: 'discards-salford-1970',
+    title: 'Discards, Salford',
+    year: 1970,
+    image: chosen('discards-salford-1970', 1920, 1616),
+    alt: 'Unwanted chairs and a table piled high against a dark brick wall.',
+    origin: 'original',
+    theme: 'beyond-tyneside',
+  },
+  {
+    slug: 'coal-wagon-1972',
+    title: 'Coal Wagon',
+    year: 1972,
+    image: chosen('coal-wagon-1972', 1920, 1997),
+    alt: 'A coal lorry piled with sacks, the coalman riding on top, seen close up from beside the front wheel.',
+    origin: 'original',
+    theme: 'industrial-scenes',
+  },
+  {
+    slug: 'ann-getting-ready-1978',
+    title: 'Ann Getting Ready',
+    year: 1978,
+    image: chosen('ann-getting-ready-1978', 1920, 1404),
+    alt: 'A woman at a dressing table with her arms raised to her hair, an unmade bed and clothes beside her.',
+    origin: 'original',
+    theme: 'family',
+  },
+  {
+    slug: 'christines-piano-1986',
+    title: 'Christine’s Piano',
+    year: 1986,
+    image: chosen('christines-piano-1986', 1920, 1467),
+    alt: 'An upright piano with music open on the stand, a chair before it, pictures pinned to the wall above.',
+    origin: 'original',
+    theme: 'interior-scenes',
+  },
+  {
+    slug: 'castle-moot-hall-and-all-saints-newcastle-on-tyne-1999',
+    title: 'Castle, Moot Hall and All Saints, Newcastle-on-Tyne',
+    year: 1999,
+    image: chosen('castle-moot-hall-and-all-saints-newcastle-on-tyne-1999', 1920, 1351),
+    alt: 'Stone steps beside the castle, the columns of the Moot Hall at right and the spire of All Saints between them.',
+    origin: 'original',
+    theme: 'newcastle',
   },
 
   // Plates in the book

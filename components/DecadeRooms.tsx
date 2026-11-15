@@ -13,6 +13,8 @@ import type { DecadePicks } from '@/lib/content/decades'
 // returned to the painting that opened it, deep ink rather than black, square
 // corners, no shadow.
 
+const WORDS = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten']
+
 function Chevron({ dir }: { dir: 'left' | 'right' }) {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -83,7 +85,7 @@ export function DecadeRooms({ decades }: { decades: DecadePicks[] }) {
                   <span className="text-ink-mute">s</span>
                 </h3>
                 <p className="mt-4 font-sans text-xs uppercase tracking-eyebrow text-ink-mute">
-                  {d.picks.length === 1 ? 'One painting' : `${d.picks.length} paintings`}
+                  {d.picks.length === 1 ? 'One painting' : `${WORDS[d.picks.length] ?? d.picks.length} paintings`}
                 </p>
               </div>
             </div>
