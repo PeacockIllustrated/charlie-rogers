@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
-
-const MIN_LENGTH = 10
+import { PASSWORD_MIN_LENGTH as MIN_LENGTH, passwordChangedStamp } from '@/lib/admin-password'
 
 export function ResetPasswordForm() {
   const router = useRouter()
@@ -27,7 +26,7 @@ export function ResetPasswordForm() {
 
     setPending(true)
     const supabase = createSupabaseBrowserClient()
-    const { error: authError } = await supabase.auth.updateUser({ password })
+    const { error: authError } = await supabase.auth.updateUser({ password, data: passwordChangedStamp() })
     if (authError) {
       setError(authError.message)
       setPending(false)

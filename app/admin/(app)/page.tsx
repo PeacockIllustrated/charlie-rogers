@@ -8,6 +8,7 @@ import { ENQUIRY_COLUMNS, type Enquiry } from '@/lib/shop/enquiries'
 import { displayTitle } from '@/lib/shop/commerce'
 import { emailSetup } from '@/lib/shop/notify'
 import { canStoreOrders } from '@/lib/shop/orders'
+import { hasChosenPassword } from '@/lib/admin-password'
 
 export const dynamic = 'force-dynamic'
 
@@ -62,6 +63,10 @@ function Empty({ children }: { children: React.ReactNode }) {
 
 export default async function AdminDashboard() {
   const supabase = await createSupabaseServerClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const onGivenPassword = Boolean(user) && !hasChosenPassword(user?.user_metadata)
 
   const [productsRes, ordersRes, settingsRes, enquiriesRes, optionsRes] = await Promise.all([
     supabase
@@ -199,6 +204,21 @@ export default async function AdminDashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Until the owner of this account sets a password of their own. */}
+      {onGivenPassword && (
+        <div className="flex flex-wrap items-center justify-between gap-4 border border-rule border-l-4 border-l-bensham bg-paper px-5 py-4">
+          <div>
+            <p className="font-serif text-h3">Choose your own password</p>
+            <p className="mt-1 font-sans text-small text-ink-soft">
+              You are signed in with the password you were given. Change it to one only you know.
+            </p>
+          </div>
+          <Link href="/admin/password" className="btn-admin">
+            Change password
+          </Link>
+        </div>
+      )}
 
       {productsRes.error && (
         <div role="alert" className="border border-bensham/30 bg-bensham/5 px-4 py-3 font-sans text-small text-bensham">

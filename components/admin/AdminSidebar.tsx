@@ -59,6 +59,15 @@ export function AdminSidebar({ userEmail, counts = {} }: { userEmail: string; co
       </nav>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-rule p-4 md:block">
         <p className="truncate font-sans text-xs text-ink-mute">{userEmail}</p>
+        <Link
+          href="/admin/password"
+          className={cn(
+            'mt-2 block font-sans text-small hover:text-bensham',
+            pathname === '/admin/password' ? 'text-bensham' : 'text-ink-soft',
+          )}
+        >
+          Change password
+        </Link>
         <form action="/api/admin/signout" method="post" className="mt-2">
           <button
             type="submit"
